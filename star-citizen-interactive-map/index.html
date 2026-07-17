@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050914" />
+    <meta name="description" content="A community-built interactive 3D and 2D Star Citizen route map." />
+    <title>Verse Route Map</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">COMMUNITY NAVIGATION TOOL</p>
+          <h1>Verse Route Map</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="view-3d" class="button active" type="button">3D</button>
+          <button id="view-2d" class="button" type="button">2D</button>
+          <button id="reset-camera" class="button secondary" type="button">Reset view</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">ROUTE PLANNER</p>
+                <h2>Plot a course</h2>
+              </div>
+              <span id="route-mode" class="status-pill">Choose origin</span>
+            </div>
+
+            <label for="origin-select">Origin</label>
+            <select id="origin-select"></select>
+
+            <label for="destination-select">Destination</label>
+            <select id="destination-select"></select>
+
+            <div class="button-row">
+              <button id="calculate-route" class="button primary" type="button">Calculate route</button>
+              <button id="clear-route" class="button secondary" type="button">Clear</button>
+            </div>
+
+            <p class="hint">You can also click one map object for the origin, then another for the destination.</p>
+          </section>
+
+          <section id="route-panel" class="panel hidden" aria-live="polite">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">ACTIVE ROUTE</p>
+                <h2 id="route-title">Route</h2>
+              </div>
+              <strong id="route-distance">0 Gm</strong>
+            </div>
+            <ol id="route-steps" class="route-steps"></ol>
+            <div class="save-row">
+              <input id="route-name" type="text" maxlength="50" placeholder="Route name" />
+              <button id="save-route" class="button primary" type="button">Save</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">SELECTED LOCATION</p>
+                <h2 id="location-name">Nothing selected</h2>
+              </div>
+              <span id="location-type" class="status-pill muted">—</span>
+            </div>
+            <p id="location-description" class="muted-copy">Select a planet, station, gateway, or jump point to see its details.</p>
+            <dl id="location-metadata" class="metadata"></dl>
+            <div class="subheading-row">
+              <h3>Commodity information</h3>
+              <span class="sample-badge">SAMPLE DATA</span>
+            </div>
+            <div id="commodity-list" class="commodity-list">
+              <p class="muted-copy">No commodity records loaded.</p>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">MY ROUTES</p>
+                <h2>Saved locally</h2>
+              </div>
+            </div>
+            <div id="saved-routes" class="saved-routes">
+              <p class="muted-copy">No saved routes yet.</p>
+            </div>
+          </section>
+
+          <section class="panel warning-panel">
+            <strong>Starter data notice</strong>
+            <p>The included positions, connections, distances, and commodity values are illustrative. Replace them with verified game/API data before treating the map as authoritative.</p>
+          </section>
+        </aside>
+
+        <section class="map-shell" aria-label="Interactive star map">
+          <div id="map-3d" class="map-view"></div>
+          <div id="map-2d" class="map-view hidden"></div>
+          <div class="legend">
+            <span><i class="dot planet"></i>Planet</span>
+            <span><i class="dot station"></i>Station</span>
+            <span><i class="dot gateway"></i>Gateway</span>
+            <span><i class="dot jump"></i>Jump point</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

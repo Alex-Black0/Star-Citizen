@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "source": "SAMPLE DATA — replace through an approved API integration",
+    "updatedAt": "2026-07-17T00:00:00Z",
+    "authoritative": false
+  },
+  "locations": {
+    "hurston": [
+      { "commodity": "Titanium", "buy": 8.10, "sell": 9.35, "currency": "aUEC/SCU" },
+      { "commodity": "Laranite", "buy": 25.40, "sell": 27.20, "currency": "aUEC/SCU" }
+    ],
+    "everus-harbor": [
+      { "commodity": "Medical Supplies", "buy": 18.20, "sell": 20.10, "currency": "aUEC/SCU" }
+    ],
+    "arccorp": [
+      { "commodity": "Agricium", "buy": 23.10, "sell": 25.80, "currency": "aUEC/SCU" },
+      { "commodity": "Beryl", "buy": 4.25, "sell": 5.10, "currency": "aUEC/SCU" }
+    ],
+    "baijini-point": [
+      { "commodity": "Processed Food", "buy": 1.20, "sell": 1.75, "currency": "aUEC/SCU" }
+    ],
+    "crusader": [
+      { "commodity": "Distilled Spirits", "buy": 4.50, "sell": 5.60, "currency": "aUEC/SCU" }
+    ],
+    "seraphim-station": [
+      { "commodity": "Medical Supplies", "buy": 17.90, "sell": 20.00, "currency": "aUEC/SCU" }
+    ],
+    "microtech": [
+      { "commodity": "Astatine", "buy": 7.10, "sell": 8.55, "currency": "aUEC/SCU" },
+      { "commodity": "Gold", "buy": 19.20, "sell": 21.40, "currency": "aUEC/SCU" }
+    ],
+    "port-tressler": [
+      { "commodity": "Agricultural Supplies", "buy": 1.05, "sell": 1.55, "currency": "aUEC/SCU" }
+    ],
+    "ruin-station": [
+      { "commodity": "Scrap", "buy": 2.10, "sell": 3.20, "currency": "aUEC/SCU" }
+    ]
+  }
+}

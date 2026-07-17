@@ -1,0 +1,188 @@
+{
+  "metadata": {
+    "name": "Starter verse graph",
+    "version": "0.1.0",
+    "distanceUnit": "Gm",
+    "authoritative": false,
+    "notes": "Illustrative topology and distances for the starter application. Replace with verified data."
+  },
+  "nodes": [
+    {
+      "id": "stanton-star",
+      "name": "Stanton",
+      "system": "Stanton",
+      "type": "star",
+      "position": [0, 0, 0],
+      "radius": 3.6,
+      "description": "Central star and routing hub for this starter Stanton graph.",
+      "tags": ["system-center"]
+    },
+    {
+      "id": "hurston",
+      "name": "Hurston",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [-36, 2, 12],
+      "radius": 2.2,
+      "description": "Planet node with an example orbital station and trade information.",
+      "tags": ["planet", "trade"]
+    },
+    {
+      "id": "everus-harbor",
+      "name": "Everus Harbor",
+      "system": "Stanton",
+      "type": "station",
+      "position": [-32, 4, 13],
+      "radius": 0.75,
+      "description": "Example orbital station node connected to Hurston.",
+      "tags": ["station", "trade"]
+    },
+    {
+      "id": "arccorp",
+      "name": "ArcCorp",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [35, -1, -8],
+      "radius": 2.1,
+      "description": "Planet node with an example orbital station and commodity records.",
+      "tags": ["planet", "trade"]
+    },
+    {
+      "id": "baijini-point",
+      "name": "Baijini Point",
+      "system": "Stanton",
+      "type": "station",
+      "position": [31, 2, -7],
+      "radius": 0.75,
+      "description": "Example orbital station node connected to ArcCorp.",
+      "tags": ["station", "trade"]
+    },
+    {
+      "id": "crusader",
+      "name": "Crusader",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [0, -2, 38],
+      "radius": 2.7,
+      "description": "Gas giant node with an example orbital station.",
+      "tags": ["planet", "trade"]
+    },
+    {
+      "id": "seraphim-station",
+      "name": "Seraphim Station",
+      "system": "Stanton",
+      "type": "station",
+      "position": [3, 1, 34],
+      "radius": 0.8,
+      "description": "Example orbital station node connected to Crusader.",
+      "tags": ["station", "trade"]
+    },
+    {
+      "id": "microtech",
+      "name": "microTech",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [7, 3, -42],
+      "radius": 2.2,
+      "description": "Planet node with an example orbital station and trade information.",
+      "tags": ["planet", "trade"]
+    },
+    {
+      "id": "port-tressler",
+      "name": "Port Tressler",
+      "system": "Stanton",
+      "type": "station",
+      "position": [10, 6, -39],
+      "radius": 0.78,
+      "description": "Example orbital station node connected to microTech.",
+      "tags": ["station", "trade"]
+    },
+    {
+      "id": "stanton-gateway",
+      "name": "Stanton Gateway",
+      "system": "Stanton",
+      "type": "gateway",
+      "position": [55, 8, 25],
+      "radius": 1.15,
+      "description": "Required gateway node for the sample Stanton-to-Pyro route.",
+      "tags": ["gateway", "required-transition"]
+    },
+    {
+      "id": "stanton-pyro-jump",
+      "name": "Stanton–Pyro Jump Point",
+      "system": "Inter-system",
+      "type": "jump-point",
+      "position": [72, 10, 34],
+      "radius": 1.45,
+      "description": "Explicit jump-point node. Cross-system routes must traverse it.",
+      "tags": ["jump-point", "required-transition"]
+    },
+    {
+      "id": "pyro-gateway",
+      "name": "Pyro Gateway",
+      "system": "Pyro",
+      "type": "gateway",
+      "position": [98, 8, 39],
+      "radius": 1.15,
+      "description": "Required Pyro-side gateway for the sample inter-system route.",
+      "tags": ["gateway", "required-transition"]
+    },
+    {
+      "id": "pyro-star",
+      "name": "Pyro",
+      "system": "Pyro",
+      "type": "star",
+      "position": [128, 0, 40],
+      "radius": 3.8,
+      "description": "Central star and routing hub for the starter Pyro graph.",
+      "tags": ["system-center"]
+    },
+    {
+      "id": "pyro-1",
+      "name": "Pyro I",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [115, 2, 57],
+      "radius": 1.8,
+      "description": "Illustrative Pyro planet node.",
+      "tags": ["planet"]
+    },
+    {
+      "id": "ruin-station",
+      "name": "Ruin Station",
+      "system": "Pyro",
+      "type": "station",
+      "position": [148, 5, 25],
+      "radius": 0.9,
+      "description": "Illustrative Pyro station node with sample trade information.",
+      "tags": ["station", "trade"]
+    },
+    {
+      "id": "pyro-4",
+      "name": "Pyro IV",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [158, -2, 57],
+      "radius": 2.1,
+      "description": "Illustrative Pyro planet node.",
+      "tags": ["planet"]
+    }
+  ],
+  "edges": [
+    { "id": "stn-hur", "from": "stanton-star", "to": "hurston", "distance": 38.0, "kind": "quantum", "bidirectional": true },
+    { "id": "hur-everus", "from": "hurston", "to": "everus-harbor", "distance": 0.22, "kind": "local", "bidirectional": true },
+    { "id": "stn-arc", "from": "stanton-star", "to": "arccorp", "distance": 36.0, "kind": "quantum", "bidirectional": true },
+    { "id": "arc-baijini", "from": "arccorp", "to": "baijini-point", "distance": 0.21, "kind": "local", "bidirectional": true },
+    { "id": "stn-cru", "from": "stanton-star", "to": "crusader", "distance": 39.0, "kind": "quantum", "bidirectional": true },
+    { "id": "cru-seraphim", "from": "crusader", "to": "seraphim-station", "distance": 0.20, "kind": "local", "bidirectional": true },
+    { "id": "stn-mic", "from": "stanton-star", "to": "microtech", "distance": 44.0, "kind": "quantum", "bidirectional": true },
+    { "id": "mic-tressler", "from": "microtech", "to": "port-tressler", "distance": 0.22, "kind": "local", "bidirectional": true },
+    { "id": "stn-gateway", "from": "stanton-star", "to": "stanton-gateway", "distance": 61.0, "kind": "quantum", "bidirectional": true },
+    { "id": "gateway-stanton-jump", "from": "stanton-gateway", "to": "stanton-pyro-jump", "distance": 18.0, "kind": "gateway", "bidirectional": true },
+    { "id": "jump-pyro-gateway", "from": "stanton-pyro-jump", "to": "pyro-gateway", "distance": 30.0, "kind": "jump", "bidirectional": true },
+    { "id": "pyro-gateway-star", "from": "pyro-gateway", "to": "pyro-star", "distance": 32.0, "kind": "gateway", "bidirectional": true },
+    { "id": "pys-p1", "from": "pyro-star", "to": "pyro-1", "distance": 21.0, "kind": "quantum", "bidirectional": true },
+    { "id": "pys-ruin", "from": "pyro-star", "to": "ruin-station", "distance": 28.0, "kind": "quantum", "bidirectional": true },
+    { "id": "pys-p4", "from": "pyro-star", "to": "pyro-4", "distance": 35.0, "kind": "quantum", "bidirectional": true }
+  ]
+}
