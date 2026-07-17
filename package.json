@@ -1,0 +1,13 @@
+{
+  "name": "star-citizen-interactive-map-starter",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Static 3D/2D Star Citizen route and commodity-run map for GitHub Pages",
+  "license": "MIT",
+  "scripts": {
+    "serve": "npx serve .",
+    "update:trade": "node scripts/update-trade-data.mjs",
+    "test": "node tests/router.test.mjs"
+  },
+  "type": "module"
+}
