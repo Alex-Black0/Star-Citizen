@@ -91,8 +91,8 @@ export function createHierarchy(universe) {
     return universe.nodes.filter((node) => {
       if (!isMapVisible(node) || node.system !== scope.system) return false;
       if (node.type === "star") return true;
-      if (parentById.has(node.id)) return false;
-      return SYSTEM_TYPES.has(node.type) || node.viewLevel === "system";
+      if (parentById.has(node.id) && node.systemVisible !== true && node.viewLevel !== "system") return false;
+      return SYSTEM_TYPES.has(node.type) || node.viewLevel === "system" || node.systemVisible === true;
     });
   }
 

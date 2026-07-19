@@ -1,13 +1,13 @@
 {
   "metadata": {
     "name": "Hierarchical verse route graph",
-    "version": "0.4.0-fallback",
+    "version": "0.5.0-fallback",
     "distanceUnit": "Gm",
     "authoritative": false,
-    "source": "Corrected fallback graph plus measured route checks",
+    "source": "Corrected fallback graph plus themed hierarchical system map",
     "updatedAt": "2026-07-19T00:00:00Z",
     "gameVersion": "4.8.3 route checks; current client may be newer",
-    "notes": "Stars are display-only. The map uses universe, system, and local levels. All three live systems are connected as a triangle through paired gateways. Distances marked estimated should be replaced by verified UEX or in-game measurements.",
+    "notes": "Stars are display-only. The map uses universe, system, and local levels, per-system visual themes, and selected-location distance spokes. Distances marked estimated should be replaced by verified UEX or in-game measurements.",
     "mapModel": "Three-level universe, system, and local navigation",
     "systemLayout": {
       "Stanton": {
@@ -54,7 +54,12 @@
         "to": "Stanton",
         "label": "Nyx \u2194 Stanton"
       }
-    ]
+    ],
+    "visualThemes": {
+      "Stanton": "cool blue commercial core-world palette",
+      "Pyro": "dark orange and ember palette inspired by in-game Pyro navigation visuals",
+      "Nyx": "deep blue and violet frontier palette"
+    }
   },
   "nodes": [
     {
@@ -82,7 +87,8 @@
         48
       ],
       "overviewLabel": "Stanton System",
-      "viewLevel": "overview"
+      "viewLevel": "overview",
+      "color": "#9fdcff"
     },
     {
       "id": "pyro-star",
@@ -109,7 +115,8 @@
         48
       ],
       "overviewLabel": "Pyro System",
-      "viewLevel": "overview"
+      "viewLevel": "overview",
+      "color": "#ff9a4f"
     },
     {
       "id": "nyx-star",
@@ -136,7 +143,8 @@
         -96
       ],
       "overviewLabel": "Nyx System",
-      "viewLevel": "overview"
+      "viewLevel": "overview",
+      "color": "#b1bbff"
     },
     {
       "id": "hurston",
@@ -156,7 +164,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 37.95
+      "orbitRadius": 37.95,
+      "color": "#6ec8ff"
     },
     {
       "id": "everus-harbor",
@@ -176,7 +185,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "hurston",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#e7eef7"
     },
     {
       "id": "lorville",
@@ -215,7 +225,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "hurston",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "aberdeen",
@@ -234,7 +245,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "hurston",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "magda",
@@ -253,7 +265,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "hurston",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "ita",
@@ -272,7 +285,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "hurston",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "arccorp",
@@ -292,7 +306,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 35.9
+      "orbitRadius": 35.9,
+      "color": "#6ec8ff"
     },
     {
       "id": "baijini-point",
@@ -312,7 +327,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "arccorp",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#e7eef7"
     },
     {
       "id": "area18",
@@ -351,7 +367,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "arccorp",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "wala",
@@ -370,7 +387,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "arccorp",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "crusader",
@@ -390,7 +408,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 38.0
+      "orbitRadius": 38.0,
+      "color": "#6ec8ff"
     },
     {
       "id": "seraphim-station",
@@ -410,7 +429,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "crusader",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#e7eef7"
     },
     {
       "id": "orison",
@@ -449,7 +469,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "crusader",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "daymar",
@@ -468,7 +489,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "crusader",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "yela",
@@ -487,7 +509,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "crusader",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "grim-hex",
@@ -507,7 +530,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "yela",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#e7eef7"
     },
     {
       "id": "microtech",
@@ -527,7 +551,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 42.58
+      "orbitRadius": 42.58,
+      "color": "#6ec8ff"
     },
     {
       "id": "port-tressler",
@@ -547,7 +572,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "microtech",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#e7eef7"
     },
     {
       "id": "new-babbage",
@@ -586,7 +612,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "microtech",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "clio",
@@ -605,7 +632,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "microtech",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "euterpe",
@@ -624,7 +652,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "microtech",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#8abfe5"
     },
     {
       "id": "pyro-gateway-stanton",
@@ -645,7 +674,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 60.42
+      "orbitRadius": 60.42,
+      "color": "#ffcb90"
     },
     {
       "id": "stanton-pyro-jump",
@@ -685,7 +715,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 56.72
+      "orbitRadius": 56.72,
+      "color": "#ffcb90"
     },
     {
       "id": "pyro-1",
@@ -704,7 +735,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 36.07
+      "orbitRadius": 36.07,
+      "color": "#ffbe96"
     },
     {
       "id": "monox",
@@ -724,7 +756,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 28.79
+      "orbitRadius": 28.79,
+      "color": "#ffbe96"
     },
     {
       "id": "checkmate",
@@ -744,7 +777,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "monox",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#f1ddd1"
     },
     {
       "id": "bloom",
@@ -764,7 +798,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 18.38
+      "orbitRadius": 18.38,
+      "color": "#ffbe96"
     },
     {
       "id": "orbituary",
@@ -784,7 +819,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "bloom",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#f1ddd1"
     },
     {
       "id": "pyro-iv",
@@ -803,7 +839,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 38.01
+      "orbitRadius": 38.01,
+      "color": "#e8d1c4"
     },
     {
       "id": "pyro-v",
@@ -822,7 +859,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 34.93
+      "orbitRadius": 34.93,
+      "color": "#e8d1c4"
     },
     {
       "id": "terminus",
@@ -842,7 +880,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 57.7
+      "orbitRadius": 57.7,
+      "color": "#ffbe96"
     },
     {
       "id": "ruin-station",
@@ -862,7 +901,8 @@
       ],
       "dataSource": "fallback",
       "parentId": "terminus",
-      "viewLevel": "local"
+      "viewLevel": "local",
+      "color": "#f1ddd1"
     },
     {
       "id": "nyx-gateway-pyro",
@@ -883,7 +923,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 71.34
+      "orbitRadius": 71.34,
+      "color": "#ffcb90"
     },
     {
       "id": "pyro-nyx-jump",
@@ -923,7 +964,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 36.4
+      "orbitRadius": 36.4,
+      "color": "#ffcb90"
     },
     {
       "id": "delamar",
@@ -943,7 +985,8 @@
       ],
       "dataSource": "fallback",
       "viewLevel": "system",
-      "orbitRadius": 6.4
+      "orbitRadius": 6.4,
+      "color": "#b5c5ff"
     },
     {
       "id": "levski",
@@ -985,7 +1028,8 @@
       "dataSource": "fallback topology",
       "viewLevel": "system",
       "distanceQuality": "topology; same-system legs estimated",
-      "orbitRadius": 61.72
+      "orbitRadius": 61.72,
+      "color": "#ffcb90"
     },
     {
       "id": "stanton-nyx-jump",
@@ -1028,7 +1072,149 @@
       "dataSource": "fallback topology",
       "viewLevel": "system",
       "distanceQuality": "topology; same-system leg estimated",
-      "orbitRadius": 41.88
+      "orbitRadius": 41.88,
+      "color": "#ffcb90"
+    },
+    {
+      "id": "gaslight",
+      "name": "Gaslight",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        187,
+        -1,
+        18
+      ],
+      "radius": 0.95,
+      "description": "Resource processing and refueling facility near Pyro V. Prioritized for ship services, fuel, and commodity trading.",
+      "tags": [
+        "station",
+        "trade",
+        "storage",
+        "refuel",
+        "priority"
+      ],
+      "dataSource": "fallback",
+      "parentId": "pyro-v",
+      "viewLevel": "local",
+      "systemVisible": true,
+      "color": "#f2dfd2"
+    },
+    {
+      "id": "patch-city",
+      "name": "Patch City",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        147,
+        1,
+        56
+      ],
+      "radius": 0.88,
+      "description": "Industrial settlement and trade stop near Monox.",
+      "tags": [
+        "station",
+        "trade",
+        "storage"
+      ],
+      "dataSource": "fallback",
+      "parentId": "monox",
+      "viewLevel": "local",
+      "systemVisible": true,
+      "color": "#f2dfd2"
+    },
+    {
+      "id": "starlight",
+      "name": "Starlight",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        163,
+        1,
+        47
+      ],
+      "radius": 0.88,
+      "description": "Major service station near Bloom.",
+      "tags": [
+        "station",
+        "trade",
+        "storage"
+      ],
+      "dataSource": "fallback",
+      "parentId": "bloom",
+      "viewLevel": "local",
+      "systemVisible": true,
+      "color": "#f2dfd2"
+    },
+    {
+      "id": "rats-nest",
+      "name": "Rat's Nest",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        151,
+        2,
+        70
+      ],
+      "radius": 0.84,
+      "description": "Remote service station in the outer Pyro lanes.",
+      "tags": [
+        "station",
+        "trade",
+        "storage"
+      ],
+      "dataSource": "fallback",
+      "parentId": "pyro-iv",
+      "viewLevel": "local",
+      "systemVisible": true,
+      "color": "#f2dfd2"
+    },
+    {
+      "id": "dudley-daughters",
+      "name": "Dudley & Daughters",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        163,
+        -1,
+        13
+      ],
+      "radius": 0.84,
+      "description": "Independent family-run service location near the Pyro V approach lanes.",
+      "tags": [
+        "station",
+        "trade",
+        "storage"
+      ],
+      "dataSource": "fallback",
+      "parentId": "pyro-v",
+      "viewLevel": "local",
+      "systemVisible": true,
+      "color": "#f2dfd2"
+    },
+    {
+      "id": "megumi-refueling",
+      "name": "Megumi Refueling",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        215,
+        1,
+        66
+      ],
+      "radius": 0.84,
+      "description": "Outer-system fuel and support stop on the Terminus side of Pyro.",
+      "tags": [
+        "station",
+        "trade",
+        "storage",
+        "refuel"
+      ],
+      "dataSource": "fallback",
+      "parentId": "terminus",
+      "viewLevel": "local",
+      "systemVisible": true,
+      "color": "#f2dfd2"
     }
   ],
   "edges": [
@@ -1583,6 +1769,54 @@
       "baseVisible": false,
       "note": "Replace with verified in-game or UEX distance when available.",
       "bidirectional": true
+    },
+    {
+      "id": "edge-pyro-v-gaslight",
+      "from": "pyro-v",
+      "to": "gaslight",
+      "distance": 6.52,
+      "kind": "quantum",
+      "baseVisible": false
+    },
+    {
+      "id": "edge-pyro-v-dudley",
+      "from": "pyro-v",
+      "to": "dudley-daughters",
+      "distance": 8.43,
+      "kind": "quantum",
+      "baseVisible": false
+    },
+    {
+      "id": "edge-monox-patch-city",
+      "from": "monox",
+      "to": "patch-city",
+      "distance": 5.37,
+      "kind": "quantum",
+      "baseVisible": false
+    },
+    {
+      "id": "edge-bloom-starlight",
+      "from": "bloom",
+      "to": "starlight",
+      "distance": 4.98,
+      "kind": "quantum",
+      "baseVisible": false
+    },
+    {
+      "id": "edge-pyro-iv-rats-nest",
+      "from": "pyro-iv",
+      "to": "rats-nest",
+      "distance": 12.61,
+      "kind": "quantum",
+      "baseVisible": false
+    },
+    {
+      "id": "edge-terminus-megumi",
+      "from": "terminus",
+      "to": "megumi-refueling",
+      "distance": 9.44,
+      "kind": "quantum",
+      "baseVisible": false
     }
   ]
 }

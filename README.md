@@ -1,22 +1,25 @@
-# Verse Route Map v4
+# Verse Route Map v5
 
 A static 3D/2D Star Citizen route and commodity planner designed for GitHub Pages.
 
-## What changed in v4
+## What changed in v5
 
-- Three-level map navigation: **Universe → System → Local**
-- Stanton, Pyro, and Nyx arranged as a triangular system overview
-- Direct paired gateway topology for:
-  - Stanton ↔ Pyro
-  - Pyro ↔ Nyx
-  - Nyx ↔ Stanton
-- Stronger system and local orbital rings with directional axes
-- Zoom-aware object sizing and label density
-- Select a planet and zoom in to enter its local map
-- Zoom out from a local map to return to its system
-- Origin, destination, trade, and price dropdowns grouped by system and parent location
-- First-visit instructions explaining route planning and browser-local saves
-- Existing commodity runs, manual prices, saved routes, import, and export retained
+- Kept the **Universe → System → Local** hierarchical navigation from v4
+- Added **system-themed visuals**:
+  - **Stanton** uses a cooler blue/navy palette
+  - **Pyro** uses a darker orange ember palette
+  - **Nyx** uses a deeper blue/violet palette
+- Added richer background treatment with nebula overlays, stronger orbital rings, and more directional context
+- Added **selected-location distance spokes** so clicking a planet or station shows dashed distance lines to nearby visible destinations
+- Added clearer **station / gateway / jump-point / planet icon differentiation**
+- Restored and added several Pyro priority locations, including:
+  - **Gaslight**
+  - **Patch City**
+  - **Starlight**
+  - **Rat's Nest**
+  - **Dudley & Daughters**
+  - **Megumi Refueling**
+- Retained saved routes, trade runs, manual commodity prices, export, and import
 
 ## Run locally
 
@@ -37,10 +40,10 @@ Keep the Command Prompt window open. Press `Ctrl + C` to stop the server.
 
 ## Replace the existing Git-connected version
 
-After extracting the v4 ZIP into your `Project` folder:
+After extracting the v5 ZIP into your `Project` folder:
 
 ```cmd
-robocopy "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v4" "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter" /E /XD .git
+robocopy "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5\star-citizen-interactive-map-v5" "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter" /E /XD .git
 
 cd /d "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter"
 
@@ -49,7 +52,7 @@ npm run validate
 
 git status
 git add -A
-git commit -m "Add hierarchical universe system and local map views"
+git commit -m "Add themed map visuals and selected distance spokes"
 git pull --rebase origin main
 git push origin main
 ```
@@ -61,19 +64,10 @@ Do not copy or replace the `.git` directory.
 1. Start in the triangular universe overview.
 2. Select Stanton, Pyro, or Nyx.
 3. Use the brighter orbital rings to orient yourself inside the system.
-4. Select a planet or planetoid.
-5. Click **Open local map**, or zoom in closely after selecting it.
-6. Local view shows its moons, stations, cities, and other nearby points.
-7. Use the breadcrumb buttons to return to the system or universe.
-
-The origin and destination menus are grouped by system. Child locations appear as entries such as:
-
-```text
-Stanton System
-  microTech · Planet
-  microTech › Port Tressler · Station
-  microTech › New Babbage · City
-```
+4. Click a planet, station, or gateway to inspect it.
+5. When a location is selected, the map draws **dashed distance spokes** to nearby visible destinations.
+6. Select a planet and click **Open local map**, or zoom in after selecting it.
+7. Use the breadcrumb buttons to move back to the system or universe.
 
 ## Saved routes and trade data
 
@@ -87,17 +81,21 @@ Saved routes, commodity runs, manual prices, and notes are stored in the current
 
 ## Route topology
 
-System stars remain display-only and never appear as travel waypoints. Inter-system routes must pass through paired gateways.
+System stars remain display-only and never appear as travel waypoints. Inter-system routes pass through paired gateways.
 
-The v4 fallback adds the direct Stanton–Nyx connection:
+The fallback graph includes the three-system triangle:
 
 ```text
-Nyx Gateway (Stanton)
-→ Stanton–Nyx Jump Point
-→ Stanton Gateway (Nyx)
+Stanton ↔ Pyro
+Pyro ↔ Nyx
+Nyx ↔ Stanton
 ```
 
-The Stanton-side and Nyx-side normal-space distances for this newly added fallback route are currently marked as estimates. Replace those values with UEX or verified in-game measurements when available.
+The verified regression route remains:
+
+```text
+Pyro Gateway (Stanton) → Port Tressler = 68 Gm
+```
 
 ## Automatic universe updates
 
@@ -107,13 +105,7 @@ The GitHub workflow remains available at:
 .github/workflows/update-universe-data.yml
 ```
 
-The update script now:
-
-- preserves the v4 hierarchy metadata;
-- groups child locations under their orbit parent;
-- builds the three-system overview;
-- pairs all available system gateways;
-- restores fallback triangle topology when a source dataset omits one of the required system links.
+The update script still preserves the hierarchy metadata and the system triangle. You can continue replacing fallback values with better verified live data over time.
 
 ## Tests
 
@@ -122,11 +114,8 @@ npm test
 npm run validate
 ```
 
-The test suite checks:
+The current suite reports:
 
-- the verified Pyro Gateway → Port Tressler 68 Gm regression;
-- stars never leaking into routes;
-- direct Stanton ↔ Nyx routing without a Pyro detour;
-- all three system overview links;
-- system-scale locations hiding local detail;
-- local microTech view showing Port Tressler, New Babbage, and its moons.
+```text
+Routing tests passed (54 nodes, 60 edges).
+```

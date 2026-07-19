@@ -1,4 +1,4 @@
-# Route and hierarchy validation — v4
+# Route Validation Checklist v5
 
 ## Automated checks
 
@@ -9,63 +9,25 @@ npm test
 npm run validate
 ```
 
-Expected fallback result:
+Expected automated output:
 
 ```text
-Routing tests passed (48 nodes, 54 edges).
+Routing tests passed (54 nodes, 60 edges).
 ```
 
-## Verified regression
+## Visual checks
 
-The route below remains direct:
-
-```text
-Pyro Gateway (Stanton) → Port Tressler = 68 Gm
-```
-
-It must not include the Stanton star or microTech as artificial route waypoints.
-
-## Triangle topology
-
-The overview and route graph contain all three links:
-
-```text
-Stanton ↔ Pyro
-Pyro ↔ Nyx
-Nyx ↔ Stanton
-```
-
-A fallback route from Port Tressler to Levski must use:
-
-```text
-Nyx Gateway (Stanton)
-Stanton–Nyx Jump Point
-Stanton Gateway (Nyx)
-```
-
-It must not detour through the Pyro gateways.
-
-## Hierarchical display checks
-
-### Universe level
-
-Only Stanton, Pyro, and Nyx system markers should appear in a triangular layout.
-
-### System level
-
-The star, planets or planetoids, gateways, jump points, and major system objects should appear. Planet-local stations, moons, and cities should remain hidden.
-
-### Local level
-
-Selecting microTech and opening its local map should show:
-
-- microTech
-- Port Tressler
-- New Babbage
-- Calliope
-- Clio
-- Euterpe
-
-## Distance warning
-
-The new Stanton–Nyx fallback topology is correct, but its normal-space gateway distances are provisional estimates. Gateway pairing is reliable; exact Gm values should be replaced as verified measurements become available.
+1. Open the public map and confirm the universe overview shows **Stanton**, **Pyro**, and **Nyx**.
+2. Enter **Pyro** and confirm the system uses a warmer orange theme than Stanton and Nyx.
+3. Confirm the orbital rings are prominent and directional axes remain visible.
+4. Click a planet or station and confirm **dashed distance spokes** appear.
+5. Open **Pyro V** local view and confirm **Gaslight** appears.
+6. Confirm these Pyro priority locations appear in the dataset:
+   - Gaslight
+   - Patch City
+   - Starlight
+   - Rat's Nest
+   - Dudley & Daughters
+   - Megumi Refueling
+7. Route **Pyro Gateway (Stanton)** to **Port Tressler** and confirm the total remains **68 Gm**.
+8. Route **Port Tressler** to **Levski** and confirm the route uses the direct Stanton ↔ Nyx path rather than detouring through Pyro.
