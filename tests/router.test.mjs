@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { findShortestRoute, summarizeRoute } from "../src/router.js";
+import { createHierarchy } from "../src/map-hierarchy.js";
 
 const universe = JSON.parse(await readFile(new URL("../public/data/universe.json", import.meta.url), "utf8"));
 const nodesById = new Map(universe.nodes.map((node) => [node.id, node]));
@@ -48,6 +49,42 @@ for (const requiredNode of [
 }
 assert(!crossSystemRoute.nodeIds.includes("stanton-star"));
 assert(!crossSystemRoute.nodeIds.includes("pyro-star"));
+
+
+// V4 system topology: Stanton, Pyro, and Nyx must form a complete triangle.
+const systemLinks = universe.metadata?.systemLinks || [];
+const systemPairs = new Set(systemLinks.map((link) => [link.from, link.to].sort().join("::")));
+for (const pair of [["Stanton", "Pyro"], ["Pyro", "Nyx"], ["Nyx", "Stanton"]]) {
+  assert(systemPairs.has(pair.sort().join("::")), `Missing system overview link ${pair.join(" ↔ ")}`);
+}
+
+const stantonToNyx = findShortestRoute(
+  universe.nodes,
+  universe.edges,
+  "port-tressler",
+  "levski"
+);
+assert(stantonToNyx, "Expected a direct Stanton to Nyx route");
+for (const requiredNode of ["nyx-gateway-stanton", "stanton-gateway-nyx"]) {
+  assert(stantonToNyx.nodeIds.includes(requiredNode), `Expected direct Stanton/Nyx route to include ${requiredNode}`);
+}
+assert(!stantonToNyx.nodeIds.includes("stanton-gateway-pyro"), "Direct Stanton/Nyx route should not detour through Pyro");
+assert(!stantonToNyx.nodeIds.includes("pyro-gateway-nyx"), "Direct Stanton/Nyx route should not detour through Pyro");
+
+// Hierarchical visibility should expose systems first, then major system objects,
+// then the selected planet's local stations, moons, and cities.
+const hierarchy = createHierarchy(universe);
+const overviewNodes = hierarchy.visibleNodesForScope({ level: "overview", system: null, anchorId: null });
+assert.deepEqual(new Set(overviewNodes.map((node) => node.system)), new Set(["Stanton", "Pyro", "Nyx"]));
+assert(overviewNodes.every((node) => node.type === "star"));
+const stantonSystemNodes = hierarchy.visibleNodesForScope({ level: "system", system: "Stanton", anchorId: null });
+assert(stantonSystemNodes.some((node) => node.id === "microtech"));
+assert(stantonSystemNodes.some((node) => node.id === "nyx-gateway-stanton"));
+assert(!stantonSystemNodes.some((node) => node.id === "port-tressler"), "Local stations should stay hidden at system scale");
+const microtechLocalNodes = hierarchy.visibleNodesForScope({ level: "local", system: "Stanton", anchorId: "microtech" });
+for (const localNode of ["microtech", "port-tressler", "new-babbage", "calliope", "clio", "euterpe"]) {
+  assert(microtechLocalNodes.some((node) => node.id === localNode), `Expected ${localNode} in microTech local view`);
+}
 
 const sameNodeRoute = findShortestRoute(universe.nodes, universe.edges, "hurston", "hurston");
 assert.equal(sameNodeRoute.distance, 0);

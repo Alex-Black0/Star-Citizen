@@ -29,19 +29,21 @@ export function findShortestRoute(nodes, edges, startId, endId) {
 
   const graph = buildGraph(nodes, edges);
   const distances = new Map(nodes.map((node) => [node.id, Number.POSITIVE_INFINITY]));
+  const routeCosts = new Map(nodes.map((node) => [node.id, Number.POSITIVE_INFINITY]));
   const previous = new Map();
   const previousEdge = new Map();
   const queue = new MinPriorityQueue();
 
   distances.set(startId, 0);
+  routeCosts.set(startId, 0);
   queue.push(startId, 0);
 
   while (queue.size > 0) {
     const current = queue.pop();
     if (!current) break;
-    const { value: currentId, priority: currentDistance } = current;
+    const { value: currentId, priority: currentCost } = current;
 
-    if (currentDistance !== distances.get(currentId)) continue;
+    if (currentCost !== routeCosts.get(currentId)) continue;
     if (currentId === endId) break;
 
     for (const neighbor of graph.get(currentId) || []) {
@@ -49,12 +51,16 @@ export function findShortestRoute(nodes, edges, startId, endId) {
       if (!neighborNode) continue;
       if (neighborNode.routable === false && neighbor.nodeId !== endId) continue;
 
-      const nextDistance = currentDistance + Number(neighbor.edge.distance);
-      if (nextDistance < distances.get(neighbor.nodeId)) {
+      const edgeDistance = Number(neighbor.edge.distance);
+      const transferPenalty = neighbor.edge.kind === "jump" ? 10000 : Number(neighbor.edge.routePenalty || 0);
+      const nextDistance = distances.get(currentId) + edgeDistance;
+      const nextCost = currentCost + edgeDistance + transferPenalty;
+      if (nextCost < routeCosts.get(neighbor.nodeId)) {
+        routeCosts.set(neighbor.nodeId, nextCost);
         distances.set(neighbor.nodeId, nextDistance);
         previous.set(neighbor.nodeId, currentId);
         previousEdge.set(neighbor.nodeId, neighbor.edge);
-        queue.push(neighbor.nodeId, nextDistance);
+        queue.push(neighbor.nodeId, nextCost);
       }
     }
   }

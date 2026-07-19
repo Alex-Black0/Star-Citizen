@@ -1,6 +1,7 @@
 import { createMap3D } from "./map-3d.js";
 import { createMap2D } from "./map-2d.js";
 import { findShortestRoute, summarizeRoute } from "./router.js";
+import { createHierarchy, scopeForNode, scopeTitle } from "./map-hierarchy.js";
 import {
   exportUserData,
   importUserData,
@@ -21,6 +22,12 @@ const elements = {
   view3d: document.querySelector("#view-3d"),
   view2d: document.querySelector("#view-2d"),
   resetCamera: document.querySelector("#reset-camera"),
+  navUniverse: document.querySelector("#nav-universe"),
+  navSystem: document.querySelector("#nav-system"),
+  navLocal: document.querySelector("#nav-local"),
+  navLocalDivider: document.querySelector("#nav-local-divider"),
+  mapLevelTitle: document.querySelector("#map-level-title"),
+  mapLevelHint: document.querySelector("#map-level-hint"),
   origin: document.querySelector("#origin-select"),
   destination: document.querySelector("#destination-select"),
   calculate: document.querySelector("#calculate-route"),
@@ -42,6 +49,7 @@ const elements = {
   commodityList: document.querySelector("#commodity-list"),
   commoditySourceBadge: document.querySelector("#commodity-source-badge"),
   addLocationPrice: document.querySelector("#add-location-price"),
+  openLocalMap: document.querySelector("#open-local-map"),
   tradeDrawerOpen: document.querySelector("#trade-drawer-open"),
   tradeDrawerClose: document.querySelector("#trade-drawer-close"),
   tradeDrawer: document.querySelector("#trade-drawer"),
@@ -83,6 +91,9 @@ const elements = {
   priceNotes: document.querySelector("#price-notes"),
   locationPriceSubmitLabel: document.querySelector("#location-price-submit-label"),
   cancelLocationPrice: document.querySelector("#cancel-location-price"),
+  onboarding: document.querySelector("#onboarding"),
+  onboardingStart: document.querySelector("#onboarding-start"),
+  onboardingDismiss: document.querySelector("#onboarding-dismiss"),
   toast: document.querySelector("#toast")
 };
 
@@ -92,6 +103,7 @@ const [universe, commodities] = await Promise.all([
 ]);
 
 const nodesById = new Map(universe.nodes.map((node) => [node.id, node]));
+const hierarchy = createHierarchy(universe);
 const routableNodes = universe.nodes.filter((node) =>
   node.visible !== false &&
   node.selectable !== false &&
@@ -109,14 +121,17 @@ let state = {
   savedRoutes: loadSavedRoutes(),
   tradeRuns: loadTradeRuns(),
   manualPrices: loadManualPrices(),
-  drawerTab: "saved"
+  drawerTab: "saved",
+  mapScope: { level: "overview", system: null, anchorId: null }
 };
 
 populateLocationSelects(routableNodes, elements.origin, elements.destination);
 populateLocationSelects(tradeableNodes, elements.tradeOrigin, elements.tradeDestination, elements.priceLocation);
 
-const map3d = createMap3D(elements.map3d, universe, handleMapNodeClick);
+const map3d = createMap3D(elements.map3d, universe, handleMapNodeClick, handleMapScaleRequest);
 const map2d = createMap2D(elements.map2d, universe, handleMapNodeClick);
+map3d.setScope(state.mapScope);
+map2d.setScope(state.mapScope);
 
 bindEvents();
 renderSavedRoutes();
@@ -126,11 +141,14 @@ renderRoute();
 updateRouteMode();
 updateTradeMath();
 renderRouteDataStatus();
+updateMapNavigation();
+showOnboardingIfNeeded();
 
 function bindEvents() {
   elements.origin.addEventListener("change", () => {
     state.originId = elements.origin.value;
     state.route = null;
+    focusMapForNode(state.originId);
     updateMaps();
     updateRouteMode();
     renderRoute();
@@ -139,6 +157,7 @@ function bindEvents() {
   elements.destination.addEventListener("change", () => {
     state.destinationId = elements.destination.value;
     state.route = null;
+    focusMapForNode(state.destinationId);
     updateMaps();
     updateRouteMode();
     renderRoute();
@@ -154,6 +173,14 @@ function bindEvents() {
   elements.resetCamera.addEventListener("click", () => map3d.resetCamera());
   elements.view3d.addEventListener("click", () => switchView("3d"));
   elements.view2d.addEventListener("click", () => switchView("2d"));
+  elements.navUniverse.addEventListener("click", enterOverview);
+  elements.navSystem.addEventListener("click", () => state.mapScope.system && enterSystem(state.mapScope.system));
+  elements.navLocal.addEventListener("click", () => state.mapScope.anchorId && enterLocal(state.mapScope.anchorId));
+  elements.openLocalMap.addEventListener("click", () => {
+    const node = nodesById.get(state.selectedNodeId);
+    const anchor = hierarchy.getLocalAnchor(node);
+    if (anchor) enterLocal(anchor.id);
+  });
 
   elements.tradeDrawerOpen.addEventListener("click", () => openDrawer("saved"));
   elements.tradeDrawerClose.addEventListener("click", closeDrawer);
@@ -181,21 +208,37 @@ function bindEvents() {
   elements.exportUserData.addEventListener("click", exportDataFile);
   elements.importUserData.addEventListener("click", () => elements.importUserDataFile.click());
   elements.importUserDataFile.addEventListener("change", importDataFile);
+  elements.onboardingStart?.addEventListener("click", () => closeOnboarding(false));
+  elements.onboardingDismiss?.addEventListener("click", () => closeOnboarding(true));
 }
 
 function populateLocationSelects(nodes, ...selects) {
-  const systems = [...new Set(nodes.map((node) => node.system))];
+  const systemOrder = hierarchy.systemOrder;
+  const typeOrder = new Map([
+    ["planet", 1], ["planetoid", 2], ["gateway", 3], ["jump-point", 4], ["station", 5],
+    ["moon", 6], ["city", 7], ["lagrange", 8], ["outpost", 9], ["poi", 10]
+  ]);
+
   for (const select of selects) {
     select.innerHTML = '<option value="">Select a location</option>';
-    for (const system of systems) {
-      const group = document.createElement("optgroup");
-      group.label = system;
-      nodes.filter((node) => node.system === system).forEach((node) => {
-        const option = document.createElement("option");
-        option.value = node.id;
-        option.textContent = `${node.name} · ${formatType(node.type)}`;
-        group.appendChild(option);
+    for (const system of systemOrder) {
+      const systemNodes = nodes.filter((node) => node.system === system).sort((a, b) => {
+        const parentA = hierarchy.getParent(a.id)?.name || "";
+        const parentB = hierarchy.getParent(b.id)?.name || "";
+        return parentA.localeCompare(parentB) || (typeOrder.get(a.type) || 99) - (typeOrder.get(b.type) || 99) || a.name.localeCompare(b.name);
       });
+      if (!systemNodes.length) continue;
+      const group = document.createElement("optgroup");
+      group.label = `${system} System`;
+      for (const node of systemNodes) {
+        const option = document.createElement("option");
+        const parent = hierarchy.getParent(node.id);
+        option.value = node.id;
+        option.textContent = parent
+          ? `${parent.name} › ${node.name} · ${formatType(node.type)}`
+          : `${node.name} · ${formatType(node.type)}`;
+        group.appendChild(option);
+      }
       select.appendChild(group);
     }
   }
@@ -213,6 +256,11 @@ function switchView(view) {
 function handleMapNodeClick(nodeId) {
   const clickedNode = nodesById.get(nodeId);
   if (!clickedNode || clickedNode.visible === false) return;
+
+  if (state.mapScope.level === "overview" && clickedNode.type === "star") {
+    enterSystem(clickedNode.system);
+    return;
+  }
 
   state.selectedNodeId = nodeId;
   renderSelection();
@@ -241,6 +289,69 @@ function handleMapNodeClick(nodeId) {
   }
 
   updateRouteMode();
+}
+
+function handleMapScaleRequest(nextScope) {
+  if (nextScope.level === "overview") enterOverview();
+  else if (nextScope.level === "system") enterSystem(nextScope.system);
+  else if (nextScope.level === "local") enterLocal(nextScope.anchorId);
+}
+
+function enterOverview() {
+  setMapScope({ level: "overview", system: null, anchorId: null });
+}
+
+function enterSystem(system) {
+  if (!system) return;
+  setMapScope({ level: "system", system, anchorId: null });
+}
+
+function enterLocal(anchorId) {
+  const anchor = nodesById.get(anchorId);
+  if (!anchor) return;
+  setMapScope({ level: "local", system: anchor.system, anchorId: anchor.id });
+  state.selectedNodeId = anchor.id;
+  renderSelection();
+  updateMaps();
+}
+
+function setMapScope(nextScope) {
+  state.mapScope = nextScope;
+  map3d.setScope(nextScope);
+  map2d.setScope(nextScope);
+  updateMapNavigation();
+  updateMaps();
+}
+
+function focusMapForNode(nodeId) {
+  const node = nodesById.get(nodeId);
+  if (!node) return;
+  const nextScope = scopeForNode(node, hierarchy);
+  if (nextScope.level === "local" && !hierarchy.hasLocalChildren(nextScope.anchorId) && node.id === nextScope.anchorId) {
+    enterSystem(node.system);
+  } else {
+    setMapScope(nextScope);
+  }
+  state.selectedNodeId = node.id;
+  renderSelection();
+}
+
+function updateMapNavigation() {
+  const scope = state.mapScope;
+  elements.mapLevelTitle.textContent = scopeTitle(scope, hierarchy);
+  elements.mapLevelHint.textContent = scope.level === "overview"
+    ? "Select a system to open its planetary map."
+    : scope.level === "system"
+      ? "Orbital rings show direction and spacing. Select a planet, then zoom in or open its local map."
+      : "Local view shows moons, stations, cities, and nearby points. Zoom out to return to the system.";
+  elements.navUniverse.classList.toggle("active", scope.level === "overview");
+  elements.navSystem.classList.toggle("hidden", scope.level === "overview");
+  elements.navSystem.classList.toggle("active", scope.level === "system");
+  elements.navSystem.textContent = scope.system ? `${scope.system} System` : "System";
+  elements.navLocal.classList.toggle("hidden", scope.level !== "local");
+  elements.navLocalDivider.classList.toggle("hidden", scope.level !== "local");
+  elements.navLocal.classList.toggle("active", scope.level === "local");
+  elements.navLocal.textContent = scope.anchorId ? nodesById.get(scope.anchorId)?.name || "Local" : "Local";
 }
 
 function calculateRoute() {
@@ -337,6 +448,7 @@ function renderSelection() {
     elements.locationMetadata.replaceChildren();
     elements.commodityList.innerHTML = '<p class="muted-copy">No commodity records loaded.</p>';
     elements.addLocationPrice.classList.add("hidden");
+    elements.openLocalMap.classList.add("hidden");
     return;
   }
 
@@ -349,8 +461,17 @@ function renderSelection() {
     <dt>Node ID</dt><dd>${escapeHtml(node.id)}</dd>
     <dt>Data source</dt><dd>${escapeHtml(node.dataSource || universe.metadata?.source || "Map dataset")}</dd>`;
 
+  const parent = hierarchy.getParent(node.id);
+  if (parent) {
+    elements.locationMetadata.insertAdjacentHTML("beforeend", `<dt>Parent</dt><dd>${escapeHtml(parent.name)}</dd>`);
+  }
+
   const tradeable = TRADEABLE_TYPES.has(node.type);
   elements.addLocationPrice.classList.toggle("hidden", !tradeable);
+  const localAnchor = hierarchy.getLocalAnchor(node);
+  const localAvailable = Boolean(localAnchor && (hierarchy.hasLocalChildren(localAnchor.id) || parent));
+  elements.openLocalMap.classList.toggle("hidden", !localAvailable || state.mapScope.level === "local");
+  elements.openLocalMap.textContent = localAnchor ? `Open ${localAnchor.name} local map` : "Open local map";
 
   const records = getLocationCommodityRecords(node.id);
   elements.commoditySourceBadge.textContent = records.some((record) => record.sourceType === "manual")
@@ -797,6 +918,17 @@ async function importDataFile() {
     console.error(error);
     showToast("Could not import that JSON file.", true);
   }
+}
+
+function showOnboardingIfNeeded() {
+  if (!elements.onboarding) return;
+  if (localStorage.getItem("verse-map-onboarding-v4") === "dismissed") return;
+  elements.onboarding.classList.remove("hidden");
+}
+
+function closeOnboarding(dontShowAgain) {
+  elements.onboarding?.classList.add("hidden");
+  if (dontShowAgain) localStorage.setItem("verse-map-onboarding-v4", "dismissed");
 }
 
 let toastTimer;

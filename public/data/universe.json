@@ -1,13 +1,60 @@
 {
   "metadata": {
-    "name": "Verse route graph",
-    "version": "0.3.0-fallback",
+    "name": "Hierarchical verse route graph",
+    "version": "0.4.0-fallback",
     "distanceUnit": "Gm",
     "authoritative": false,
     "source": "Corrected fallback graph plus measured route checks",
     "updatedAt": "2026-07-19T00:00:00Z",
     "gameVersion": "4.8.3 route checks; current client may be newer",
-    "notes": "Stars are display-only and never route waypoints. Major Stanton distances and Pyro Gateway checks are measured/community-reported. Pyro/Nyx fallback distances marked estimated are replaced when the Update universe route data GitHub Action succeeds."
+    "notes": "Stars are display-only. The map uses universe, system, and local levels. All three live systems are connected as a triangle through paired gateways. Distances marked estimated should be replaced by verified UEX or in-game measurements.",
+    "mapModel": "Three-level universe, system, and local navigation",
+    "systemLayout": {
+      "Stanton": {
+        "position": [
+          -92,
+          0,
+          48
+        ],
+        "color": "#65d6ff"
+      },
+      "Pyro": {
+        "position": [
+          92,
+          0,
+          48
+        ],
+        "color": "#ff9b69"
+      },
+      "Nyx": {
+        "position": [
+          0,
+          0,
+          -96
+        ],
+        "color": "#9d8cff"
+      }
+    },
+    "systemLinks": [
+      {
+        "id": "overview-stanton-pyro",
+        "from": "Stanton",
+        "to": "Pyro",
+        "label": "Stanton \u2194 Pyro"
+      },
+      {
+        "id": "overview-pyro-nyx",
+        "from": "Pyro",
+        "to": "Nyx",
+        "label": "Pyro \u2194 Nyx"
+      },
+      {
+        "id": "overview-nyx-stanton",
+        "from": "Nyx",
+        "to": "Stanton",
+        "label": "Nyx \u2194 Stanton"
+      }
+    ]
   },
   "nodes": [
     {
@@ -28,7 +75,14 @@
       ],
       "routable": false,
       "selectable": false,
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "overviewPosition": [
+        -92,
+        0,
+        48
+      ],
+      "overviewLabel": "Stanton System",
+      "viewLevel": "overview"
     },
     {
       "id": "pyro-star",
@@ -48,7 +102,14 @@
       ],
       "routable": false,
       "selectable": false,
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "overviewPosition": [
+        92,
+        0,
+        48
+      ],
+      "overviewLabel": "Pyro System",
+      "viewLevel": "overview"
     },
     {
       "id": "nyx-star",
@@ -68,7 +129,14 @@
       ],
       "routable": false,
       "selectable": false,
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "overviewPosition": [
+        0,
+        0,
+        -96
+      ],
+      "overviewLabel": "Nyx System",
+      "viewLevel": "overview"
     },
     {
       "id": "hurston",
@@ -86,7 +154,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 37.95
     },
     {
       "id": "everus-harbor",
@@ -104,7 +174,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "hurston",
+      "viewLevel": "local"
     },
     {
       "id": "lorville",
@@ -122,7 +194,9 @@
         "city",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "hurston",
+      "viewLevel": "local"
     },
     {
       "id": "arial",
@@ -139,7 +213,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "hurston",
+      "viewLevel": "local"
     },
     {
       "id": "aberdeen",
@@ -156,7 +232,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "hurston",
+      "viewLevel": "local"
     },
     {
       "id": "magda",
@@ -173,7 +251,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "hurston",
+      "viewLevel": "local"
     },
     {
       "id": "ita",
@@ -190,7 +270,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "hurston",
+      "viewLevel": "local"
     },
     {
       "id": "arccorp",
@@ -208,7 +290,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 35.9
     },
     {
       "id": "baijini-point",
@@ -226,7 +310,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "arccorp",
+      "viewLevel": "local"
     },
     {
       "id": "area18",
@@ -244,7 +330,9 @@
         "city",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "arccorp",
+      "viewLevel": "local"
     },
     {
       "id": "lyria",
@@ -261,7 +349,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "arccorp",
+      "viewLevel": "local"
     },
     {
       "id": "wala",
@@ -278,7 +368,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "arccorp",
+      "viewLevel": "local"
     },
     {
       "id": "crusader",
@@ -296,7 +388,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 38.0
     },
     {
       "id": "seraphim-station",
@@ -314,7 +408,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "crusader",
+      "viewLevel": "local"
     },
     {
       "id": "orison",
@@ -332,7 +428,9 @@
         "city",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "crusader",
+      "viewLevel": "local"
     },
     {
       "id": "cellin",
@@ -349,7 +447,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "crusader",
+      "viewLevel": "local"
     },
     {
       "id": "daymar",
@@ -366,7 +466,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "crusader",
+      "viewLevel": "local"
     },
     {
       "id": "yela",
@@ -383,7 +485,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "crusader",
+      "viewLevel": "local"
     },
     {
       "id": "grim-hex",
@@ -401,7 +505,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "yela",
+      "viewLevel": "local"
     },
     {
       "id": "microtech",
@@ -419,7 +525,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 42.58
     },
     {
       "id": "port-tressler",
@@ -437,7 +545,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "microtech",
+      "viewLevel": "local"
     },
     {
       "id": "new-babbage",
@@ -455,7 +565,9 @@
         "city",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "microtech",
+      "viewLevel": "local"
     },
     {
       "id": "calliope",
@@ -472,7 +584,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "microtech",
+      "viewLevel": "local"
     },
     {
       "id": "clio",
@@ -489,7 +603,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "microtech",
+      "viewLevel": "local"
     },
     {
       "id": "euterpe",
@@ -506,7 +622,9 @@
       "tags": [
         "moon"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "microtech",
+      "viewLevel": "local"
     },
     {
       "id": "pyro-gateway-stanton",
@@ -525,7 +643,9 @@
         "trade",
         "required-transition"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 60.42
     },
     {
       "id": "stanton-pyro-jump",
@@ -543,7 +663,8 @@
         "jump-point",
         "required-transition"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system"
     },
     {
       "id": "stanton-gateway-pyro",
@@ -562,7 +683,9 @@
         "trade",
         "required-transition"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 56.72
     },
     {
       "id": "pyro-1",
@@ -579,7 +702,9 @@
       "tags": [
         "planet"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 36.07
     },
     {
       "id": "monox",
@@ -597,7 +722,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 28.79
     },
     {
       "id": "checkmate",
@@ -615,7 +742,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "monox",
+      "viewLevel": "local"
     },
     {
       "id": "bloom",
@@ -633,7 +762,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 18.38
     },
     {
       "id": "orbituary",
@@ -651,7 +782,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "bloom",
+      "viewLevel": "local"
     },
     {
       "id": "pyro-iv",
@@ -668,7 +801,9 @@
       "tags": [
         "planet"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 38.01
     },
     {
       "id": "pyro-v",
@@ -685,7 +820,9 @@
       "tags": [
         "planet"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 34.93
     },
     {
       "id": "terminus",
@@ -703,7 +840,9 @@
         "planet",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 57.7
     },
     {
       "id": "ruin-station",
@@ -721,7 +860,9 @@
         "station",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "terminus",
+      "viewLevel": "local"
     },
     {
       "id": "nyx-gateway-pyro",
@@ -740,7 +881,9 @@
         "trade",
         "required-transition"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 71.34
     },
     {
       "id": "pyro-nyx-jump",
@@ -758,7 +901,8 @@
         "jump-point",
         "required-transition"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system"
     },
     {
       "id": "pyro-gateway-nyx",
@@ -777,7 +921,9 @@
         "trade",
         "required-transition"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 36.4
     },
     {
       "id": "delamar",
@@ -795,7 +941,9 @@
         "planetoid",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "viewLevel": "system",
+      "orbitRadius": 6.4
     },
     {
       "id": "levski",
@@ -813,7 +961,74 @@
         "city",
         "trade"
       ],
-      "dataSource": "fallback"
+      "dataSource": "fallback",
+      "parentId": "delamar",
+      "viewLevel": "local"
+    },
+    {
+      "id": "nyx-gateway-stanton",
+      "name": "Nyx Gateway (Stanton)",
+      "system": "Stanton",
+      "type": "gateway",
+      "position": [
+        -55,
+        7,
+        -28
+      ],
+      "radius": 1.15,
+      "description": "Stanton-side gateway for direct travel to the Nyx system.",
+      "tags": [
+        "gateway",
+        "required-transition",
+        "triangle-link"
+      ],
+      "dataSource": "fallback topology",
+      "viewLevel": "system",
+      "distanceQuality": "topology; same-system legs estimated",
+      "orbitRadius": 61.72
+    },
+    {
+      "id": "stanton-nyx-jump",
+      "name": "Stanton\u2013Nyx Jump Point",
+      "system": "Stanton",
+      "type": "jump-point",
+      "position": [
+        -65,
+        9,
+        -34
+      ],
+      "radius": 1.25,
+      "description": "Direct jump tunnel between the Stanton and Nyx systems.",
+      "tags": [
+        "jump-point",
+        "required-transition",
+        "triangle-link"
+      ],
+      "dataSource": "fallback topology",
+      "viewLevel": "system",
+      "distanceQuality": "topology"
+    },
+    {
+      "id": "stanton-gateway-nyx",
+      "name": "Stanton Gateway (Nyx)",
+      "system": "Nyx",
+      "type": "gateway",
+      "position": [
+        265,
+        8,
+        -28
+      ],
+      "radius": 1.15,
+      "description": "Nyx-side gateway for direct travel to the Stanton system.",
+      "tags": [
+        "gateway",
+        "required-transition",
+        "triangle-link"
+      ],
+      "dataSource": "fallback topology",
+      "viewLevel": "system",
+      "distanceQuality": "topology; same-system leg estimated",
+      "orbitRadius": 41.88
     }
   ],
   "edges": [
@@ -1288,6 +1503,86 @@
       "bidirectional": true,
       "distanceQuality": "estimated",
       "dataSource": "fallback"
+    },
+    {
+      "id": "nyx-gateway-tressler",
+      "from": "nyx-gateway-stanton",
+      "to": "port-tressler",
+      "distance": 52,
+      "kind": "quantum",
+      "distanceQuality": "estimated-fallback",
+      "dataSource": "fallback topology",
+      "baseVisible": false,
+      "note": "Replace with verified in-game or UEX distance when available.",
+      "bidirectional": true
+    },
+    {
+      "id": "nyx-gateway-baijini",
+      "from": "nyx-gateway-stanton",
+      "to": "baijini-point",
+      "distance": 61,
+      "kind": "quantum",
+      "distanceQuality": "estimated-fallback",
+      "dataSource": "fallback topology",
+      "baseVisible": false,
+      "note": "Replace with verified in-game or UEX distance when available.",
+      "bidirectional": true
+    },
+    {
+      "id": "nyx-gateway-everus",
+      "from": "nyx-gateway-stanton",
+      "to": "everus-harbor",
+      "distance": 45,
+      "kind": "quantum",
+      "distanceQuality": "estimated-fallback",
+      "dataSource": "fallback topology",
+      "baseVisible": false,
+      "note": "Replace with verified in-game or UEX distance when available.",
+      "bidirectional": true
+    },
+    {
+      "id": "nyx-gateway-seraphim",
+      "from": "nyx-gateway-stanton",
+      "to": "seraphim-station",
+      "distance": 48,
+      "kind": "quantum",
+      "distanceQuality": "estimated-fallback",
+      "dataSource": "fallback topology",
+      "baseVisible": false,
+      "note": "Replace with verified in-game or UEX distance when available.",
+      "bidirectional": true
+    },
+    {
+      "id": "nyx-gateway-jump-stanton",
+      "from": "nyx-gateway-stanton",
+      "to": "stanton-nyx-jump",
+      "distance": 0.05,
+      "kind": "gateway",
+      "distanceQuality": "topology",
+      "dataSource": "fallback topology",
+      "bidirectional": true
+    },
+    {
+      "id": "jump-stanton-nyx",
+      "from": "stanton-nyx-jump",
+      "to": "stanton-gateway-nyx",
+      "distance": 0,
+      "kind": "jump",
+      "distanceQuality": "topology",
+      "dataSource": "fallback topology",
+      "bidirectional": true
+    },
+    {
+      "id": "stanton-gateway-delamar",
+      "from": "stanton-gateway-nyx",
+      "to": "delamar",
+      "distance": 36,
+      "kind": "quantum",
+      "distanceQuality": "estimated-fallback",
+      "dataSource": "fallback topology",
+      "baseVisible": false,
+      "note": "Replace with verified in-game or UEX distance when available.",
+      "bidirectional": true
     }
   ]
 }

@@ -1,51 +1,71 @@
-# Route Validation Notes
+# Route and hierarchy validation — v4
 
-## Confirmed defect
-
-The former graph connected destinations through `stanton-star` and `pyro-star`. Dijkstra correctly selected those edges, but those edges represented an invalid travel model.
-
-## Correct behavior
-
-- Stars are display-only.
-- Same-system routes use direct orbit-distance edges.
-- A station inherits the distance of its physical orbit anchor rather than routing through the star.
-- Inter-system routes must cross the named gateway on both sides.
-- System-to-system distance rows cannot create shortcuts that bypass gateways.
-
-## Current regression case
-
-```text
-Origin: Pyro Gateway (Stanton)
-Destination: Port Tressler
-Expected: 68 Gm
-Forbidden waypoint: Stanton
-```
+## Automated checks
 
 Run:
 
 ```cmd
 npm test
+npm run validate
 ```
 
-## Recording another in-game check
-
-Record:
+Expected fallback result:
 
 ```text
-Game patch
-Origin
-Destination
-Displayed Gm
-Date measured
-Whether an intermediate gateway was required
+Routing tests passed (48 nodes, 54 edges).
 ```
 
-Then add the verified value to `public/data/route-overrides.json`. The next universe-data update applies that value after UEX import.
+## Verified regression
 
-## Accuracy levels
+The route below remains direct:
 
-- `manual-override`: explicitly verified or temporarily corrected.
-- `community-measured`: imported UEX orbit distance.
-- `measured`: known fallback measurement.
-- `estimated`: fallback only; replace when live data is available.
-- `topology`: required connection such as a jump tunnel, not a normal-space distance measurement.
+```text
+Pyro Gateway (Stanton) → Port Tressler = 68 Gm
+```
+
+It must not include the Stanton star or microTech as artificial route waypoints.
+
+## Triangle topology
+
+The overview and route graph contain all three links:
+
+```text
+Stanton ↔ Pyro
+Pyro ↔ Nyx
+Nyx ↔ Stanton
+```
+
+A fallback route from Port Tressler to Levski must use:
+
+```text
+Nyx Gateway (Stanton)
+Stanton–Nyx Jump Point
+Stanton Gateway (Nyx)
+```
+
+It must not detour through the Pyro gateways.
+
+## Hierarchical display checks
+
+### Universe level
+
+Only Stanton, Pyro, and Nyx system markers should appear in a triangular layout.
+
+### System level
+
+The star, planets or planetoids, gateways, jump points, and major system objects should appear. Planet-local stations, moons, and cities should remain hidden.
+
+### Local level
+
+Selecting microTech and opening its local map should show:
+
+- microTech
+- Port Tressler
+- New Babbage
+- Calliope
+- Clio
+- Euterpe
+
+## Distance warning
+
+The new Stanton–Nyx fallback topology is correct, but its normal-space gateway distances are provisional estimates. Gateway pairing is reliable; exact Gm values should be replaced as verified measurements become available.

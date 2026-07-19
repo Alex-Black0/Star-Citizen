@@ -1,15 +1,15 @@
 {
   "name": "star-citizen-interactive-map-starter",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
-  "description": "Static 3D/2D Star Citizen route, commodity-run, and live UEX location map for GitHub Pages",
+  "description": "Hierarchical 3D/2D Star Citizen universe, system, local route, and commodity map for GitHub Pages",
   "license": "MIT",
   "scripts": {
     "serve": "npx serve .",
     "update:trade": "node scripts/update-trade-data.mjs",
     "test": "node tests/router.test.mjs",
     "update:universe": "node scripts/update-universe-data.mjs",
-    "validate": "node --check src/app.js && node --check src/router.js && node --check src/map-2d.js && node --check src/map-3d.js && node --check scripts/update-universe-data.mjs && node --check scripts/update-trade-data.mjs"
+    "validate": "node --check src/app.js && node --check src/router.js && node --check src/map-hierarchy.js && node --check src/map-2d.js && node --check src/map-3d.js && node --check scripts/update-universe-data.mjs && node --check scripts/update-trade-data.mjs"
   },
   "type": "module"
 }

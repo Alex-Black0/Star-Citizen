@@ -400,3 +400,143 @@ textarea:focus { border-color: var(--accent); }
 
 .map-2d-edge.route-only { opacity: 0; }
 .map-2d-edge.route-only.active { opacity: 1; }
+
+/* Hierarchical v4 map navigation */
+.map-navigation {
+  position: absolute;
+  z-index: 14;
+  top: 16px;
+  left: 18px;
+  max-width: min(620px, calc(100% - 36px));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(112, 205, 247, 0.24);
+  border-radius: 12px;
+  background: rgba(3, 9, 18, 0.84);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(14px);
+}
+.map-breadcrumbs { display: flex; align-items: center; gap: 5px; flex: 0 0 auto; }
+.map-crumb {
+  border: 0;
+  border-radius: 7px;
+  padding: 6px 8px;
+  background: transparent;
+  color: #9fc4d7;
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+.map-crumb:hover { color: #eaf9ff; background: rgba(101, 214, 255, 0.08); }
+.map-crumb.active { color: #07121a; background: #73dcff; }
+.crumb-divider { color: #4f7b94; font-weight: 900; }
+.map-level-copy { min-width: 0; border-left: 1px solid var(--border); padding-left: 13px; }
+.map-level-copy strong { display: block; color: #e9f9ff; font-size: 0.76rem; }
+.map-level-copy span { display: block; margin-top: 2px; color: #89a7b7; font-size: 0.63rem; line-height: 1.35; }
+
+.map-label {
+  color: #effbff;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.015em;
+  padding: 4px 7px;
+  border-radius: 5px;
+  border: 1px solid rgba(125, 207, 245, 0.26);
+  background: rgba(2, 8, 17, 0.78);
+  box-shadow: 0 0 12px rgba(49, 167, 221, 0.12);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateY(-14px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+.map-label.system-label {
+  color: #dff7ff;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(3, 10, 20, 0.88);
+  border-color: rgba(113, 220, 255, 0.44);
+  box-shadow: 0 0 26px rgba(70, 192, 239, 0.28);
+}
+.map-label.local-label { font-size: 10px; }
+.map-label.type-gateway,
+.map-label.type-jump-point { color: #ffe0bd; border-color: rgba(255, 181, 95, 0.42); }
+.map-label.selected { border-color: #ffffff; box-shadow: 0 0 18px rgba(255,255,255,.24); }
+.map-label.zoom-distant { opacity: 0.18; transform: translateY(-14px) scale(0.9); }
+.map-label.route { color: #071018; background: #89e7ff; border-color: transparent; opacity: 1; }
+
+.map-2d-ring {
+  fill: none;
+  stroke: rgba(104, 207, 255, 0.64);
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 4px rgba(104, 207, 255, 0.38));
+}
+.map-2d-axis {
+  stroke: rgba(82, 165, 207, 0.28);
+  stroke-width: 1.1;
+  stroke-dasharray: 6 7;
+}
+.map-2d-system-link {
+  stroke: rgba(106, 214, 255, 0.65);
+  stroke-width: 2.4;
+  stroke-dasharray: 9 7;
+  filter: drop-shadow(0 0 5px rgba(106, 214, 255, 0.35));
+}
+.map-2d-label.system-label {
+  fill: #e7f9ff;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.map-empty { padding: 30px; color: var(--muted); }
+
+.onboarding-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 4, 10, 0.76);
+  backdrop-filter: blur(9px);
+}
+.onboarding-card {
+  width: min(580px, 100%);
+  border: 1px solid rgba(107, 215, 255, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  background: linear-gradient(155deg, rgba(12, 29, 48, 0.98), rgba(3, 9, 18, 0.99));
+  box-shadow: 0 28px 90px rgba(0,0,0,.56), 0 0 45px rgba(52, 181, 232, 0.12);
+}
+.onboarding-card h2 { font-size: 1.35rem; margin-bottom: 18px; }
+.onboarding-steps { display: grid; gap: 10px; }
+.onboarding-steps > div { display: grid; grid-template-columns: 32px 1fr; gap: 11px; align-items: center; }
+.onboarding-steps strong {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #031019;
+  background: #6bd8ff;
+  font-size: 0.76rem;
+}
+.onboarding-steps span { color: #d8edf7; font-size: 0.82rem; line-height: 1.45; }
+.onboarding-note {
+  margin: 18px 0 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 189, 112, 0.22);
+  border-radius: 9px;
+  background: rgba(255, 169, 78, 0.06);
+  color: #e9c8a7;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+.onboarding-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+
+@media (max-width: 840px) {
+  .map-navigation { top: 10px; left: 10px; right: 10px; max-width: none; align-items: flex-start; flex-direction: column; gap: 7px; }
+  .map-level-copy { border-left: 0; border-top: 1px solid var(--border); padding: 7px 0 0; }
+}

@@ -12,7 +12,7 @@ const FALLBACK_PATH = path.resolve(process.env.UNIVERSE_FALLBACK || "public/data
 
 const headers = {
   Accept: "application/json",
-  "User-Agent": "Verse-Route-Map/0.3 (+https://github.com/Alex-Black0/Star-Citizen)"
+  "User-Agent": "Verse-Route-Map/0.4 (+https://github.com/Alex-Black0/Star-Citizen)"
 };
 
 const fallback = await readJsonOrNull(FALLBACK_PATH);
@@ -79,7 +79,7 @@ if (distanceRows.length === 0) {
   throw new Error("UEX returned no orbit-distance rows. The fallback universe file was not replaced.");
 }
 
-const built = buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds, fallbackPositions });
+const built = buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds, fallbackPositions, fallback });
 await mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
 await writeFile(OUTPUT_PATH, `${JSON.stringify(built.universe, null, 2)}\n`, "utf8");
 await writeFile(LOCATION_MAP_PATH, `${JSON.stringify(built.locationAliases, null, 2)}\n`, "utf8");
@@ -87,7 +87,7 @@ await writeFile(LOCATION_MAP_PATH, `${JSON.stringify(built.locationAliases, null
 console.log(`Wrote ${built.universe.nodes.length} nodes and ${built.universe.edges.length} edges to ${OUTPUT_PATH}`);
 console.log(`Wrote ${Object.keys(built.locationAliases).length} commodity-location aliases to ${LOCATION_MAP_PATH}`);
 
-function buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds, fallbackPositions }) {
+function buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds, fallbackPositions, fallback }) {
   const nodes = [];
   const edges = [];
   const usedIds = new Set();
@@ -109,6 +109,9 @@ function buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds
       system: system.name,
       type: "star",
       position: center,
+      overviewPosition: systemOverviewPosition(system.name, index),
+      overviewLabel: `${system.name} System`,
+      viewLevel: "overview",
       radius: 3.6,
       description: `${system.name} system star. Display-only and never used as a route waypoint.`,
       routable: false,
@@ -158,6 +161,7 @@ function buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds
         system: system.name,
         type: visibleType,
         position,
+        viewLevel: "system",
         radius: radiusForType(visibleType),
         description: describeOrbit(orbit, system.name),
         tags: tagsForRecord(orbit, visibleType),
@@ -246,6 +250,8 @@ function buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds
         system: currentSystem.name,
         type,
         position,
+        parentId: orbitDisplayByUexId.get(Number(orbitId)) || null,
+        viewLevel: "local",
         radius: radiusForType(type),
         description: describeLocation(record, type, currentSystem.name),
         tags: tagsForRecord(record, type),
@@ -306,18 +312,22 @@ function buildUniverse({ systems, datasets, distanceRows, overrides, fallbackIds
   }
 
   connectJumpPointPairs(nodes, edges);
+  ensureTriangleTopology(nodes, edges, fallback);
   applyOverrides(overrides, nodes, edges);
 
   const universe = {
     metadata: {
       name: "UEX-generated verse route graph",
-      version: "0.3.0",
+      version: "0.4.0",
       distanceUnit: "Gm",
+      mapModel: "Three-level universe, system, and local navigation",
+      systemLayout: buildSystemLayout(systems),
+      systemLinks: buildSystemLinks(systems),
       authoritative: false,
       source: "UEX API 2.0 live-visible locations and orbit distances",
       updatedAt: new Date().toISOString(),
       gameVersion: [...gameVersions].sort().join(", ") || "UEX current dataset",
-      routeModel: "Direct orbit-to-orbit graph. System stars are display-only and never route waypoints.",
+      routeModel: "Direct orbit-to-orbit graph with paired gateways. System stars are display-only and never route waypoints.",
       visualScaleOnly: true,
       notes: "UEX is community-maintained. Route distances are orbit-level; local surface or station approach travel is not added. Manual corrections from route-overrides.json are applied last.",
       counts: {
@@ -433,6 +443,83 @@ function connectJumpPointPairs(nodes, edges) {
       });
     }
   }
+}
+
+
+function ensureTriangleTopology(nodes, edges, fallback) {
+  if (!fallback?.nodes || !fallback?.edges) return;
+  const desiredPairs = [["Stanton", "Pyro"], ["Pyro", "Nyx"], ["Nyx", "Stanton"]];
+  const nodeById = new Map(nodes.map((node) => [node.id, node]));
+
+  for (const [systemA, systemB] of desiredPairs) {
+    const alreadyConnected = edges.some((edge) => {
+      if (edge.kind !== "jump") return false;
+      const from = nodeById.get(edge.from);
+      const to = nodeById.get(edge.to);
+      return from && to && new Set([from.system, to.system]).size === 2 &&
+        ((from.system === systemA && to.system === systemB) || (from.system === systemB && to.system === systemA));
+    });
+    if (alreadyConnected) continue;
+
+    const fallbackPairNodes = fallback.nodes.filter((node) => {
+      if (![systemA, systemB].includes(node.system)) return false;
+      const normalizedName = normalize(node.name);
+      return normalizedName.includes(normalize(systemA)) && normalizedName.includes(normalize(systemB)) ||
+        (node.system === systemA && normalizedName.includes(normalize(systemB)) && ["gateway", "jump-point"].includes(node.type)) ||
+        (node.system === systemB && normalizedName.includes(normalize(systemA)) && ["gateway", "jump-point"].includes(node.type));
+    });
+
+    for (const node of fallbackPairNodes) {
+      if (!nodeById.has(node.id)) {
+        const clone = structuredClone(node);
+        nodes.push(clone);
+        nodeById.set(clone.id, clone);
+      }
+    }
+
+    const pairIds = new Set(fallbackPairNodes.map((node) => node.id));
+    for (const edge of fallback.edges) {
+      if (!pairIds.has(edge.from) && !pairIds.has(edge.to)) continue;
+      if (!nodeById.has(edge.from) || !nodeById.has(edge.to)) continue;
+      const canonical = canonicalPair(edge.from, edge.to);
+      if (edges.some((existing) => canonicalPair(existing.from, existing.to) === canonical)) continue;
+      edges.push(structuredClone(edge));
+    }
+
+    connectJumpPointPairs(nodes, edges);
+  }
+}
+
+function buildSystemLayout(systems) {
+  const preferred = {
+    Stanton: { position: [-92, 0, 48], color: "#65d6ff" },
+    Pyro: { position: [92, 0, 48], color: "#ff9b69" },
+    Nyx: { position: [0, 0, -96], color: "#9d8cff" }
+  };
+  const layout = {};
+  systems.forEach((system, index) => {
+    layout[system.name] = preferred[system.name] || {
+      position: [Math.cos(index * 2.399) * 115, 0, Math.sin(index * 2.399) * 115],
+      color: "#65d6ff"
+    };
+  });
+  return layout;
+}
+
+function buildSystemLinks(systems) {
+  const names = new Set(systems.map((system) => system.name));
+  return [["Stanton", "Pyro"], ["Pyro", "Nyx"], ["Nyx", "Stanton"]]
+    .filter(([from, to]) => names.has(from) && names.has(to))
+    .map(([from, to]) => ({ id: `overview-${slugify(from)}-${slugify(to)}`, from, to, label: `${from} ↔ ${to}` }));
+}
+
+function systemOverviewPosition(systemName, index) {
+  const preferred = {
+    Stanton: [-92, 0, 48],
+    Pyro: [92, 0, 48],
+    Nyx: [0, 0, -96]
+  };
+  return preferred[systemName] || [Math.cos(index * 2.399) * 115, 0, Math.sin(index * 2.399) * 115];
 }
 
 async function fetchRows(resource, params = {}) {

@@ -92,6 +92,7 @@
             <div id="commodity-list" class="commodity-list">
               <p class="muted-copy">No commodity records loaded.</p>
             </div>
+            <button id="open-local-map" class="button primary full-width hidden" type="button">Open local map</button>
             <button id="add-location-price" class="button secondary full-width hidden" type="button">Add commodity price here</button>
           </section>
 
@@ -114,6 +115,19 @@
         </aside>
 
         <section class="map-shell" aria-label="Interactive star map">
+          <div class="map-navigation" aria-label="Map level navigation">
+            <div class="map-breadcrumbs">
+              <button id="nav-universe" class="map-crumb active" type="button">Universe</button>
+              <span class="crumb-divider">›</span>
+              <button id="nav-system" class="map-crumb hidden" type="button">System</button>
+              <span id="nav-local-divider" class="crumb-divider hidden">›</span>
+              <button id="nav-local" class="map-crumb hidden" type="button">Local</button>
+            </div>
+            <div class="map-level-copy">
+              <strong id="map-level-title">Known Systems</strong>
+              <span id="map-level-hint">Select a system to open its planetary map.</span>
+            </div>
+          </div>
           <div id="map-3d" class="map-view"></div>
           <div id="map-2d" class="map-view hidden"></div>
           <div class="legend">
@@ -251,6 +265,24 @@
         </form>
       </section>
     </aside>
+
+    <div id="onboarding" class="onboarding-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+      <section class="onboarding-card">
+        <p class="eyebrow">WELCOME TO THE VERSE ROUTE MAP</p>
+        <h2 id="onboarding-title">Plan routes at three levels</h2>
+        <div class="onboarding-steps">
+          <div><strong>1</strong><span>Select a system from the triangle overview.</span></div>
+          <div><strong>2</strong><span>Use the system rings and gateways to orient yourself.</span></div>
+          <div><strong>3</strong><span>Select a planet and open its local map for moons, stations, and cities.</span></div>
+          <div><strong>4</strong><span>Choose an origin and destination, calculate the route, then save it.</span></div>
+        </div>
+        <p class="onboarding-note">Saved routes, trade runs, manual prices, and notes are stored in this browser. Use Export in Trade Runs to back them up or move them to another device.</p>
+        <div class="onboarding-actions">
+          <button id="onboarding-dismiss" class="button secondary" type="button">Don’t show again</button>
+          <button id="onboarding-start" class="button primary" type="button">Start planning</button>
+        </div>
+      </section>
+    </div>
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 

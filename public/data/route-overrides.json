@@ -2,7 +2,7 @@
   "metadata": {
     "description": "Manual route-distance corrections applied after UEX import. Use these for recent in-game measurements or temporary API corrections.",
     "distanceUnit": "Gm",
-    "updatedAt": "2026-07-19T00:00:00Z"
+    "updatedAt": "2026-07-19T19:30:00Z"
   },
   "routes": [
     {
