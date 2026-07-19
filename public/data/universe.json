@@ -1,10 +1,13 @@
 {
   "metadata": {
-    "name": "Starter verse graph",
-    "version": "0.1.0",
+    "name": "Verse route graph",
+    "version": "0.3.0-fallback",
     "distanceUnit": "Gm",
     "authoritative": false,
-    "notes": "Illustrative topology and distances for the starter application. Replace with verified data."
+    "source": "Corrected fallback graph plus measured route checks",
+    "updatedAt": "2026-07-19T00:00:00Z",
+    "gameVersion": "4.8.3 route checks; current client may be newer",
+    "notes": "Stars are display-only and never route waypoints. Major Stanton distances and Pyro Gateway checks are measured/community-reported. Pyro/Nyx fallback distances marked estimated are replaced when the Update universe route data GitHub Action succeeds."
   },
   "nodes": [
     {
@@ -12,177 +15,1279 @@
       "name": "Stanton",
       "system": "Stanton",
       "type": "star",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "radius": 3.6,
-      "description": "Central star and routing hub for this starter Stanton graph.",
-      "tags": ["system-center"]
-    },
-    {
-      "id": "hurston",
-      "name": "Hurston",
-      "system": "Stanton",
-      "type": "planet",
-      "position": [-36, 2, 12],
-      "radius": 2.2,
-      "description": "Planet node with an example orbital station and trade information.",
-      "tags": ["planet", "trade"]
-    },
-    {
-      "id": "everus-harbor",
-      "name": "Everus Harbor",
-      "system": "Stanton",
-      "type": "station",
-      "position": [-32, 4, 13],
-      "radius": 0.75,
-      "description": "Example orbital station node connected to Hurston.",
-      "tags": ["station", "trade"]
-    },
-    {
-      "id": "arccorp",
-      "name": "ArcCorp",
-      "system": "Stanton",
-      "type": "planet",
-      "position": [35, -1, -8],
-      "radius": 2.1,
-      "description": "Planet node with an example orbital station and commodity records.",
-      "tags": ["planet", "trade"]
-    },
-    {
-      "id": "baijini-point",
-      "name": "Baijini Point",
-      "system": "Stanton",
-      "type": "station",
-      "position": [31, 2, -7],
-      "radius": 0.75,
-      "description": "Example orbital station node connected to ArcCorp.",
-      "tags": ["station", "trade"]
-    },
-    {
-      "id": "crusader",
-      "name": "Crusader",
-      "system": "Stanton",
-      "type": "planet",
-      "position": [0, -2, 38],
-      "radius": 2.7,
-      "description": "Gas giant node with an example orbital station.",
-      "tags": ["planet", "trade"]
-    },
-    {
-      "id": "seraphim-station",
-      "name": "Seraphim Station",
-      "system": "Stanton",
-      "type": "station",
-      "position": [3, 1, 34],
-      "radius": 0.8,
-      "description": "Example orbital station node connected to Crusader.",
-      "tags": ["station", "trade"]
-    },
-    {
-      "id": "microtech",
-      "name": "microTech",
-      "system": "Stanton",
-      "type": "planet",
-      "position": [7, 3, -42],
-      "radius": 2.2,
-      "description": "Planet node with an example orbital station and trade information.",
-      "tags": ["planet", "trade"]
-    },
-    {
-      "id": "port-tressler",
-      "name": "Port Tressler",
-      "system": "Stanton",
-      "type": "station",
-      "position": [10, 6, -39],
-      "radius": 0.78,
-      "description": "Example orbital station node connected to microTech.",
-      "tags": ["station", "trade"]
-    },
-    {
-      "id": "stanton-gateway",
-      "name": "Stanton Gateway",
-      "system": "Stanton",
-      "type": "gateway",
-      "position": [55, 8, 25],
-      "radius": 1.15,
-      "description": "Required gateway node for the sample Stanton-to-Pyro route.",
-      "tags": ["gateway", "required-transition"]
-    },
-    {
-      "id": "stanton-pyro-jump",
-      "name": "Stanton–Pyro Jump Point",
-      "system": "Inter-system",
-      "type": "jump-point",
-      "position": [72, 10, 34],
-      "radius": 1.45,
-      "description": "Explicit jump-point node. Cross-system routes must traverse it.",
-      "tags": ["jump-point", "required-transition"]
-    },
-    {
-      "id": "pyro-gateway",
-      "name": "Pyro Gateway",
-      "system": "Pyro",
-      "type": "gateway",
-      "position": [98, 8, 39],
-      "radius": 1.15,
-      "description": "Required Pyro-side gateway for the sample inter-system route.",
-      "tags": ["gateway", "required-transition"]
+      "description": "Stanton system star. Display-only and never used as a route waypoint.",
+      "tags": [
+        "system-center",
+        "display-only"
+      ],
+      "routable": false,
+      "selectable": false,
+      "dataSource": "fallback"
     },
     {
       "id": "pyro-star",
       "name": "Pyro",
       "system": "Pyro",
       "type": "star",
-      "position": [128, 0, 40],
+      "position": [
+        150,
+        0,
+        25
+      ],
       "radius": 3.8,
-      "description": "Central star and routing hub for the starter Pyro graph.",
-      "tags": ["system-center"]
+      "description": "Pyro system star. Display-only and never used as a route waypoint.",
+      "tags": [
+        "system-center",
+        "display-only"
+      ],
+      "routable": false,
+      "selectable": false,
+      "dataSource": "fallback"
+    },
+    {
+      "id": "nyx-star",
+      "name": "Nyx",
+      "system": "Nyx",
+      "type": "star",
+      "position": [
+        300,
+        0,
+        -5
+      ],
+      "radius": 3.5,
+      "description": "Nyx system star. Display-only and never used as a route waypoint.",
+      "tags": [
+        "system-center",
+        "display-only"
+      ],
+      "routable": false,
+      "selectable": false,
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hurston",
+      "name": "Hurston",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [
+        -36,
+        2,
+        12
+      ],
+      "radius": 2.2,
+      "description": "Hurston, primary planet in the Stanton system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "everus-harbor",
+      "name": "Everus Harbor",
+      "system": "Stanton",
+      "type": "station",
+      "position": [
+        -32,
+        4,
+        13
+      ],
+      "radius": 0.75,
+      "description": "Orbital station above Hurston.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "lorville",
+      "name": "Lorville",
+      "system": "Stanton",
+      "type": "city",
+      "position": [
+        -38,
+        1,
+        14
+      ],
+      "radius": 0.65,
+      "description": "Major city on Hurston.",
+      "tags": [
+        "city",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "arial",
+      "name": "Arial",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        -42,
+        2,
+        9
+      ],
+      "radius": 1.0,
+      "description": "Arial, moon of Hurston.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "aberdeen",
+      "name": "Aberdeen",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        -39,
+        1,
+        6
+      ],
+      "radius": 1.0,
+      "description": "Aberdeen, moon of Hurston.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "magda",
+      "name": "Magda",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        -31,
+        3,
+        8
+      ],
+      "radius": 1.0,
+      "description": "Magda, moon of Hurston.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "ita",
+      "name": "Ita",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        -28,
+        1,
+        15
+      ],
+      "radius": 1.0,
+      "description": "Ita, moon of Hurston.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "arccorp",
+      "name": "ArcCorp",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [
+        35,
+        -1,
+        -8
+      ],
+      "radius": 2.1,
+      "description": "ArcCorp, primary planet in the Stanton system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "baijini-point",
+      "name": "Baijini Point",
+      "system": "Stanton",
+      "type": "station",
+      "position": [
+        31,
+        2,
+        -7
+      ],
+      "radius": 0.75,
+      "description": "Orbital station above ArcCorp.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "area18",
+      "name": "Area18",
+      "system": "Stanton",
+      "type": "city",
+      "position": [
+        38,
+        -2,
+        -10
+      ],
+      "radius": 0.65,
+      "description": "Major city on ArcCorp.",
+      "tags": [
+        "city",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "lyria",
+      "name": "Lyria",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        41,
+        0,
+        -5
+      ],
+      "radius": 1.0,
+      "description": "Lyria, moon of ArcCorp.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "wala",
+      "name": "Wala",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        29,
+        -2,
+        -13
+      ],
+      "radius": 1.0,
+      "description": "Wala, moon of ArcCorp.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "crusader",
+      "name": "Crusader",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [
+        0,
+        -2,
+        38
+      ],
+      "radius": 2.7,
+      "description": "Crusader, gas giant in the Stanton system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "seraphim-station",
+      "name": "Seraphim Station",
+      "system": "Stanton",
+      "type": "station",
+      "position": [
+        3,
+        1,
+        34
+      ],
+      "radius": 0.8,
+      "description": "Orbital station above Crusader.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "orison",
+      "name": "Orison",
+      "system": "Stanton",
+      "type": "city",
+      "position": [
+        -2,
+        -1,
+        41
+      ],
+      "radius": 0.65,
+      "description": "Cloud city on Crusader.",
+      "tags": [
+        "city",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "cellin",
+      "name": "Cellin",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        -7,
+        0,
+        34
+      ],
+      "radius": 1.0,
+      "description": "Cellin, moon of Crusader.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "daymar",
+      "name": "Daymar",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        7,
+        -1,
+        44
+      ],
+      "radius": 1.0,
+      "description": "Daymar, moon of Crusader.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "yela",
+      "name": "Yela",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        10,
+        1,
+        35
+      ],
+      "radius": 1.0,
+      "description": "Yela, moon of Crusader.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "grim-hex",
+      "name": "GrimHEX",
+      "system": "Stanton",
+      "type": "station",
+      "position": [
+        12,
+        2,
+        34
+      ],
+      "radius": 0.72,
+      "description": "Outlaw station in the Yela asteroid belt.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "microtech",
+      "name": "microTech",
+      "system": "Stanton",
+      "type": "planet",
+      "position": [
+        7,
+        3,
+        -42
+      ],
+      "radius": 2.2,
+      "description": "microTech, primary planet in the Stanton system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "port-tressler",
+      "name": "Port Tressler",
+      "system": "Stanton",
+      "type": "station",
+      "position": [
+        10,
+        6,
+        -39
+      ],
+      "radius": 0.78,
+      "description": "Orbital station above microTech.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "new-babbage",
+      "name": "New Babbage",
+      "system": "Stanton",
+      "type": "city",
+      "position": [
+        4,
+        1,
+        -45
+      ],
+      "radius": 0.65,
+      "description": "Major city on microTech.",
+      "tags": [
+        "city",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "calliope",
+      "name": "Calliope",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        0,
+        5,
+        -39
+      ],
+      "radius": 1.0,
+      "description": "Calliope, moon of microTech.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "clio",
+      "name": "Clio",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        15,
+        3,
+        -47
+      ],
+      "radius": 1.0,
+      "description": "Clio, moon of microTech.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "euterpe",
+      "name": "Euterpe",
+      "system": "Stanton",
+      "type": "moon",
+      "position": [
+        13,
+        0,
+        -36
+      ],
+      "radius": 1.0,
+      "description": "Euterpe, moon of microTech.",
+      "tags": [
+        "moon"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "pyro-gateway-stanton",
+      "name": "Pyro Gateway (Stanton)",
+      "system": "Stanton",
+      "type": "gateway",
+      "position": [
+        55,
+        8,
+        25
+      ],
+      "radius": 1.15,
+      "description": "Gateway station on the Stanton side of the Stanton\u2013Pyro jump point.",
+      "tags": [
+        "gateway",
+        "trade",
+        "required-transition"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "stanton-pyro-jump",
+      "name": "Stanton\u2013Pyro Jump Point",
+      "system": "Stanton",
+      "type": "jump-point",
+      "position": [
+        64,
+        9,
+        29
+      ],
+      "radius": 1.4,
+      "description": "Inter-system jump point between Stanton and Pyro.",
+      "tags": [
+        "jump-point",
+        "required-transition"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "stanton-gateway-pyro",
+      "name": "Stanton Gateway (Pyro)",
+      "system": "Pyro",
+      "type": "gateway",
+      "position": [
+        94,
+        8,
+        34
+      ],
+      "radius": 1.15,
+      "description": "Gateway station on the Pyro side of the Stanton\u2013Pyro jump point.",
+      "tags": [
+        "gateway",
+        "trade",
+        "required-transition"
+      ],
+      "dataSource": "fallback"
     },
     {
       "id": "pyro-1",
       "name": "Pyro I",
       "system": "Pyro",
       "type": "planet",
-      "position": [115, 2, 57],
+      "position": [
+        124,
+        2,
+        50
+      ],
       "radius": 1.8,
-      "description": "Illustrative Pyro planet node.",
-      "tags": ["planet"]
+      "description": "Pyro I.",
+      "tags": [
+        "planet"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "monox",
+      "name": "Monox",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [
+        140,
+        -2,
+        52
+      ],
+      "radius": 1.9,
+      "description": "Monox in the Pyro system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "checkmate",
+      "name": "Checkmate Station",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        143,
+        1,
+        48
+      ],
+      "radius": 0.85,
+      "description": "Major station near Monox.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "bloom",
+      "name": "Bloom",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [
+        157,
+        1,
+        42
+      ],
+      "radius": 2.0,
+      "description": "Bloom in the Pyro system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "orbituary",
+      "name": "Orbituary",
+      "system": "Pyro",
+      "type": "station",
+      "position": [
+        160,
+        4,
+        39
+      ],
+      "radius": 0.85,
+      "description": "Major station near Bloom.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "pyro-iv",
+      "name": "Pyro IV",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [
+        172,
+        -2,
+        56
+      ],
+      "radius": 2.1,
+      "description": "Pyro IV.",
+      "tags": [
+        "planet"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "pyro-v",
+      "name": "Pyro V",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [
+        184,
+        2,
+        33
+      ],
+      "radius": 2.3,
+      "description": "Pyro V.",
+      "tags": [
+        "planet"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "terminus",
+      "name": "Terminus",
+      "system": "Pyro",
+      "type": "planet",
+      "position": [
+        202,
+        -1,
+        50
+      ],
+      "radius": 2.0,
+      "description": "Terminus in the Pyro system.",
+      "tags": [
+        "planet",
+        "trade"
+      ],
+      "dataSource": "fallback"
     },
     {
       "id": "ruin-station",
       "name": "Ruin Station",
       "system": "Pyro",
       "type": "station",
-      "position": [148, 5, 25],
+      "position": [
+        206,
+        4,
+        47
+      ],
       "radius": 0.9,
-      "description": "Illustrative Pyro station node with sample trade information.",
-      "tags": ["station", "trade"]
+      "description": "Major station near Terminus.",
+      "tags": [
+        "station",
+        "trade"
+      ],
+      "dataSource": "fallback"
     },
     {
-      "id": "pyro-4",
-      "name": "Pyro IV",
+      "id": "nyx-gateway-pyro",
+      "name": "Nyx Gateway (Pyro)",
       "system": "Pyro",
-      "type": "planet",
-      "position": [158, -2, 57],
-      "radius": 2.1,
-      "description": "Illustrative Pyro planet node.",
-      "tags": ["planet"]
+      "type": "gateway",
+      "position": [
+        221,
+        7,
+        18
+      ],
+      "radius": 1.15,
+      "description": "Gateway station on the Pyro side of the Pyro\u2013Nyx jump point.",
+      "tags": [
+        "gateway",
+        "trade",
+        "required-transition"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "pyro-nyx-jump",
+      "name": "Pyro\u2013Nyx Jump Point",
+      "system": "Pyro",
+      "type": "jump-point",
+      "position": [
+        232,
+        9,
+        13
+      ],
+      "radius": 1.4,
+      "description": "Inter-system jump point between Pyro and Nyx.",
+      "tags": [
+        "jump-point",
+        "required-transition"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "pyro-gateway-nyx",
+      "name": "Pyro Gateway (Nyx)",
+      "system": "Nyx",
+      "type": "gateway",
+      "position": [
+        266,
+        8,
+        8
+      ],
+      "radius": 1.15,
+      "description": "Gateway station on the Nyx side of the Pyro\u2013Nyx jump point.",
+      "tags": [
+        "gateway",
+        "trade",
+        "required-transition"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "delamar",
+      "name": "Delamar",
+      "system": "Nyx",
+      "type": "planetoid",
+      "position": [
+        305,
+        2,
+        -1
+      ],
+      "radius": 2.0,
+      "description": "Delamar in the Nyx system.",
+      "tags": [
+        "planetoid",
+        "trade"
+      ],
+      "dataSource": "fallback"
+    },
+    {
+      "id": "levski",
+      "name": "Levski",
+      "system": "Nyx",
+      "type": "city",
+      "position": [
+        309,
+        4,
+        1
+      ],
+      "radius": 0.75,
+      "description": "Landing zone on Delamar.",
+      "tags": [
+        "city",
+        "trade"
+      ],
+      "dataSource": "fallback"
     }
   ],
   "edges": [
-    { "id": "stn-hur", "from": "stanton-star", "to": "hurston", "distance": 38.0, "kind": "quantum", "bidirectional": true },
-    { "id": "hur-everus", "from": "hurston", "to": "everus-harbor", "distance": 0.22, "kind": "local", "bidirectional": true },
-    { "id": "stn-arc", "from": "stanton-star", "to": "arccorp", "distance": 36.0, "kind": "quantum", "bidirectional": true },
-    { "id": "arc-baijini", "from": "arccorp", "to": "baijini-point", "distance": 0.21, "kind": "local", "bidirectional": true },
-    { "id": "stn-cru", "from": "stanton-star", "to": "crusader", "distance": 39.0, "kind": "quantum", "bidirectional": true },
-    { "id": "cru-seraphim", "from": "crusader", "to": "seraphim-station", "distance": 0.20, "kind": "local", "bidirectional": true },
-    { "id": "stn-mic", "from": "stanton-star", "to": "microtech", "distance": 44.0, "kind": "quantum", "bidirectional": true },
-    { "id": "mic-tressler", "from": "microtech", "to": "port-tressler", "distance": 0.22, "kind": "local", "bidirectional": true },
-    { "id": "stn-gateway", "from": "stanton-star", "to": "stanton-gateway", "distance": 61.0, "kind": "quantum", "bidirectional": true },
-    { "id": "gateway-stanton-jump", "from": "stanton-gateway", "to": "stanton-pyro-jump", "distance": 18.0, "kind": "gateway", "bidirectional": true },
-    { "id": "jump-pyro-gateway", "from": "stanton-pyro-jump", "to": "pyro-gateway", "distance": 30.0, "kind": "jump", "bidirectional": true },
-    { "id": "pyro-gateway-star", "from": "pyro-gateway", "to": "pyro-star", "distance": 32.0, "kind": "gateway", "bidirectional": true },
-    { "id": "pys-p1", "from": "pyro-star", "to": "pyro-1", "distance": 21.0, "kind": "quantum", "bidirectional": true },
-    { "id": "pys-ruin", "from": "pyro-star", "to": "ruin-station", "distance": 28.0, "kind": "quantum", "bidirectional": true },
-    { "id": "pys-p4", "from": "pyro-star", "to": "pyro-4", "distance": 35.0, "kind": "quantum", "bidirectional": true }
+    {
+      "id": "hur-everus",
+      "from": "hurston",
+      "to": "everus-harbor",
+      "distance": 0.22,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hur-lorville",
+      "from": "hurston",
+      "to": "lorville",
+      "distance": 0.05,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hur-arial",
+      "from": "hurston",
+      "to": "arial",
+      "distance": 0.45,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hur-aberdeen",
+      "from": "hurston",
+      "to": "aberdeen",
+      "distance": 0.52,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hur-magda",
+      "from": "hurston",
+      "to": "magda",
+      "distance": 0.38,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hur-ita",
+      "from": "hurston",
+      "to": "ita",
+      "distance": 0.41,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "arc-baijini",
+      "from": "arccorp",
+      "to": "baijini-point",
+      "distance": 0.21,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "arc-area18",
+      "from": "arccorp",
+      "to": "area18",
+      "distance": 0.05,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "arc-lyria",
+      "from": "arccorp",
+      "to": "lyria",
+      "distance": 0.41,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "arc-wala",
+      "from": "arccorp",
+      "to": "wala",
+      "distance": 0.46,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "cru-seraphim",
+      "from": "crusader",
+      "to": "seraphim-station",
+      "distance": 0.2,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "cru-orison",
+      "from": "crusader",
+      "to": "orison",
+      "distance": 0.05,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "cru-cellin",
+      "from": "crusader",
+      "to": "cellin",
+      "distance": 0.34,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "cru-daymar",
+      "from": "crusader",
+      "to": "daymar",
+      "distance": 0.39,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "cru-yela",
+      "from": "crusader",
+      "to": "yela",
+      "distance": 0.31,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "yela-grim",
+      "from": "yela",
+      "to": "grim-hex",
+      "distance": 0.08,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "mic-tressler",
+      "from": "microtech",
+      "to": "port-tressler",
+      "distance": 0.22,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "mic-babbage",
+      "from": "microtech",
+      "to": "new-babbage",
+      "distance": 0.05,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "mic-calliope",
+      "from": "microtech",
+      "to": "calliope",
+      "distance": 0.43,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "mic-clio",
+      "from": "microtech",
+      "to": "clio",
+      "distance": 0.47,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "mic-euterpe",
+      "from": "microtech",
+      "to": "euterpe",
+      "distance": 0.36,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "hur-cru",
+      "from": "hurston",
+      "to": "crusader",
+      "distance": 31.924061,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "hur-arc",
+      "from": "hurston",
+      "to": "arccorp",
+      "distance": 22.88281,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "hur-mic",
+      "from": "hurston",
+      "to": "microtech",
+      "distance": 38.407719,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "arc-cru",
+      "from": "arccorp",
+      "to": "crusader",
+      "distance": 42.305225,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "arc-mic",
+      "from": "arccorp",
+      "to": "microtech",
+      "distance": 59.463893,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "cru-mic",
+      "from": "crusader",
+      "to": "microtech",
+      "distance": 57.480718,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "gateway-baijini",
+      "from": "pyro-gateway-stanton",
+      "to": "baijini-point",
+      "distance": 17.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "community-measured",
+      "dataSource": "UEX 4.6-4.8"
+    },
+    {
+      "id": "gateway-everus",
+      "from": "pyro-gateway-stanton",
+      "to": "everus-harbor",
+      "distance": 30.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "community-measured",
+      "dataSource": "UEX 4.6-4.8"
+    },
+    {
+      "id": "gateway-seraphim",
+      "from": "pyro-gateway-stanton",
+      "to": "seraphim-station",
+      "distance": 34.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "community-measured",
+      "dataSource": "UEX 4.8"
+    },
+    {
+      "id": "gateway-tressler",
+      "from": "pyro-gateway-stanton",
+      "to": "port-tressler",
+      "distance": 68.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "community-measured",
+      "dataSource": "UEX 4.8.3",
+      "note": "User measured close to 69 Gm; UEX currently reports approximately 68 Gm."
+    },
+    {
+      "id": "gateway-jump-stanton",
+      "from": "pyro-gateway-stanton",
+      "to": "stanton-pyro-jump",
+      "distance": 0.05,
+      "kind": "gateway",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "jump-stanton-pyro",
+      "from": "stanton-pyro-jump",
+      "to": "stanton-gateway-pyro",
+      "distance": 0.0,
+      "kind": "jump",
+      "bidirectional": true,
+      "distanceQuality": "topology",
+      "dataSource": "jump-tunnel",
+      "note": "Jump tunnel transition; not counted as normal-space Gm distance."
+    },
+    {
+      "id": "pyro-gateway-p1",
+      "from": "stanton-gateway-pyro",
+      "to": "pyro-1",
+      "distance": 28.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "pyro-p1-monox",
+      "from": "pyro-1",
+      "to": "monox",
+      "distance": 22.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "monox-checkmate",
+      "from": "monox",
+      "to": "checkmate",
+      "distance": 0.22,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "monox-bloom",
+      "from": "monox",
+      "to": "bloom",
+      "distance": 36.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "bloom-orbituary",
+      "from": "bloom",
+      "to": "orbituary",
+      "distance": 0.22,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "bloom-p4",
+      "from": "bloom",
+      "to": "pyro-iv",
+      "distance": 39.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "p4-p5",
+      "from": "pyro-iv",
+      "to": "pyro-v",
+      "distance": 46.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "p5-terminus",
+      "from": "pyro-v",
+      "to": "terminus",
+      "distance": 101.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "measured",
+      "dataSource": "game-distance"
+    },
+    {
+      "id": "terminus-ruin",
+      "from": "terminus",
+      "to": "ruin-station",
+      "distance": 0.22,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "terminus-nyx-gateway",
+      "from": "terminus",
+      "to": "nyx-gateway-pyro",
+      "distance": 52.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "nyx-gateway-pyro-jump",
+      "from": "nyx-gateway-pyro",
+      "to": "pyro-nyx-jump",
+      "distance": 0.05,
+      "kind": "gateway",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "jump-pyro-nyx",
+      "from": "pyro-nyx-jump",
+      "to": "pyro-gateway-nyx",
+      "distance": 0.0,
+      "kind": "jump",
+      "bidirectional": true,
+      "distanceQuality": "topology",
+      "dataSource": "jump-tunnel"
+    },
+    {
+      "id": "nyx-gateway-delamar",
+      "from": "pyro-gateway-nyx",
+      "to": "delamar",
+      "distance": 42.0,
+      "kind": "quantum",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    },
+    {
+      "id": "delamar-levski",
+      "from": "delamar",
+      "to": "levski",
+      "distance": 0.05,
+      "kind": "local",
+      "bidirectional": true,
+      "distanceQuality": "estimated",
+      "dataSource": "fallback"
+    }
   ]
 }

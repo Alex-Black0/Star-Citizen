@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "description": "Manual route-distance corrections applied after UEX import. Use these for recent in-game measurements or temporary API corrections.",
+    "distanceUnit": "Gm",
+    "updatedAt": "2026-07-19T00:00:00Z"
+  },
+  "routes": [
+    {
+      "from": "pyro-gateway-stanton",
+      "to": "port-tressler",
+      "distance": 68,
+      "kind": "quantum",
+      "gameVersion": "4.8.3",
+      "source": "UEX route records and player verification",
+      "note": "Observed close to 69 Gm in game; UEX reports approximately 68 Gm."
+    },
+    {
+      "from": "pyro-gateway-stanton",
+      "to": "baijini-point",
+      "distance": 17,
+      "kind": "quantum",
+      "gameVersion": "4.6-4.8",
+      "source": "UEX route records"
+    },
+    {
+      "from": "pyro-gateway-stanton",
+      "to": "everus-harbor",
+      "distance": 30,
+      "kind": "quantum",
+      "gameVersion": "4.6-4.8",
+      "source": "UEX route records"
+    },
+    {
+      "from": "pyro-gateway-stanton",
+      "to": "seraphim-station",
+      "distance": 34,
+      "kind": "quantum",
+      "gameVersion": "4.8",
+      "source": "UEX route records"
+    }
+  ]
+}

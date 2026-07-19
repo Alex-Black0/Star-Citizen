@@ -4,20 +4,27 @@ const NODE_COLORS = {
   star: "#ffd279",
   planet: "#4fc5ff",
   station: "#b7d5e7",
+  moon: "#8bb8d1",
+  city: "#75f0c1",
+  outpost: "#c9a56a",
+  poi: "#c58cff",
+  lagrange: "#65d6c4",
+  planetoid: "#8fb4ff",
   gateway: "#ffb55f",
   "jump-point": "#d990ff"
 };
 
 export function createMap2D(container, universe, onNodeClick) {
   const nodeLookup = new Map(universe.nodes.map((node) => [node.id, node]));
+  const visibleNodes = universe.nodes.filter((node) => node.visible !== false && node.mapVisible !== false);
   let route = null;
   let selectedNodeId = null;
 
   function render() {
     const width = Math.max(900, container.clientWidth || 900);
     const height = Math.max(620, container.clientHeight || 620);
-    const xs = universe.nodes.map((node) => node.position[0]);
-    const zs = universe.nodes.map((node) => node.position[2]);
+    const xs = visibleNodes.map((node) => node.position[0]);
+    const zs = visibleNodes.map((node) => node.position[2]);
     const minX = Math.min(...xs) - 12;
     const maxX = Math.max(...xs) + 12;
     const minZ = Math.min(...zs) - 12;
@@ -33,14 +40,22 @@ export function createMap2D(container, universe, onNodeClick) {
       y: height - (offsetY + (position[2] - minZ) * scale)
     });
 
-    const edgeMarkup = universe.edges.map((edge) => {
-      const from = point(nodeLookup.get(edge.from).position);
-      const to = point(nodeLookup.get(edge.to).position);
-      const classes = ["map-2d-edge", edge.kind === "jump" ? "jump" : "", activeEdges.has(edge.id) ? "active" : ""].filter(Boolean).join(" ");
+    const edgeMarkup = universe.edges.filter((edge) => edge.visible !== false).map((edge) => {
+      const fromNode = nodeLookup.get(edge.from);
+      const toNode = nodeLookup.get(edge.to);
+      if (!fromNode || !toNode) return "";
+      const from = point(fromNode.position);
+      const to = point(toNode.position);
+      const classes = [
+        "map-2d-edge",
+        edge.kind === "jump" ? "jump" : "",
+        edge.baseVisible === false ? "route-only" : "",
+        activeEdges.has(edge.id) ? "active" : ""
+      ].filter(Boolean).join(" ");
       return `<line class="${classes}" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" />`;
     }).join("");
 
-    const nodeMarkup = universe.nodes.map((node) => {
+    const nodeMarkup = visibleNodes.map((node) => {
       const p = point(node.position);
       const radius = Math.max(4.5, node.radius * 2.7) * (activeNodes.has(node.id) ? 1.35 : 1);
       const stroke = selectedNodeId === node.id ? "#ffffff" : "rgba(255,255,255,.32)";

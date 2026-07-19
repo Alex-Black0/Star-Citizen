@@ -387,3 +387,16 @@ textarea:focus { border-color: var(--accent); }
   .cargo-grid { grid-template-columns: repeat(3, 1fr); }
   .profit-preview { grid-template-columns: 1fr; }
 }
+
+.route-data-status {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.62rem;
+  line-height: 1.45;
+}
+.route-data-status.warning {
+  color: #ffd29b;
+}
+
+.map-2d-edge.route-only { opacity: 0; }
+.map-2d-edge.route-only.active { opacity: 1; }

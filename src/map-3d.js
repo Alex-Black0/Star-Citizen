@@ -7,6 +7,12 @@ const TYPE_COLORS = {
   star: 0xffd279,
   planet: 0x4fc5ff,
   station: 0xb7d5e7,
+  moon: 0x8bb8d1,
+  city: 0x75f0c1,
+  outpost: 0xc9a56a,
+  poi: 0xc58cff,
+  lagrange: 0x65d6c4,
+  planetoid: 0x8fb4ff,
   gateway: 0xffb55f,
   "jump-point": 0xd990ff
 };
@@ -47,31 +53,38 @@ export function createMap3D(container, universe, onNodeClick) {
   addSystemRings(scene, universe.nodes);
 
   for (const edge of universe.edges) {
+    if (edge.visible === false) continue;
     const from = nodeLookup.get(edge.from);
     const to = nodeLookup.get(edge.to);
     if (!from || !to) continue;
 
     const points = [new THREE.Vector3(...from.position), new THREE.Vector3(...to.position)];
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const baseOpacity = edge.baseVisible === false ? 0 : (edge.kind === "jump" ? 0.5 : 0.35);
     const material = new THREE.LineBasicMaterial({
       color: edge.kind === "jump" ? 0x9b68b8 : 0x31556c,
       transparent: true,
-      opacity: edge.kind === "jump" ? 0.5 : 0.35
+      opacity: baseOpacity
     });
     const line = new THREE.Line(geometry, material);
     line.userData.edgeId = edge.id;
     line.userData.kind = edge.kind;
+    line.userData.baseVisible = edge.baseVisible !== false;
     scene.add(line);
     edgeLines.set(edge.id, line);
   }
 
   for (const node of universe.nodes) {
+    if (node.visible === false || node.mapVisible === false) continue;
     const color = TYPE_COLORS[node.type] ?? 0x75d7ff;
+    const radius = Number(node.radius || 0.7);
     const geometry = node.type === "jump-point"
-      ? new THREE.TorusGeometry(node.radius, Math.max(0.25, node.radius * 0.18), 16, 54)
+      ? new THREE.TorusGeometry(radius, Math.max(0.18, radius * 0.18), 16, 54)
       : node.type === "gateway"
-        ? new THREE.OctahedronGeometry(node.radius, 1)
-        : new THREE.SphereGeometry(node.radius, 32, 20);
+        ? new THREE.OctahedronGeometry(radius, 1)
+        : node.type === "station"
+          ? new THREE.DodecahedronGeometry(radius, 1)
+          : new THREE.SphereGeometry(radius, 28, 18);
 
     const material = new THREE.MeshStandardMaterial({
       color,
@@ -99,7 +112,7 @@ export function createMap3D(container, universe, onNodeClick) {
     labelElement.className = "map-label";
     labelElement.textContent = node.name;
     const label = new CSS2DObject(labelElement);
-    label.position.set(0, node.radius + 1.2, 0);
+    label.position.set(0, radius + 1.2, 0);
     mesh.add(label);
     nodeLabels.set(node.id, labelElement);
   }
@@ -119,8 +132,8 @@ export function createMap3D(container, universe, onNodeClick) {
   renderer.domElement.addEventListener("pointerup", handlePointerUp);
 
   function resetCamera() {
-    camera.position.set(82, 92, 205);
-    controls.target.set(58, 0, 20);
+    camera.position.set(155, 125, 330);
+    controls.target.set(135, 0, 15);
     controls.update();
   }
   resetCamera();
@@ -157,7 +170,7 @@ export function createMap3D(container, universe, onNodeClick) {
     for (const [edgeId, line] of edgeLines) {
       const active = activeEdges.has(edgeId);
       line.material.color.set(active ? 0x6ce0ff : (line.userData.kind === "jump" ? 0x9b68b8 : 0x31556c));
-      line.material.opacity = active ? 1 : 0.35;
+      line.material.opacity = active ? 1 : (line.userData.baseVisible ? 0.35 : 0);
     }
 
     for (const [nodeId, mesh] of nodeMeshes) {

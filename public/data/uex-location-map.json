@@ -1,11 +1,136 @@
 {
-  "hurston": ["lorville"],
-  "everus-harbor": ["everus harbor", "everusharbor"],
-  "arccorp": ["area18", "area 18"],
-  "baijini-point": ["baijini point", "baijinipoint"],
-  "crusader": ["orison"],
-  "seraphim-station": ["seraphim station", "seraphimstation"],
-  "microtech": ["new babbage", "newbabbage"],
-  "port-tressler": ["port tressler", "porttressler"],
-  "ruin-station": ["ruin station", "ruinstation"]
+  "hurston": [
+    "Hurston"
+  ],
+  "everus-harbor": [
+    "Everus Harbor",
+    "everusharbor"
+  ],
+  "lorville": [
+    "Lorville"
+  ],
+  "arial": [
+    "Arial"
+  ],
+  "aberdeen": [
+    "Aberdeen"
+  ],
+  "magda": [
+    "Magda"
+  ],
+  "ita": [
+    "Ita"
+  ],
+  "arccorp": [
+    "ArcCorp"
+  ],
+  "baijini-point": [
+    "Baijini Point",
+    "baijinipoint"
+  ],
+  "area18": [
+    "Area18"
+  ],
+  "lyria": [
+    "Lyria"
+  ],
+  "wala": [
+    "Wala"
+  ],
+  "crusader": [
+    "Crusader"
+  ],
+  "seraphim-station": [
+    "Seraphim Station",
+    "seraphimstation"
+  ],
+  "orison": [
+    "Orison"
+  ],
+  "cellin": [
+    "Cellin"
+  ],
+  "daymar": [
+    "Daymar"
+  ],
+  "yela": [
+    "Yela"
+  ],
+  "grim-hex": [
+    "GrimHEX"
+  ],
+  "microtech": [
+    "microTech"
+  ],
+  "port-tressler": [
+    "Port Tressler",
+    "porttressler"
+  ],
+  "new-babbage": [
+    "New Babbage",
+    "newbabbage"
+  ],
+  "calliope": [
+    "Calliope"
+  ],
+  "clio": [
+    "Clio"
+  ],
+  "euterpe": [
+    "Euterpe"
+  ],
+  "pyro-gateway-stanton": [
+    "Pyro Gateway (Stanton)",
+    "pyrogatewaystanton"
+  ],
+  "stanton-gateway-pyro": [
+    "Stanton Gateway (Pyro)",
+    "stantongatewaypyro"
+  ],
+  "pyro-1": [
+    "Pyro I",
+    "pyroi"
+  ],
+  "monox": [
+    "Monox"
+  ],
+  "checkmate": [
+    "Checkmate Station",
+    "checkmatestation"
+  ],
+  "bloom": [
+    "Bloom"
+  ],
+  "orbituary": [
+    "Orbituary"
+  ],
+  "pyro-iv": [
+    "Pyro IV",
+    "pyroiv"
+  ],
+  "pyro-v": [
+    "Pyro V",
+    "pyrov"
+  ],
+  "terminus": [
+    "Terminus"
+  ],
+  "ruin-station": [
+    "Ruin Station",
+    "ruinstation"
+  ],
+  "nyx-gateway-pyro": [
+    "Nyx Gateway (Pyro)",
+    "nyxgatewaypyro"
+  ],
+  "pyro-gateway-nyx": [
+    "Pyro Gateway (Nyx)",
+    "pyrogatewaynyx"
+  ],
+  "delamar": [
+    "Delamar"
+  ],
+  "levski": [
+    "Levski"
+  ]
 }

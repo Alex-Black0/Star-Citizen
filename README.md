@@ -1,305 +1,189 @@
-# Verse Route Map — Star Citizen map starter
+# Star Citizen Interactive Map
 
-A clean-room starter for a shareable Star Citizen map with:
+A static 3D/2D route planner, commodity price tracker, and saved trade-run tool designed for GitHub Pages.
 
-- Interactive **3D** map built with Three.js
-- Optional **2D** SVG map using the same data
-- Click-to-select origin and destination
-- Multi-hop shortest-path routing with explicit gateways and jump points
-- Per-leg and total distance display
-- Location details with snapshot and manually entered commodity prices
-- Commodity runs with 36, 24, 12, 8, and 1 SCU container counts
-- Automatic investment, revenue, and estimated-profit calculations
-- Right-side saved-run drawer with load, edit, and delete actions
-- Export/import of personal route and trade data as JSON
-- Routes, manual prices, and trade runs saved in the user's browser with `localStorage`
-- GitHub Pages deployment workflow
-- Scheduled UEX commodity-data snapshot workflow
+## Route-model correction in v0.3
 
-> **Data warning:** The included topology, positions, distances, and commodity prices are demonstration data. Replace them with verified current data before treating routes or values as authoritative.
+Earlier versions treated the **Stanton** and **Pyro** stars as travel hubs. That produced routes such as:
 
-## Why this structure
+```text
+Pyro Gateway (Stanton) → Stanton → microTech → Port Tressler
+```
 
-The universe is represented as a graph:
+That graph was incorrect. A system star is now a **display-only marker** and cannot be selected or traversed by the routing algorithm.
 
-- **Nodes** are stars, planets, moons, stations, gateways, and jump points.
-- **Edges** are allowed travel segments.
-- Each edge has its own distance and travel type.
+The route graph now uses:
 
-The renderer does not decide whether travel is possible. The graph does. This means a cross-system route can be forced through:
+- direct same-system orbit-to-orbit distance edges;
+- local location-to-orbit anchors for stations, cities, moons, and outposts;
+- explicit gateway-to-gateway transitions for inter-system travel;
+- manual overrides for recently verified in-game measurements.
 
-`planet → system hub → gateway → jump point → destination gateway → destination`
+The included regression test verifies that **Pyro Gateway (Stanton) → Port Tressler is 68 Gm** and never traverses the Stanton star.
 
-Both 3D and 2D views render the same graph, so adding a location or changing a route rule only requires a data update.
+## Included fallback locations
+
+The repository ships with a corrected fallback graph containing major Stanton, Pyro, and Nyx destinations. It includes the major planets, moons, orbital stations, cities, gateways, and several major Pyro/Nyx locations.
+
+The fallback is intentionally limited. The **Update universe route data** GitHub Action replaces it with the current UEX live-visible inventory, including additional:
+
+- star systems;
+- planets and planetoids;
+- moons;
+- space stations and gateways;
+- cities;
+- outposts;
+- trade-relevant points of interest;
+- Lagrange points and jump-point orbits.
 
 ## Run locally
 
-A local web server is required because the application loads JSON files with `fetch()`.
+From Command Prompt:
 
-### Windows
-
-```powershell
+```cmd
+cd /d "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter"
 py -m http.server 8080
 ```
 
-### macOS or Linux
-
-```bash
-python3 -m http.server 8080
-```
-
-Then open:
+Open:
 
 ```text
 http://localhost:8080
 ```
 
-You can also run:
+Use `Ctrl+C` in Command Prompt to stop the server.
 
-```bash
-npm run serve
+## Validate routing locally
+
+Node.js 22 or newer is recommended.
+
+```cmd
+npm test
+npm run validate
 ```
 
-That command uses `npx serve` and may download the small `serve` package the first time.
+The tests check:
 
-## Publish on GitHub Pages
+- the verified 68 Gm Pyro Gateway–Port Tressler route;
+- stars never appearing in any route;
+- required Stanton–Pyro gateway traversal;
+- hidden orbit anchors not appearing as user-facing stops;
+- valid edge endpoints and nonnegative distances.
 
-1. Create a new GitHub repository.
-2. Copy these files into the repository.
-3. Commit and push them to the `main` branch.
-4. In GitHub, open **Settings → Pages**.
-5. Under **Build and deployment**, select **GitHub Actions**.
-6. The included `.github/workflows/pages.yml` workflow will publish the site.
+## Refresh all locations and route distances
 
-Your friends can use the generated GitHub Pages URL without installing anything.
+### From GitHub
 
-## Project layout
+After pushing this version:
+
+1. Open the repository on GitHub.
+2. Select **Actions**.
+3. Select **Update universe route data**.
+4. Select **Run workflow**.
+5. Wait for the workflow and the following Pages deployment to finish.
+
+The updater also runs daily and when its script, override data, or workflow changes.
+
+### Locally
+
+```cmd
+npm run update:universe
+npm test
+```
+
+The updater writes:
 
 ```text
-.
-├── .github/workflows/
-│   ├── pages.yml
-│   └── update-trade-data.yml
-├── public/data/
-│   ├── universe.json
-│   ├── commodities.json
-│   └── uex-location-map.json
-├── scripts/
-│   └── update-trade-data.mjs
-├── src/
-│   ├── app.js
-│   ├── map-2d.js
-│   ├── map-3d.js
-│   ├── router.js
-│   └── storage.js
-├── index.html
-├── styles.css
-└── README.md
-```
-
-## Add a planet, station, or jump point
-
-Edit `public/data/universe.json`.
-
-Example node:
-
-```json
-{
-  "id": "example-planet",
-  "name": "Example Planet",
-  "system": "Example System",
-  "type": "planet",
-  "position": [20, 0, 35],
-  "radius": 2.2,
-  "description": "Description shown in the location panel.",
-  "tags": ["planet", "trade"]
-}
-```
-
-The `position` is a **display coordinate**, not necessarily the real travel distance.
-
-Supported starter types:
-
-- `star`
-- `planet`
-- `station`
-- `gateway`
-- `jump-point`
-
-## Add a route connection
-
-Add an edge to `public/data/universe.json`:
-
-```json
-{
-  "id": "example-edge",
-  "from": "example-planet",
-  "to": "example-gateway",
-  "distance": 12.5,
-  "kind": "quantum",
-  "bidirectional": true
-}
-```
-
-The routing algorithm uses `distance` as its weight. It does **not** use the distance between the rendered coordinates.
-
-Suggested edge kinds:
-
-- `local`
-- `quantum`
-- `gateway`
-- `jump`
-
-A gateway becomes mandatory simply by making it the only graph connection into or out of the next region.
-
-## Routing algorithm
-
-`src/router.js` uses Dijkstra's shortest-path algorithm. This is a strong default when every travel segment has a non-negative cost.
-
-Later, edge cost can include more than physical distance:
-
-```text
-cost = distance + travelTime + fuelCost + dangerPenalty + playerPreference
-```
-
-For example, a user could choose:
-
-- Shortest distance
-- Fastest estimated time
-- Lowest fuel use
-- Safest route
-- Highest trade profit
-
-## Commodity data
-
-The map combines two separate data sources:
-
-1. `public/data/commodities.json` — a shared snapshot committed to GitHub.
-2. Browser `localStorage` — each player's manually entered prices and saved trade runs.
-
-Click a planet or station and choose **Add commodity price here** to enter:
-
-- Commodity name
-- Buy price per SCU
-- Sell price per SCU
-- Available or demanded quantity in SCU
-- Notes such as terminal name or update time
-
-Click **Create run** beside a commodity record to prefill a new trade run. A run stores:
-
-- Buy and sell locations
-- Commodity
-- Counts of 36, 24, 12, 8, and 1 SCU containers
-- Total SCU
-- Buy and sell price per SCU
-- Investment, revenue, and estimated profit
-- Personal notes
-
-Saved runs appear in the right-side **Trade Runs** drawer. **Load route** plots the run on the map. **Export** creates a JSON backup that can be imported on another browser or shared with a friend.
-
-### Automatic UEX snapshots
-
-UEX API 2.0 exposes commodity-price resources. The included updater defaults to:
-
-```text
-https://api.uexcorp.uk/2.0/commodities_prices_all
-```
-
-That bulk endpoint does not require an access token. The GitHub Action runs daily, normalizes the response, writes `public/data/commodities.json`, and commits changes. It intentionally runs from GitHub Actions instead of every visitor's browser so the site does not repeatedly download the full dataset and is not dependent on browser CORS behavior.
-
-UEX reports prices by trading terminal, while the current map uses broader planet and station nodes. Edit:
-
-```text
+public/data/universe.json
 public/data/uex-location-map.json
 ```
 
-to map UEX terminal names or slugs to map node IDs. Example:
+It tries both current UEX API hosts and refuses to replace the fallback file when no systems or distance data are returned.
+
+## Route-data sources and limitations
+
+UEX publishes live-visible location resources and orbit-to-orbit distances in Gm. The project imports those records as a community-maintained dataset.
+
+Important limitations:
+
+- UEX data can lag behind the newest game patch.
+- Imported distances are at orbit level; final local approach distances are not added.
+- Surface navigation is not modeled.
+- A jump tunnel is represented as a required topology transition and currently adds 0 Gm to normal-space quantum distance.
+- Visual coordinates are for map readability and are never used to calculate travel distance.
+
+The map displays the dataset source, supported game version, and update date beneath the route controls.
+
+## Correct a measured route
+
+Add a record to:
+
+```text
+public/data/route-overrides.json
+```
+
+Example:
 
 ```json
 {
-  "microtech": ["new babbage", "newbabbage"],
-  "port-tressler": ["port tressler", "porttressler"]
+  "from": "pyro-gateway-stanton",
+  "to": "port-tressler",
+  "distance": 68,
+  "kind": "quantum",
+  "gameVersion": "4.8.3",
+  "source": "UEX route records and player verification",
+  "note": "Observed close to 69 Gm in game."
 }
 ```
 
-For each mapped location and commodity, the updater keeps the lowest positive buy price and highest positive sell price among matched terminals. Add dedicated city, outpost, and terminal nodes later for more precise routing and prices.
+Overrides are applied after imported UEX distances, so a verified in-game measurement wins.
 
-To fetch from a different compatible endpoint, create the optional GitHub repository variable `SC_TRADE_API_URL`. Add `SC_TRADE_API_TOKEN` as an Actions secret only when that endpoint requires authentication. Never put API tokens in browser-delivered JavaScript or HTML.
+## Add a missing location manually
 
-Run the updater manually from **GitHub → Actions → Update commodity data → Run workflow**. The source is community-maintained and should always display a last-updated time and non-authoritative disclaimer.
+For an immediate fallback-only addition, edit `public/data/universe.json` and add:
 
-## Possible map-data sources
+1. a node with a unique `id`, name, system, type, and visual position;
+2. one or more measured route edges;
+3. aliases in `public/data/uex-location-map.json` when the location has commodity terminals.
 
-For systems, celestial objects, and jump-point topology, investigate approved/open community APIs instead of copying another site's implementation. One example is the Star Citizen Wiki API:
+For long-term maintenance, prefer fixing the UEX import mapping so the location remains automatic.
 
-- https://github.com/StarCitizenWiki/API
-- https://docs.star-citizen.wiki/
+## Commodity and trade-run features
 
-Always review API terms, rate limits, attribution requirements, and data licenses before importing or republishing data.
+- Click a planet, moon, city, station, or outpost to add a manual commodity price.
+- Open **Trade Runs** to create, update, load, and delete saved runs.
+- Cargo can be entered as 36, 24, 12, 8, and 1 SCU container counts.
+- Saved runs and manual prices use browser local storage.
+- Export/import lets players transfer their local data as JSON.
+- The daily commodity workflow can refresh the shared UEX price snapshot.
 
-## Saved information
+## GitHub Pages
 
-The starter saves routes, manual commodity prices, and trade runs with browser `localStorage`. This is ideal for the first release because it requires no account system or database.
-
-Limitations:
-
-- Saved information only exists on that browser/device.
-- Clearing browser storage deletes it.
-- The Export/Import buttons provide a manual backup and sharing method.
-- Automatic synchronization between devices still requires accounts and a backend.
-
-For accounts and synchronization later, add a backend such as Supabase, Firebase, or a small custom API. Suggested tables:
+The deployment workflow publishes the repository root. In GitHub:
 
 ```text
-users
-saved_routes
-trade_runs
-trade_run_cargo
-manual_prices
-route_waypoints
-location_notes
-custom_markers
-shared_collections
+Settings → Pages → Source → GitHub Actions
 ```
 
-## Recommended development phases
+Every push to `main` deploys the latest map.
 
-### Phase 1 — working map
+## Project structure
 
-- Verify the 3D and 2D interaction
-- Replace sample Stanton/Pyro positions
-- Add real route edges and distances
-- Add search and filters
-- Add more planets, moons, stations, and jump points
+```text
+.github/workflows/pages.yml                 GitHub Pages deployment
+.github/workflows/update-trade-data.yml     Commodity refresh
+.github/workflows/update-universe-data.yml  Locations and route refresh
+public/data/universe.json                   Route graph and location inventory
+public/data/route-overrides.json            Verified distance corrections
+public/data/commodities.json                Shared commodity snapshot
+scripts/update-universe-data.mjs            UEX location/distance importer
+scripts/update-trade-data.mjs               Commodity importer
+src/router.js                               Dijkstra routing and route summaries
+src/map-3d.js                               Three.js renderer
+src/map-2d.js                               SVG renderer
+tests/router.test.mjs                       Regression tests
+```
 
-### Phase 2 — reliable trade data
+## Disclaimer
 
-- Obtain approved API access
-- Normalize location IDs across map and trade sources
-- Display source and last-updated time for every price
-- Add stale-data indicators
-- Add commodity and profit filters
-
-### Phase 3 — player features
-
-- Accounts
-- Cloud-saved routes
-- Private notes and markers
-- Shareable route links
-- Organization/friend collections
-- Route optimization by ship, range, fuel, cargo, danger, or profit
-
-### Phase 4 — advanced simulation
-
-- Orbital movement or time-based positions
-- Planet and moon textures
-- System-level and local planetary zoom modes
-- Ship quantum-drive performance
-- Estimated travel time and fuel use
-- Live or patch-versioned datasets
-
-## Legal and attribution notes
-
-This starter was built from scratch and is licensed under MIT. Do not copy source code, textures, models, or other assets from projects that do not grant an explicit license. Use project screenshots only as design references unless the author grants permission.
-
-Star Citizen, Roberts Space Industries, and related names and assets belong to their respective rights holders. This project should clearly identify itself as an unofficial fan-made tool and include attribution required by every external dataset or asset license.
+This is a fan-made project and is not affiliated with or endorsed by Cloud Imperium Games or Roberts Space Industries. UEX data is community-maintained and should be verified against the current live game when accuracy is operationally important.

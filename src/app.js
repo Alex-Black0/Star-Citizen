@@ -1,6 +1,6 @@
 import { createMap3D } from "./map-3d.js";
 import { createMap2D } from "./map-2d.js";
-import { findShortestRoute } from "./router.js";
+import { findShortestRoute, summarizeRoute } from "./router.js";
 import {
   exportUserData,
   importUserData,
@@ -13,7 +13,7 @@ import {
 } from "./storage.js";
 
 const CONTAINER_SIZES = [36, 24, 12, 8, 1];
-const TRADEABLE_TYPES = new Set(["planet", "station", "moon", "city", "outpost", "poi"]);
+const TRADEABLE_TYPES = new Set(["planet", "planetoid", "station", "moon", "city", "outpost", "poi", "lagrange"]);
 
 const elements = {
   map3d: document.querySelector("#map-3d"),
@@ -29,6 +29,7 @@ const elements = {
   routePanel: document.querySelector("#route-panel"),
   routeTitle: document.querySelector("#route-title"),
   routeDistance: document.querySelector("#route-distance"),
+  routeDataStatus: document.querySelector("#route-data-status"),
   routeSteps: document.querySelector("#route-steps"),
   routeName: document.querySelector("#route-name"),
   saveRoute: document.querySelector("#save-route"),
@@ -91,7 +92,13 @@ const [universe, commodities] = await Promise.all([
 ]);
 
 const nodesById = new Map(universe.nodes.map((node) => [node.id, node]));
-const tradeableNodes = universe.nodes.filter((node) => TRADEABLE_TYPES.has(node.type));
+const routableNodes = universe.nodes.filter((node) =>
+  node.visible !== false &&
+  node.selectable !== false &&
+  node.routable !== false &&
+  node.routeInternal !== true
+);
+const tradeableNodes = routableNodes.filter((node) => TRADEABLE_TYPES.has(node.type));
 
 let state = {
   view: "3d",
@@ -105,7 +112,7 @@ let state = {
   drawerTab: "saved"
 };
 
-populateLocationSelects(universe.nodes, elements.origin, elements.destination);
+populateLocationSelects(routableNodes, elements.origin, elements.destination);
 populateLocationSelects(tradeableNodes, elements.tradeOrigin, elements.tradeDestination, elements.priceLocation);
 
 const map3d = createMap3D(elements.map3d, universe, handleMapNodeClick);
@@ -118,6 +125,7 @@ renderSelection();
 renderRoute();
 updateRouteMode();
 updateTradeMath();
+renderRouteDataStatus();
 
 function bindEvents() {
   elements.origin.addEventListener("change", () => {
@@ -203,9 +211,17 @@ function switchView(view) {
 }
 
 function handleMapNodeClick(nodeId) {
+  const clickedNode = nodesById.get(nodeId);
+  if (!clickedNode || clickedNode.visible === false) return;
+
   state.selectedNodeId = nodeId;
   renderSelection();
   updateMaps();
+
+  if (clickedNode.selectable === false || clickedNode.routable === false || clickedNode.routeInternal === true) {
+    updateRouteMode();
+    return;
+  }
 
   if (!state.originId) {
     state.originId = nodeId;
@@ -266,18 +282,32 @@ function renderRoute() {
 
   const origin = nodesById.get(state.originId);
   const destination = nodesById.get(state.destinationId);
+  const routeSteps = summarizeRoute(state.route, universe.nodes);
+
   elements.routePanel.classList.remove("hidden");
   elements.routeTitle.textContent = `${origin.name} → ${destination.name}`;
   elements.routeDistance.textContent = `${formatDistance(state.route.distance)} ${universe.metadata.distanceUnit}`;
   elements.routeName.placeholder = `${origin.name} to ${destination.name}`;
-  elements.routeSteps.innerHTML = state.route.nodeIds.map((nodeId, index) => {
-    const node = nodesById.get(nodeId);
-    const nextEdge = state.route.edges[index];
-    const detail = nextEdge
-      ? `${formatType(nextEdge.kind)} · ${formatDistance(nextEdge.distance)} ${universe.metadata.distanceUnit}`
-      : "Destination";
+  elements.routeSteps.innerHTML = routeSteps.map((step, index) => {
+    const node = nodesById.get(step.nodeId);
+    const kinds = step.kinds.map(formatType).join(" + ");
+    const detail = index === 0
+      ? "Origin"
+      : `${kinds || "Travel"} · ${formatDistance(step.distanceFromPrevious)} ${universe.metadata.distanceUnit}`;
     return `<li><strong>${escapeHtml(node.name)}</strong><small>${escapeHtml(detail)}</small></li>`;
   }).join("");
+}
+
+function renderRouteDataStatus() {
+  if (!elements.routeDataStatus) return;
+  const metadata = universe.metadata || {};
+  const parts = [
+    metadata.source || "Route dataset",
+    metadata.gameVersion ? `Game ${metadata.gameVersion}` : null,
+    metadata.updatedAt ? `Updated ${new Date(metadata.updatedAt).toLocaleDateString()}` : null
+  ].filter(Boolean);
+  elements.routeDataStatus.textContent = parts.join(" · ");
+  elements.routeDataStatus.classList.toggle("warning", metadata.authoritative === false);
 }
 
 function getLocationCommodityRecords(locationId) {
@@ -316,7 +346,8 @@ function renderSelection() {
   elements.locationMetadata.innerHTML = `
     <dt>System</dt><dd>${escapeHtml(node.system)}</dd>
     <dt>Map coordinates</dt><dd>${node.position.map((value) => Number(value).toFixed(1)).join(", ")}</dd>
-    <dt>Node ID</dt><dd>${escapeHtml(node.id)}</dd>`;
+    <dt>Node ID</dt><dd>${escapeHtml(node.id)}</dd>
+    <dt>Data source</dt><dd>${escapeHtml(node.dataSource || universe.metadata?.source || "Map dataset")}</dd>`;
 
   const tradeable = TRADEABLE_TYPES.has(node.type);
   elements.addLocationPrice.classList.toggle("hidden", !tradeable);

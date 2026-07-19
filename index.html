@@ -24,7 +24,9 @@
           <h1>Verse Route Map</h1>
         </div>
         <div class="topbar-actions">
-          <button id="trade-drawer-open" class="button trade-button" type="button">Trade Runs <span id="trade-run-count" class="count-badge">0</span></button>
+          <button id="trade-drawer-open" class="button secondary trade-button" type="button">
+            Trade Runs <span id="trade-run-count" class="count-badge">0</span>
+          </button>
           <button id="view-3d" class="button active" type="button">3D</button>
           <button id="view-2d" class="button" type="button">2D</button>
           <button id="reset-camera" class="button secondary" type="button">Reset view</button>
@@ -65,6 +67,7 @@
               <strong id="route-distance">0 Gm</strong>
             </div>
             <ol id="route-steps" class="route-steps"></ol>
+            <p id="route-data-status" class="route-data-status"></p>
             <div class="save-row">
               <input id="route-name" type="text" maxlength="50" placeholder="Route name" />
               <button id="save-route" class="button primary" type="button">Save</button>
@@ -84,7 +87,7 @@
             <dl id="location-metadata" class="metadata"></dl>
             <div class="subheading-row">
               <h3>Commodity information</h3>
-              <span id="commodity-source-badge" class="sample-badge">SAMPLE + MANUAL</span>
+              <span id="commodity-source-badge" class="sample-badge">SNAPSHOT</span>
             </div>
             <div id="commodity-list" class="commodity-list">
               <p class="muted-copy">No commodity records loaded.</p>
@@ -105,8 +108,8 @@
           </section>
 
           <section class="panel warning-panel">
-            <strong>Starter data notice</strong>
-            <p>Prices from the included JSON are demonstration data. Manual prices and runs are saved only in this browser unless you export them.</p>
+            <strong>Route data status</strong>
+            <p>Stars are display-only and are never used as route waypoints. The fallback includes measured major Stanton routes; run the <em>Update universe route data</em> GitHub Action to import the full live UEX location and orbit-distance dataset.</p>
           </section>
         </aside>
 
@@ -121,134 +124,135 @@
           </div>
         </section>
       </main>
-
-      <div id="drawer-backdrop" class="drawer-backdrop hidden"></div>
-      <aside id="trade-drawer" class="trade-drawer" aria-hidden="true" aria-label="Commodity trade runs">
-        <div class="drawer-header">
-          <div>
-            <p class="eyebrow">COMMODITY PLANNER</p>
-            <h2>Trade Runs</h2>
-          </div>
-          <button id="trade-drawer-close" class="icon-button" type="button" aria-label="Close trade runs">×</button>
-        </div>
-
-        <div class="drawer-tabs" role="tablist">
-          <button id="tab-saved-runs" class="drawer-tab active" type="button">Saved Runs</button>
-          <button id="tab-run-form" class="drawer-tab" type="button">New Run</button>
-          <button id="tab-price-form" class="drawer-tab" type="button">Location Price</button>
-        </div>
-
-        <section id="panel-saved-runs" class="drawer-panel active">
-          <div class="drawer-toolbar">
-            <button id="new-trade-run" class="button primary" type="button">New trade run</button>
-            <button id="export-user-data" class="button secondary" type="button">Export</button>
-            <button id="import-user-data" class="button secondary" type="button">Import</button>
-            <input id="import-user-data-file" class="hidden" type="file" accept="application/json,.json" />
-          </div>
-          <div id="saved-trade-runs" class="saved-trade-runs"></div>
-        </section>
-
-        <section id="panel-run-form" class="drawer-panel">
-          <form id="trade-run-form">
-            <input id="trade-run-id" type="hidden" />
-
-            <label for="trade-run-name">Run name</label>
-            <input id="trade-run-name" type="text" maxlength="70" placeholder="Laranite run to Area18" />
-
-            <div class="form-grid two-column">
-              <div>
-                <label for="trade-origin">Buy at</label>
-                <select id="trade-origin" required></select>
-              </div>
-              <div>
-                <label for="trade-destination">Sell at</label>
-                <select id="trade-destination" required></select>
-              </div>
-            </div>
-
-            <label for="trade-commodity">Commodity</label>
-            <input id="trade-commodity" type="text" maxlength="60" placeholder="Laranite" required />
-
-            <div class="form-grid two-column">
-              <div>
-                <label for="trade-buy-price">Buy price / SCU</label>
-                <input id="trade-buy-price" type="number" min="0" step="0.01" placeholder="25.40" required />
-              </div>
-              <div>
-                <label for="trade-sell-price">Sell price / SCU</label>
-                <input id="trade-sell-price" type="number" min="0" step="0.01" placeholder="27.20" required />
-              </div>
-            </div>
-
-            <div class="subheading-row cargo-heading">
-              <div>
-                <h3>Cargo containers</h3>
-                <p class="hint">Enter the number of containers for each size.</p>
-              </div>
-              <strong id="trade-total-scu">0 SCU</strong>
-            </div>
-
-            <div class="cargo-grid">
-              <label class="cargo-size">36 SCU<input data-container-size="36" type="number" min="0" step="1" value="0" /></label>
-              <label class="cargo-size">24 SCU<input data-container-size="24" type="number" min="0" step="1" value="0" /></label>
-              <label class="cargo-size">12 SCU<input data-container-size="12" type="number" min="0" step="1" value="0" /></label>
-              <label class="cargo-size">8 SCU<input data-container-size="8" type="number" min="0" step="1" value="0" /></label>
-              <label class="cargo-size">1 SCU<input data-container-size="1" type="number" min="0" step="1" value="0" /></label>
-            </div>
-
-            <div class="profit-preview">
-              <div><span>Investment</span><strong id="trade-investment">0 aUEC</strong></div>
-              <div><span>Revenue</span><strong id="trade-revenue">0 aUEC</strong></div>
-              <div class="profit-total"><span>Estimated profit</span><strong id="trade-profit">0 aUEC</strong></div>
-            </div>
-
-            <label for="trade-notes">Notes</label>
-            <textarea id="trade-notes" rows="4" maxlength="500" placeholder="Landing zone, risk, preferred ship, alternate sell location..."></textarea>
-
-            <div class="drawer-actions">
-              <button id="cancel-trade-run" class="button secondary" type="button">Cancel</button>
-              <button class="button primary" type="submit"><span id="trade-run-submit-label">Save trade run</span></button>
-            </div>
-          </form>
-        </section>
-
-        <section id="panel-price-form" class="drawer-panel">
-          <form id="location-price-form">
-            <input id="location-price-id" type="hidden" />
-
-            <label for="price-location">Planet or station</label>
-            <select id="price-location" required></select>
-
-            <label for="price-commodity">Commodity</label>
-            <input id="price-commodity" type="text" maxlength="60" placeholder="Gold" required />
-
-            <div class="form-grid two-column">
-              <div>
-                <label for="price-buy">Buy price / SCU</label>
-                <input id="price-buy" type="number" min="0" step="0.01" placeholder="19.20" />
-              </div>
-              <div>
-                <label for="price-sell">Sell price / SCU</label>
-                <input id="price-sell" type="number" min="0" step="0.01" placeholder="21.40" />
-              </div>
-            </div>
-
-            <label for="price-stock">Available or demanded quantity (SCU)</label>
-            <input id="price-stock" type="number" min="0" step="1" placeholder="500" />
-
-            <label for="price-notes">Notes</label>
-            <textarea id="price-notes" rows="4" maxlength="500" placeholder="Terminal name, timestamp, refresh rate, or other details..."></textarea>
-
-            <div class="drawer-actions">
-              <button id="cancel-location-price" class="button secondary" type="button">Cancel</button>
-              <button class="button primary" type="submit"><span id="location-price-submit-label">Save location price</span></button>
-            </div>
-          </form>
-        </section>
-      </aside>
-
-      <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
     </div>
+
+    <div id="drawer-backdrop" class="drawer-backdrop hidden"></div>
+
+    <aside id="trade-drawer" class="trade-drawer" aria-hidden="true" aria-label="Commodity trade runs">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">COMMODITY PLANNER</p>
+          <h2>Trade Runs</h2>
+        </div>
+        <button id="trade-drawer-close" class="icon-button" type="button" aria-label="Close trade runs">×</button>
+      </div>
+
+      <div class="drawer-tabs" role="tablist" aria-label="Commodity planner sections">
+        <button id="tab-saved-runs" class="drawer-tab active" type="button" role="tab">Saved Runs</button>
+        <button id="tab-run-form" class="drawer-tab" type="button" role="tab">New Run</button>
+        <button id="tab-price-form" class="drawer-tab" type="button" role="tab">Add Price</button>
+      </div>
+
+      <section id="panel-saved-runs" class="drawer-panel active" role="tabpanel">
+        <div class="drawer-toolbar">
+          <button id="new-trade-run" class="button primary" type="button">New trade run</button>
+          <button id="export-user-data" class="button secondary" type="button">Export</button>
+          <button id="import-user-data" class="button secondary" type="button">Import</button>
+          <input id="import-user-data-file" class="hidden" type="file" accept="application/json,.json" />
+        </div>
+        <div id="saved-trade-runs" class="saved-trade-runs"></div>
+      </section>
+
+      <section id="panel-run-form" class="drawer-panel" role="tabpanel">
+        <form id="trade-run-form">
+          <input id="trade-run-id" type="hidden" />
+
+          <label for="trade-run-name">Run name</label>
+          <input id="trade-run-name" type="text" maxlength="80" placeholder="Example: Titanium to Area18" />
+
+          <div class="form-grid two-column">
+            <div>
+              <label for="trade-origin">Buy location</label>
+              <select id="trade-origin" required></select>
+            </div>
+            <div>
+              <label for="trade-destination">Sell location</label>
+              <select id="trade-destination" required></select>
+            </div>
+          </div>
+
+          <label for="trade-commodity">Commodity</label>
+          <input id="trade-commodity" type="text" maxlength="80" placeholder="Example: Titanium" required />
+
+          <div class="form-grid two-column">
+            <div>
+              <label for="trade-buy-price">Buy price per SCU</label>
+              <input id="trade-buy-price" type="number" min="0" step="0.01" value="0" required />
+            </div>
+            <div>
+              <label for="trade-sell-price">Sell price per SCU</label>
+              <input id="trade-sell-price" type="number" min="0" step="0.01" value="0" required />
+            </div>
+          </div>
+
+          <div class="subheading-row cargo-heading">
+            <div>
+              <h3>Cargo containers</h3>
+              <p class="hint">Enter the number of containers for each SCU size.</p>
+            </div>
+            <strong id="trade-total-scu">0 SCU</strong>
+          </div>
+
+          <div class="cargo-grid">
+            <label class="cargo-size">36 SCU<input data-container-size="36" type="number" min="0" step="1" value="0" /></label>
+            <label class="cargo-size">24 SCU<input data-container-size="24" type="number" min="0" step="1" value="0" /></label>
+            <label class="cargo-size">12 SCU<input data-container-size="12" type="number" min="0" step="1" value="0" /></label>
+            <label class="cargo-size">8 SCU<input data-container-size="8" type="number" min="0" step="1" value="0" /></label>
+            <label class="cargo-size">1 SCU<input data-container-size="1" type="number" min="0" step="1" value="0" /></label>
+          </div>
+
+          <div class="profit-preview">
+            <div><span>INVESTMENT</span><strong id="trade-investment">0 aUEC</strong></div>
+            <div><span>REVENUE</span><strong id="trade-revenue">0 aUEC</strong></div>
+            <div class="profit-total"><span>PROFIT</span><strong id="trade-profit">0 aUEC</strong></div>
+          </div>
+
+          <label for="trade-notes">Notes</label>
+          <textarea id="trade-notes" rows="4" maxlength="500" placeholder="Inventory, risk, timing, or route notes"></textarea>
+
+          <div class="drawer-actions">
+            <button id="cancel-trade-run" class="button secondary" type="button">Cancel</button>
+            <button class="button primary" type="submit"><span id="trade-run-submit-label">Save trade run</span></button>
+          </div>
+        </form>
+      </section>
+
+      <section id="panel-price-form" class="drawer-panel" role="tabpanel">
+        <form id="location-price-form">
+          <input id="location-price-id" type="hidden" />
+
+          <label for="price-location">Planet or station</label>
+          <select id="price-location" required></select>
+
+          <label for="price-commodity">Commodity</label>
+          <input id="price-commodity" type="text" maxlength="80" placeholder="Example: Gold" required />
+
+          <div class="form-grid two-column">
+            <div>
+              <label for="price-buy">Buy price per SCU</label>
+              <input id="price-buy" type="number" min="0" step="0.01" placeholder="Optional" />
+            </div>
+            <div>
+              <label for="price-sell">Sell price per SCU</label>
+              <input id="price-sell" type="number" min="0" step="0.01" placeholder="Optional" />
+            </div>
+          </div>
+
+          <label for="price-stock">Available or demanded quantity (SCU)</label>
+          <input id="price-stock" type="number" min="0" step="1" placeholder="Optional" />
+
+          <label for="price-notes">Notes</label>
+          <textarea id="price-notes" rows="4" maxlength="500" placeholder="Terminal, demand, update time, or source"></textarea>
+
+          <div class="drawer-actions">
+            <button id="cancel-location-price" class="button secondary" type="button">Cancel</button>
+            <button class="button primary" type="submit"><span id="location-price-submit-label">Save location price</span></button>
+          </div>
+        </form>
+      </section>
+    </aside>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
     <script type="module" src="./src/app.js"></script>
   </body>
