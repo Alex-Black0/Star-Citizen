@@ -86,6 +86,33 @@ for (const localNode of ["microtech", "port-tressler", "new-babbage", "calliope"
   assert(microtechLocalNodes.some((node) => node.id === localNode), `Expected ${localNode} in microTech local view`);
 }
 
+
+// Stanton local hierarchy remains unchanged: Yela is reached through its parent planet.
+const microtechToYela = findShortestRoute(
+  universe.nodes,
+  universe.edges,
+  "microtech",
+  "yela"
+);
+assert(microtechToYela, "Expected microTech to Yela route");
+assert.deepEqual(microtechToYela.nodeIds, ["microtech", "crusader", "yela"]);
+
+// Pyro direct-routing regression: stations and gateways are quantum destinations.
+// The fallback graph must not force Gaslight through a chain of unrelated planets.
+const gaslightToStantonGateway = findShortestRoute(
+  universe.nodes,
+  universe.edges,
+  "gaslight",
+  "stanton-gateway-pyro"
+);
+assert(gaslightToStantonGateway, "Expected Gaslight to Stanton Gateway route");
+assert.deepEqual(
+  gaslightToStantonGateway.nodeIds,
+  ["gaslight", "stanton-gateway-pyro"],
+  "Gaslight should quantum directly to Stanton Gateway without planet hopping"
+);
+assert(gaslightToStantonGateway.distance > 0, "Expected a positive direct Pyro distance");
+
 const sameNodeRoute = findShortestRoute(universe.nodes, universe.edges, "hurston", "hurston");
 assert.equal(sameNodeRoute.distance, 0);
 assert.deepEqual(sameNodeRoute.nodeIds, ["hurston"]);

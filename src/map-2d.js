@@ -113,8 +113,17 @@ export function createMap2D(container, universe, onNodeClick) {
         <g>${nodeMarkup}</g>
       </svg>`;
 
+    const svg = container.querySelector(".map-2d-svg");
+    svg?.addEventListener("click", (event) => {
+      const nodeElement = event.target.closest?.("[data-node-id]");
+      if (!nodeElement) onNodeClick(null);
+    });
+
     container.querySelectorAll("[data-node-id]").forEach((element) => {
-      element.addEventListener("click", () => onNodeClick(element.dataset.nodeId));
+      element.addEventListener("click", (event) => {
+        event.stopPropagation();
+        onNodeClick(element.dataset.nodeId);
+      });
     });
   }
 

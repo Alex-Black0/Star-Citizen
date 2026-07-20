@@ -210,6 +210,7 @@ export function createMap3D(container, universe, onNodeClick, onScopeRequest = (
     const visibleMeshes = [...nodeMeshes.values()].filter((mesh) => mesh.visible);
     const hits = raycaster.intersectObjects(visibleMeshes, false);
     if (hits.length > 0) onNodeClick(hits[0].object.userData.nodeId);
+    else onNodeClick(null);
   }
 
   function setScope(nextScope) {

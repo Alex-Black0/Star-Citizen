@@ -254,6 +254,14 @@ function switchView(view) {
 }
 
 function handleMapNodeClick(nodeId) {
+  if (!nodeId) {
+    state.selectedNodeId = "";
+    renderSelection();
+    updateMaps();
+    updateRouteMode();
+    return;
+  }
+
   const clickedNode = nodesById.get(nodeId);
   if (!clickedNode || clickedNode.visible === false) return;
 

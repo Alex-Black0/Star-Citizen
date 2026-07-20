@@ -1,33 +1,58 @@
-# Route Validation Checklist v5
+# Route Validation Checklist v5.1
 
 ## Automated checks
-
-Run:
 
 ```cmd
 npm test
 npm run validate
 ```
 
-Expected automated output:
+Expected:
 
 ```text
-Routing tests passed (54 nodes, 60 edges).
+Routing tests passed (54 nodes, 180 edges).
 ```
 
-## Visual checks
+## Selection checks
 
-1. Open the public map and confirm the universe overview shows **Stanton**, **Pyro**, and **Nyx**.
-2. Enter **Pyro** and confirm the system uses a warmer orange theme than Stanton and Nyx.
-3. Confirm the orbital rings are prominent and directional axes remain visible.
-4. Click a planet or station and confirm **dashed distance spokes** appear.
-5. Open **Pyro V** local view and confirm **Gaslight** appears.
-6. Confirm these Pyro priority locations appear in the dataset:
-   - Gaslight
-   - Patch City
-   - Starlight
-   - Rat's Nest
-   - Dudley & Daughters
-   - Megumi Refueling
-7. Route **Pyro Gateway (Stanton)** to **Port Tressler** and confirm the total remains **68 Gm**.
-8. Route **Port Tressler** to **Levski** and confirm the route uses the direct Stanton ↔ Nyx path rather than detouring through Pyro.
+- Select a planet or station and confirm distance spokes appear.
+- Click empty space in the 3D map and confirm the selection clears.
+- Repeat in the 2D map.
+- Confirm clearing the selected object does not erase a previously calculated route.
+
+## Route checks
+
+### Pyro
+
+```text
+Gaslight → Stanton Gateway (Pyro)
+```
+
+Expected visible steps:
+
+```text
+Gaslight
+Stanton Gateway (Pyro)
+```
+
+The route must not insert Pyro V, Pyro IV, Bloom, Monox, or Pyro I.
+
+### Stanton regression
+
+```text
+microTech → Yela
+```
+
+Expected visible steps:
+
+```text
+microTech
+Crusader
+Yela
+```
+
+### Existing verified regression
+
+```text
+Pyro Gateway (Stanton) → Port Tressler = 68 Gm
+```

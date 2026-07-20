@@ -52,7 +52,14 @@ export function findShortestRoute(nodes, edges, startId, endId) {
       if (neighborNode.routable === false && neighbor.nodeId !== endId) continue;
 
       const edgeDistance = Number(neighbor.edge.distance);
-      const transferPenalty = neighbor.edge.kind === "jump" ? 10000 : Number(neighbor.edge.routePenalty || 0);
+      const defaultHopPenalty = neighbor.edge.kind === "jump"
+        ? 10000
+        : neighbor.edge.kind === "local"
+          ? 0.25
+          : 5;
+      const transferPenalty = Number.isFinite(Number(neighbor.edge.routePenalty))
+        ? Number(neighbor.edge.routePenalty)
+        : defaultHopPenalty;
       const nextDistance = distances.get(currentId) + edgeDistance;
       const nextCost = currentCost + edgeDistance + transferPenalty;
       if (nextCost < routeCosts.get(neighbor.nodeId)) {

@@ -1,121 +1,73 @@
-# Verse Route Map v5
+# Verse Route Map v5.1
 
-A static 3D/2D Star Citizen route and commodity planner designed for GitHub Pages.
+This hotfix updates the themed hierarchical Star Citizen route and commodity map for GitHub Pages.
 
-## What changed in v5
+## What changed
 
-- Kept the **Universe → System → Local** hierarchical navigation from v4
-- Added **system-themed visuals**:
-  - **Stanton** uses a cooler blue/navy palette
-  - **Pyro** uses a darker orange ember palette
-  - **Nyx** uses a deeper blue/violet palette
-- Added richer background treatment with nebula overlays, stronger orbital rings, and more directional context
-- Added **selected-location distance spokes** so clicking a planet or station shows dashed distance lines to nearby visible destinations
-- Added clearer **station / gateway / jump-point / planet icon differentiation**
-- Restored and added several Pyro priority locations, including:
-  - **Gaslight**
-  - **Patch City**
-  - **Starlight**
-  - **Rat's Nest**
-  - **Dudley & Daughters**
-  - **Megumi Refueling**
-- Retained saved routes, trade runs, manual commodity prices, export, and import
-
-## Run locally
-
-From Command Prompt:
-
-```cmd
-cd /d "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter"
-py -m http.server 8080
-```
-
-Open:
+- Clicking an **empty area** of either the 3D or 2D map now clears the selected location.
+- Clearing the selection removes the dashed distance spokes without clearing the active origin, destination, or calculated route.
+- Pyro fallback routing now includes direct same-system quantum links between major:
+  - planets;
+  - gateways;
+  - stations;
+  - trade and ship-storage locations.
+- The route planner now applies a small waypoint penalty so it prefers a direct quantum leg instead of several nearly equal hops.
+- Stanton's existing local hierarchy is retained. For example:
 
 ```text
-http://localhost:8080
+microTech → Crusader → Yela
 ```
 
-Keep the Command Prompt window open. Press `Ctrl + C` to stop the server.
+- Gaslight now routes directly to Stanton Gateway in the fallback graph:
 
-## Replace the existing Git-connected version
+```text
+Gaslight → Stanton Gateway (Pyro)
+```
 
-After extracting the v5 ZIP into your `Project` folder:
+The fallback direct Pyro distances are estimates derived from the map geometry. Imported UEX or verified in-game values should replace those estimates when available.
+
+## Install the update
+
+This ZIP is packaged without an extra inner project folder. Extract it into:
+
+```text
+C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5-1
+```
+
+Then run:
 
 ```cmd
-robocopy "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5\star-citizen-interactive-map-v5" "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter" /E /XD .git
+robocopy "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5-1" "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter" /E /XD .git
 
 cd /d "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter"
 
+findstr /C:"0.5.1" package.json
 npm test
 npm run validate
 
 git status
 git add -A
-git commit -m "Add themed map visuals and selected distance spokes"
+git commit -m "Clear map selections and fix direct Pyro routing"
 git pull --rebase origin main
 git push origin main
+git status
 ```
 
-Do not copy or replace the `.git` directory.
-
-## Using the map
-
-1. Start in the triangular universe overview.
-2. Select Stanton, Pyro, or Nyx.
-3. Use the brighter orbital rings to orient yourself inside the system.
-4. Click a planet, station, or gateway to inspect it.
-5. When a location is selected, the map draws **dashed distance spokes** to nearby visible destinations.
-6. Select a planet and click **Open local map**, or zoom in after selecting it.
-7. Use the breadcrumb buttons to move back to the system or universe.
-
-## Saved routes and trade data
-
-Saved routes, commodity runs, manual prices, and notes are stored in the current browser using local storage.
-
-- Different users receive separate browser-local saves.
-- Saves do not automatically follow a user to another device.
-- Clearing browser data can remove them.
-- Use **Trade Runs → Export** to back up the data.
-- Use **Import** to restore it in another browser.
-
-## Route topology
-
-System stars remain display-only and never appear as travel waypoints. Inter-system routes pass through paired gateways.
-
-The fallback graph includes the three-system triangle:
+## Expected tests
 
 ```text
-Stanton ↔ Pyro
-Pyro ↔ Nyx
-Nyx ↔ Stanton
+Routing tests passed (54 nodes, 180 edges).
 ```
 
-The verified regression route remains:
+## Manual checks
+
+1. Open Pyro.
+2. Select Gaslight and confirm the dashed distance spokes appear.
+3. Click an empty section of space and confirm the selection and spokes disappear.
+4. Route Gaslight to Stanton Gateway (Pyro).
+5. Confirm the route has one direct leg rather than visiting Pyro V and several other planets.
+6. Route microTech to Yela and confirm the existing Stanton hierarchy remains:
 
 ```text
-Pyro Gateway (Stanton) → Port Tressler = 68 Gm
-```
-
-## Automatic universe updates
-
-The GitHub workflow remains available at:
-
-```text
-.github/workflows/update-universe-data.yml
-```
-
-The update script still preserves the hierarchy metadata and the system triangle. You can continue replacing fallback values with better verified live data over time.
-
-## Tests
-
-```cmd
-npm test
-npm run validate
-```
-
-The current suite reports:
-
-```text
-Routing tests passed (54 nodes, 60 edges).
+microTech → Crusader → Yela
 ```

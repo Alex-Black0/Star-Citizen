@@ -1,8 +1,8 @@
 {
   "name": "star-citizen-interactive-map-starter",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
-  "description": "Themed hierarchical 3D/2D Star Citizen universe, system, and local commodity route map for GitHub Pages",
+  "description": "Themed hierarchical Star Citizen map with clearable selections and direct Pyro quantum routing",
   "license": "MIT",
   "scripts": {
     "serve": "npx serve .",
