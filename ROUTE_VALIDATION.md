@@ -1,8 +1,6 @@
-# Route Validation Checklist v5.3
+# v5.4 Validation Checklist
 
 ## Automated checks
-
-Run:
 
 ```cmd
 npm test
@@ -14,17 +12,20 @@ Expected output:
 ```text
 Routing tests passed (54 nodes, 180 edges).
 Trade calculator tests passed.
+Community trade run tests passed.
 ```
 
-## Visual checks
+## Community Trade Runs checks
 
-1. Open the public map.
-2. Enter **Stanton** and confirm:
-   - Hurston looks dusty / brown
-   - ArcCorp looks urbanized
-   - Crusader shows gas giant banding
-   - microTech looks icy
-3. Enter **Pyro** and confirm the system uses darker orange visuals and the planets look more scorched / volcanic.
-4. Enter **Nyx** and confirm Delamar has a colder rocky appearance.
-5. Open any local view and confirm the selected body is textured and slowly rotating.
-6. Confirm space stations still display correctly and routing / selection behavior still works.
+1. Open **Trade Runs** in a browser with no existing private runs.
+2. Confirm the drawer opens on the **Community** tab.
+3. Confirm these three examples appear:
+   - Tressler → Baijini
+   - Baijini → Gaslight
+   - Gaslight → Tressler
+4. Confirm each run shows its observed date and price warning.
+5. Rank the shared runs by net profit and confirm Baijini → Gaslight is first.
+6. Click **Load route** and confirm the route opens on the map.
+7. Click **Copy to My Runs** and confirm the run appears in the **My Runs** tab.
+8. Edit the copied run and confirm the original community example remains unchanged.
+9. Delete the copied run and confirm **Copy to My Runs** becomes available again.

@@ -62,13 +62,21 @@ const elements = {
   tradeDrawer: document.querySelector("#trade-drawer"),
   drawerBackdrop: document.querySelector("#drawer-backdrop"),
   tradeRunCount: document.querySelector("#trade-run-count"),
+  tabCommunityRuns: document.querySelector("#tab-community-runs"),
   tabSavedRuns: document.querySelector("#tab-saved-runs"),
   tabRunForm: document.querySelector("#tab-run-form"),
   tabPriceForm: document.querySelector("#tab-price-form"),
+  panelCommunityRuns: document.querySelector("#panel-community-runs"),
   panelSavedRuns: document.querySelector("#panel-saved-runs"),
   panelRunForm: document.querySelector("#panel-run-form"),
   panelPriceForm: document.querySelector("#panel-price-form"),
   newTradeRun: document.querySelector("#new-trade-run"),
+  communityTradeRuns: document.querySelector("#community-trade-runs"),
+  bestCommunityRun: document.querySelector("#best-community-run"),
+  communityTradeSort: document.querySelector("#community-trade-sort"),
+  communityRunCount: document.querySelector("#community-run-count"),
+  myRunCount: document.querySelector("#my-run-count"),
+  communityDataWarning: document.querySelector("#community-data-warning"),
   savedTradeRuns: document.querySelector("#saved-trade-runs"),
   bestTradeRun: document.querySelector("#best-trade-run"),
   tradeSort: document.querySelector("#trade-sort"),
@@ -122,9 +130,10 @@ const elements = {
   toast: document.querySelector("#toast")
 };
 
-const [universe, commodities] = await Promise.all([
+const [universe, commodities, communityTradeData] = await Promise.all([
   loadJson("./public/data/universe.json"),
-  loadJson("./public/data/commodities.json")
+  loadJson("./public/data/commodities.json"),
+  loadJson("./public/data/community-trade-runs.json").catch(() => ({ tradeRuns: [] }))
 ]);
 
 const nodesById = new Map(universe.nodes.map((node) => [node.id, node]));
@@ -145,9 +154,11 @@ let state = {
   route: null,
   savedRoutes: loadSavedRoutes(),
   tradeRuns: loadTradeRuns(),
+  communityTradeRuns: hydrateTradeRuns(Array.isArray(communityTradeData.tradeRuns) ? communityTradeData.tradeRuns : []),
   manualPrices: loadManualPrices(),
-  drawerTab: "saved",
+  drawerTab: "community",
   tradeSort: "netProfit",
+  communityTradeSort: "netProfit",
   mapScope: { level: "overview", system: null, anchorId: null }
 };
 
@@ -164,6 +175,7 @@ map2d.setScope(state.mapScope);
 
 bindEvents();
 renderSavedRoutes();
+renderCommunityTradeRuns();
 renderSavedTradeRuns();
 renderSelection();
 renderRoute();
@@ -211,13 +223,14 @@ function bindEvents() {
     if (anchor) enterLocal(anchor.id);
   });
 
-  elements.tradeDrawerOpen.addEventListener("click", () => openDrawer("saved"));
+  elements.tradeDrawerOpen.addEventListener("click", () => openDrawer(state.tradeRuns.length ? "saved" : "community"));
   elements.tradeDrawerClose.addEventListener("click", closeDrawer);
   elements.drawerBackdrop.addEventListener("click", closeDrawer);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && elements.tradeDrawer.classList.contains("open")) closeDrawer();
   });
 
+  elements.tabCommunityRuns.addEventListener("click", () => switchDrawerTab("community"));
   elements.tabSavedRuns.addEventListener("click", () => switchDrawerTab("saved"));
   elements.tabRunForm.addEventListener("click", () => switchDrawerTab("run"));
   elements.tabPriceForm.addEventListener("click", () => switchDrawerTab("price"));
@@ -226,6 +239,10 @@ function bindEvents() {
   elements.tradeSort.addEventListener("change", () => {
     state.tradeSort = elements.tradeSort.value;
     renderSavedTradeRuns();
+  });
+  elements.communityTradeSort.addEventListener("change", () => {
+    state.communityTradeSort = elements.communityTradeSort.value;
+    renderCommunityTradeRuns();
   });
   elements.tradePricingModes.forEach((input) => input.addEventListener("change", () => {
     updatePricingModeVisibility();
@@ -664,6 +681,7 @@ function closeDrawer() {
 function switchDrawerTab(tab) {
   state.drawerTab = tab;
   const tabs = {
+    community: [elements.tabCommunityRuns, elements.panelCommunityRuns],
     saved: [elements.tabSavedRuns, elements.panelSavedRuns],
     run: [elements.tabRunForm, elements.panelRunForm],
     price: [elements.tabPriceForm, elements.panelPriceForm]
@@ -851,8 +869,124 @@ function saveTradeRun(event) {
   showToast(existingId ? "Trade run updated." : "Trade run saved.");
 }
 
+
+function renderCommunityTradeRuns() {
+  const runs = state.communityTradeRuns || [];
+  elements.communityRunCount.textContent = String(runs.length);
+  elements.communityTradeSort.value = state.communityTradeSort;
+  if (communityTradeData.disclaimer) elements.communityDataWarning.textContent = communityTradeData.disclaimer;
+
+  if (runs.length === 0) {
+    elements.bestCommunityRun.classList.add("hidden");
+    elements.communityTradeRuns.innerHTML = `
+      <div class="empty-state">
+        <strong>No community runs published yet</strong>
+        <p>Shared example runs will appear here automatically when they are included with the map.</p>
+      </div>`;
+    return;
+  }
+
+  const rankedRuns = rankTradeRuns(runs, state.communityTradeSort);
+  const bestRun = rankedRuns[0];
+  elements.bestCommunityRun.classList.remove("hidden");
+  elements.bestCommunityRun.innerHTML = `
+    <span class="best-run-kicker">TOP COMMUNITY RUN FOR CURRENT RANKING</span>
+    <strong>${escapeHtml(bestRun.name)}</strong>
+    <span>${escapeHtml(bestRun.commodity)} · ${escapeHtml(nodesById.get(bestRun.originId)?.name || bestRun.originId)} → ${escapeHtml(nodesById.get(bestRun.destinationId)?.name || bestRun.destinationId)}</span>
+    <b>${escapeHtml(tradeRankingMetric(bestRun, state.communityTradeSort))}</b>`;
+
+  elements.communityTradeRuns.innerHTML = rankedRuns.map((run, index) => {
+    const origin = nodesById.get(run.originId);
+    const destination = nodesById.get(run.destinationId);
+    const cargoSummary = CONTAINER_SIZES
+      .filter((size) => Number(run.containers?.[String(size)] || 0) > 0)
+      .map((size) => `${run.containers[String(size)]}×${size}`)
+      .join(" · ");
+    const freshness = freshnessForRun(run);
+    const pricingSummary = run.pricingMode === PRICING_MODES.TOTALS
+      ? `<span><small>TOTAL PAID</small>${formatAuec(run.investment)}</span><span><small>TOTAL RECEIVED</small>${formatAuec(run.revenue)}</span>`
+      : `<span><small>BUY / SCU</small>${formatPrice(run.buyPrice)}</span><span><small>SELL / SCU</small>${formatPrice(run.sellPrice)}</span>`;
+    const alreadyCopied = state.tradeRuns.some((item) => item.communitySourceId === run.communitySourceId);
+
+    return `
+      <article class="trade-run-card community-run-card ${index === 0 ? "top-ranked" : ""}">
+        <div class="trade-run-card-header">
+          <div class="ranked-title">
+            <span class="rank-badge">#${index + 1}</span>
+            <div><p class="eyebrow">COMMUNITY · ${escapeHtml(run.commodity)}</p><h3>${escapeHtml(run.name)}</h3></div>
+          </div>
+          <strong class="profit-value ${Number(run.netProfit) < 0 ? "negative" : ""}">${formatSignedAuec(run.netProfit)} aUEC</strong>
+        </div>
+        <div class="trade-route-line">
+          <span><small>BUY</small>${escapeHtml(origin?.name || run.originId)}</span>
+          <b>→</b>
+          <span><small>SELL</small>${escapeHtml(destination?.name || run.destinationId)}</span>
+        </div>
+        <div class="trade-stats">
+          <span><small>CARGO</small>${formatWhole(run.totalScu)} SCU</span>
+          ${pricingSummary}
+          <span><small>OPTIONAL COSTS</small>${formatAuec(run.totalFees)} aUEC</span>
+          <span><small>DISTANCE</small>${run.routeDistance > 0 ? `${formatDistance(run.routeDistance)} Gm` : "—"}</span>
+          <span><small>PROFIT / SCU</small>${run.profitPerScu === null ? "—" : formatPrice(run.profitPerScu)}</span>
+          <span><small>PROFIT / GM</small>${run.profitPerGm === null ? "—" : formatAuec(run.profitPerGm)}</span>
+          <span><small>PROFIT / MIN</small>${run.profitPerMinute === null ? "—" : formatAuec(run.profitPerMinute)}</span>
+        </div>
+        <div class="run-freshness ${freshness.level}"><span>Observed ${escapeHtml(run.priceObservedAt || "Unknown date")}</span><b>${escapeHtml(freshness.label)}</b></div>
+        <p class="container-summary">${escapeHtml(cargoSummary || "No container breakdown")}</p>
+        <p class="community-copy-note">Shared by ${escapeHtml(run.submittedBy || "the community")}. Prices and stock may have changed since this run was recorded.</p>
+        <div class="trade-card-actions">
+          <button class="button primary" data-copy-community-run="${escapeHtml(run.communitySourceId || run.id)}" type="button" ${alreadyCopied ? "disabled" : ""}>${alreadyCopied ? "Copied to My Runs" : "Copy to My Runs"}</button>
+          <button class="button secondary" data-load-community-run="${escapeHtml(run.communitySourceId || run.id)}" type="button">Load route</button>
+        </div>
+      </article>`;
+  }).join("");
+
+  elements.communityTradeRuns.querySelectorAll("[data-copy-community-run]").forEach((button) => {
+    button.addEventListener("click", () => copyCommunityTradeRun(button.dataset.copyCommunityRun));
+  });
+
+  elements.communityTradeRuns.querySelectorAll("[data-load-community-run]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const run = state.communityTradeRuns.find((item) => (item.communitySourceId || item.id) === button.dataset.loadCommunityRun);
+      if (!run) return;
+      loadRoute(run.originId, run.destinationId);
+      closeDrawer();
+      showToast(`${run.name} loaded on the map.`);
+    });
+  });
+}
+
+function copyCommunityTradeRun(sourceId) {
+  const source = state.communityTradeRuns.find((item) => (item.communitySourceId || item.id) === sourceId);
+  if (!source) return;
+  const existing = state.tradeRuns.find((item) => item.communitySourceId === sourceId);
+  if (existing) {
+    switchDrawerTab("saved");
+    showToast("That community run is already in My Runs.");
+    return;
+  }
+
+  const now = new Date().toISOString();
+  const copied = normalizeTradeRun({
+    ...source,
+    id: crypto.randomUUID(),
+    communitySourceId: sourceId,
+    source: "Copied from Community Trade Runs",
+    createdAt: now,
+    updatedAt: now,
+    notes: source.notes || "Copied from a dated community example. Verify current commodity prices, stock, demand, and fees before running it."
+  });
+  state.tradeRuns = [copied, ...state.tradeRuns].slice(0, 100);
+  persistTradeRuns(state.tradeRuns);
+  renderSavedTradeRuns();
+  renderCommunityTradeRuns();
+  switchDrawerTab("saved");
+  showToast(`${source.name} copied to My Runs.`);
+}
+
 function renderSavedTradeRuns() {
-  elements.tradeRunCount.textContent = String(state.tradeRuns.length);
+  elements.myRunCount.textContent = String(state.tradeRuns.length);
+  elements.tradeRunCount.textContent = String(state.tradeRuns.length + state.communityTradeRuns.length);
   elements.tradeSort.value = state.tradeSort;
 
   if (state.tradeRuns.length === 0) {
@@ -957,6 +1091,7 @@ function deleteTradeRun(id) {
   state.tradeRuns = state.tradeRuns.filter((item) => item.id !== id);
   persistTradeRuns(state.tradeRuns);
   renderSavedTradeRuns();
+  renderCommunityTradeRuns();
   showToast("Trade run deleted.");
 }
 
@@ -1048,6 +1183,7 @@ async function importDataFile() {
     state.manualPrices = imported.manualPrices;
     renderSavedRoutes();
     renderSavedTradeRuns();
+    renderCommunityTradeRuns();
     renderSelection();
     showToast("Trade data imported.");
   } catch (error) {

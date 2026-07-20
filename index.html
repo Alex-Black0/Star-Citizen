@@ -152,12 +152,36 @@
       </div>
 
       <div class="drawer-tabs" role="tablist" aria-label="Commodity planner sections">
-        <button id="tab-saved-runs" class="drawer-tab active" type="button" role="tab">Saved Runs</button>
+        <button id="tab-community-runs" class="drawer-tab active" type="button" role="tab">Community <span id="community-run-count" class="tab-count">0</span></button>
+        <button id="tab-saved-runs" class="drawer-tab" type="button" role="tab">My Runs <span id="my-run-count" class="tab-count">0</span></button>
         <button id="tab-run-form" class="drawer-tab" type="button" role="tab">New Run</button>
         <button id="tab-price-form" class="drawer-tab" type="button" role="tab">Add Price</button>
       </div>
 
-      <section id="panel-saved-runs" class="drawer-panel active" role="tabpanel">
+      <section id="panel-community-runs" class="drawer-panel active" role="tabpanel">
+        <div class="community-intro">
+          <div>
+            <p class="eyebrow">SHARED EXAMPLES</p>
+            <h3>Community Trade Runs</h3>
+          </div>
+          <p>These dated examples are available to everyone. Copy one to <strong>My Runs</strong> before changing prices, cargo, fees, or notes.</p>
+          <p id="community-data-warning" class="community-warning">Commodity prices and availability can change. Verify current values before buying cargo.</p>
+        </div>
+        <div class="run-ranking-toolbar">
+          <label for="community-trade-sort">Rank community runs by</label>
+          <select id="community-trade-sort">
+            <option value="netProfit">Net profit</option>
+            <option value="profitPerScu">Profit per SCU</option>
+            <option value="profitPerGm">Profit per Gm</option>
+            <option value="profitPerMinute">Profit per minute</option>
+            <option value="recent">Most recently updated</option>
+          </select>
+        </div>
+        <div id="best-community-run" class="best-trade-run hidden"></div>
+        <div id="community-trade-runs" class="saved-trade-runs"></div>
+      </section>
+
+      <section id="panel-saved-runs" class="drawer-panel" role="tabpanel">
         <div class="drawer-toolbar">
           <button id="new-trade-run" class="button primary" type="button">New trade run</button>
           <button id="export-user-data" class="button secondary" type="button">Export</button>

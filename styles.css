@@ -242,7 +242,7 @@ textarea:focus { border-color: var(--accent); }
 }
 .drawer-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
   padding: 10px 12px;
   border-bottom: 1px solid var(--border);
@@ -775,4 +775,67 @@ textarea:focus { border-color: var(--accent); }
   .run-ranking-toolbar { grid-template-columns: 1fr; }
   .profit-preview.expanded { grid-template-columns: repeat(2, 1fr); }
   .trade-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(115, 220, 255, 0.12);
+  color: #bfefff;
+  font-size: 0.66rem;
+  font-weight: 900;
+}
+.drawer-tab.active .tab-count {
+  color: #07121a;
+  background: rgba(7, 18, 26, 0.18);
+}
+.community-intro {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(115, 220, 255, 0.22);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(40, 128, 169, 0.12), rgba(6, 17, 29, 0.76));
+}
+.community-intro h3 {
+  margin: 2px 0 8px;
+  color: #effbff;
+}
+.community-intro > p {
+  margin: 7px 0 0;
+  color: #9eb9c8;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.community-warning {
+  padding: 9px 10px;
+  border-left: 3px solid #ffbe72;
+  border-radius: 5px;
+  background: rgba(255, 169, 78, 0.08);
+  color: #f3cfaa !important;
+}
+.community-run-card {
+  border-color: rgba(115, 220, 255, 0.2);
+}
+.community-run-card.top-ranked {
+  box-shadow: 0 0 0 1px rgba(115, 220, 255, 0.24), 0 14px 30px rgba(1, 8, 16, 0.28);
+}
+.community-copy-note {
+  margin: 10px 0;
+  color: #8faaba;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+.trade-card-actions button:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
+@media (max-width: 700px) {
+  .drawer-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
