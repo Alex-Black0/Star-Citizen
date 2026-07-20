@@ -164,6 +164,17 @@
           <button id="import-user-data" class="button secondary" type="button">Import</button>
           <input id="import-user-data-file" class="hidden" type="file" accept="application/json,.json" />
         </div>
+        <div class="run-ranking-toolbar">
+          <label for="trade-sort">Rank saved runs by</label>
+          <select id="trade-sort">
+            <option value="netProfit">Net profit</option>
+            <option value="profitPerScu">Profit per SCU</option>
+            <option value="profitPerGm">Profit per Gm</option>
+            <option value="profitPerMinute">Profit per minute</option>
+            <option value="recent">Most recently updated</option>
+          </select>
+        </div>
+        <div id="best-trade-run" class="best-trade-run hidden"></div>
         <div id="saved-trade-runs" class="saved-trade-runs"></div>
       </section>
 
@@ -188,15 +199,43 @@
           <label for="trade-commodity">Commodity</label>
           <input id="trade-commodity" type="text" maxlength="80" placeholder="Example: Titanium" required />
 
-          <div class="form-grid two-column">
-            <div>
-              <label for="trade-buy-price">Buy price per SCU</label>
-              <input id="trade-buy-price" type="number" min="0" step="0.01" value="0" required />
+          <fieldset class="pricing-mode-fieldset">
+            <legend>How do you want to enter prices?</legend>
+            <label class="pricing-mode-option">
+              <input type="radio" name="trade-pricing-mode" value="per-scu" checked />
+              <span><strong>Price by SCU & quantity</strong><small>Use buy and sell prices per SCU.</small></span>
+            </label>
+            <label class="pricing-mode-option">
+              <input type="radio" name="trade-pricing-mode" value="totals" />
+              <span><strong>Total transaction amounts</strong><small>Enter the combined amount paid and received across one or more transactions.</small></span>
+            </label>
+          </fieldset>
+
+          <div id="pricing-per-scu" class="pricing-panel">
+            <div class="form-grid two-column">
+              <div>
+                <label for="trade-buy-price">Buy price per SCU</label>
+                <input id="trade-buy-price" type="number" min="0" step="0.01" value="0" />
+              </div>
+              <div>
+                <label for="trade-sell-price">Sell price per SCU</label>
+                <input id="trade-sell-price" type="number" min="0" step="0.01" value="0" />
+              </div>
             </div>
-            <div>
-              <label for="trade-sell-price">Sell price per SCU</label>
-              <input id="trade-sell-price" type="number" min="0" step="0.01" value="0" required />
+          </div>
+
+          <div id="pricing-totals" class="pricing-panel hidden">
+            <div class="form-grid two-column">
+              <div>
+                <label for="trade-buy-total">Total amount paid</label>
+                <input id="trade-buy-total" type="number" min="0" step="1" value="0" />
+              </div>
+              <div>
+                <label for="trade-sell-total">Total amount received</label>
+                <input id="trade-sell-total" type="number" min="0" step="1" value="0" />
+              </div>
             </div>
+            <p class="hint">Combine multiple purchase or sale receipts into these totals.</p>
           </div>
 
           <div class="subheading-row cargo-heading">
@@ -208,17 +247,35 @@
           </div>
 
           <div class="cargo-grid">
-            <label class="cargo-size">36 SCU<input data-container-size="36" type="number" min="0" step="1" value="0" /></label>
+            <label class="cargo-size">32 SCU<input data-container-size="32" type="number" min="0" step="1" value="0" /></label>
             <label class="cargo-size">24 SCU<input data-container-size="24" type="number" min="0" step="1" value="0" /></label>
             <label class="cargo-size">12 SCU<input data-container-size="12" type="number" min="0" step="1" value="0" /></label>
             <label class="cargo-size">8 SCU<input data-container-size="8" type="number" min="0" step="1" value="0" /></label>
             <label class="cargo-size">1 SCU<input data-container-size="1" type="number" min="0" step="1" value="0" /></label>
           </div>
 
-          <div class="profit-preview">
+          <details class="optional-costs">
+            <summary>Optional operating costs and run timing</summary>
+            <p class="hint">Leave these at zero or blank unless you want a more accurate net-profit calculation.</p>
+            <div class="form-grid two-column">
+              <div><label for="trade-loading-fee">Auto-loading fee</label><input id="trade-loading-fee" type="number" min="0" step="1" value="0" /></div>
+              <div><label for="trade-unloading-fee">Auto-unloading fee</label><input id="trade-unloading-fee" type="number" min="0" step="1" value="0" /></div>
+              <div><label for="trade-fuel-cost">Fuel cost</label><input id="trade-fuel-cost" type="number" min="0" step="1" value="0" /></div>
+              <div><label for="trade-other-fees">Other costs</label><input id="trade-other-fees" type="number" min="0" step="1" value="0" /></div>
+              <div><label for="trade-observed-date">Price observed date</label><input id="trade-observed-date" type="date" /></div>
+              <div><label for="trade-trip-minutes">Observed trip time (minutes)</label><input id="trade-trip-minutes" type="number" min="0" step="1" placeholder="Optional" /></div>
+            </div>
+          </details>
+
+          <div class="profit-preview expanded">
             <div><span>INVESTMENT</span><strong id="trade-investment">0 aUEC</strong></div>
             <div><span>REVENUE</span><strong id="trade-revenue">0 aUEC</strong></div>
-            <div class="profit-total"><span>PROFIT</span><strong id="trade-profit">0 aUEC</strong></div>
+            <div><span>OPTIONAL COSTS</span><strong id="trade-fees">0 aUEC</strong></div>
+            <div class="profit-total"><span>NET PROFIT</span><strong id="trade-profit">0 aUEC</strong></div>
+            <div><span>PROFIT / SCU</span><strong id="trade-profit-per-scu">—</strong></div>
+            <div><span>ROUTE DISTANCE</span><strong id="trade-route-distance">—</strong></div>
+            <div><span>PROFIT / GM</span><strong id="trade-profit-per-gm">—</strong></div>
+            <div><span>PROFIT / MIN</span><strong id="trade-profit-per-minute">—</strong></div>
           </div>
 
           <label for="trade-notes">Notes</label>

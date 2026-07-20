@@ -3,6 +3,14 @@ import { createMap2D } from "./map-2d.js";
 import { findShortestRoute, summarizeRoute } from "./router.js";
 import { createHierarchy, scopeForNode, scopeTitle } from "./map-hierarchy.js";
 import {
+  CONTAINER_SIZES,
+  PRICING_MODES,
+  calculateTradeMetrics,
+  freshnessForRun,
+  normalizeTradeRun,
+  rankTradeRuns
+} from "./trade-calculator.js";
+import {
   exportUserData,
   importUserData,
   loadManualPrices,
@@ -13,7 +21,6 @@ import {
   persistTradeRuns
 } from "./storage.js";
 
-const CONTAINER_SIZES = [36, 24, 12, 8, 1];
 const TRADEABLE_TYPES = new Set(["planet", "planetoid", "station", "moon", "city", "outpost", "poi", "lagrange"]);
 
 const elements = {
@@ -63,6 +70,8 @@ const elements = {
   panelPriceForm: document.querySelector("#panel-price-form"),
   newTradeRun: document.querySelector("#new-trade-run"),
   savedTradeRuns: document.querySelector("#saved-trade-runs"),
+  bestTradeRun: document.querySelector("#best-trade-run"),
+  tradeSort: document.querySelector("#trade-sort"),
   exportUserData: document.querySelector("#export-user-data"),
   importUserData: document.querySelector("#import-user-data"),
   importUserDataFile: document.querySelector("#import-user-data-file"),
@@ -72,13 +81,29 @@ const elements = {
   tradeOrigin: document.querySelector("#trade-origin"),
   tradeDestination: document.querySelector("#trade-destination"),
   tradeCommodity: document.querySelector("#trade-commodity"),
+  tradePricingModes: [...document.querySelectorAll('input[name="trade-pricing-mode"]')],
+  pricingPerScu: document.querySelector("#pricing-per-scu"),
+  pricingTotals: document.querySelector("#pricing-totals"),
   tradeBuyPrice: document.querySelector("#trade-buy-price"),
   tradeSellPrice: document.querySelector("#trade-sell-price"),
+  tradeBuyTotal: document.querySelector("#trade-buy-total"),
+  tradeSellTotal: document.querySelector("#trade-sell-total"),
+  tradeLoadingFee: document.querySelector("#trade-loading-fee"),
+  tradeUnloadingFee: document.querySelector("#trade-unloading-fee"),
+  tradeFuelCost: document.querySelector("#trade-fuel-cost"),
+  tradeOtherFees: document.querySelector("#trade-other-fees"),
+  tradeObservedDate: document.querySelector("#trade-observed-date"),
+  tradeTripMinutes: document.querySelector("#trade-trip-minutes"),
   tradeNotes: document.querySelector("#trade-notes"),
   tradeTotalScu: document.querySelector("#trade-total-scu"),
   tradeInvestment: document.querySelector("#trade-investment"),
   tradeRevenue: document.querySelector("#trade-revenue"),
+  tradeFees: document.querySelector("#trade-fees"),
   tradeProfit: document.querySelector("#trade-profit"),
+  tradeProfitPerScu: document.querySelector("#trade-profit-per-scu"),
+  tradeRouteDistance: document.querySelector("#trade-route-distance"),
+  tradeProfitPerGm: document.querySelector("#trade-profit-per-gm"),
+  tradeProfitPerMinute: document.querySelector("#trade-profit-per-minute"),
   tradeRunSubmitLabel: document.querySelector("#trade-run-submit-label"),
   cancelTradeRun: document.querySelector("#cancel-trade-run"),
   locationPriceForm: document.querySelector("#location-price-form"),
@@ -122,8 +147,12 @@ let state = {
   tradeRuns: loadTradeRuns(),
   manualPrices: loadManualPrices(),
   drawerTab: "saved",
+  tradeSort: "netProfit",
   mapScope: { level: "overview", system: null, anchorId: null }
 };
+
+state.tradeRuns = hydrateTradeRuns(state.tradeRuns);
+persistTradeRuns(state.tradeRuns);
 
 populateLocationSelects(routableNodes, elements.origin, elements.destination);
 populateLocationSelects(tradeableNodes, elements.tradeOrigin, elements.tradeDestination, elements.priceLocation);
@@ -194,6 +223,14 @@ function bindEvents() {
   elements.tabPriceForm.addEventListener("click", () => switchDrawerTab("price"));
   elements.newTradeRun.addEventListener("click", () => openTradeRunForm());
   elements.addLocationPrice.addEventListener("click", () => openLocationPriceForm({ locationId: state.selectedNodeId }));
+  elements.tradeSort.addEventListener("change", () => {
+    state.tradeSort = elements.tradeSort.value;
+    renderSavedTradeRuns();
+  });
+  elements.tradePricingModes.forEach((input) => input.addEventListener("change", () => {
+    updatePricingModeVisibility();
+    updateTradeMath();
+  }));
 
   elements.tradeRunForm.addEventListener("submit", saveTradeRun);
   elements.locationPriceForm.addEventListener("submit", saveLocationPrice);
@@ -639,24 +676,65 @@ function switchDrawerTab(tab) {
   });
 }
 
+function hydrateTradeRuns(runs) {
+  return runs.map((source) => {
+    const run = normalizeTradeRun(source);
+    if (run.routeDistance > 0 || !run.originId || !run.destinationId) return run;
+    const route = findShortestRoute(universe.nodes, universe.edges, run.originId, run.destinationId);
+    return normalizeTradeRun({ ...run, routeDistance: route?.distance || 0 });
+  });
+}
+
+function currentPricingMode() {
+  return elements.tradePricingModes.find((input) => input.checked)?.value || PRICING_MODES.PER_SCU;
+}
+
+function updatePricingModeVisibility() {
+  const mode = currentPricingMode();
+  elements.pricingPerScu.classList.toggle("hidden", mode !== PRICING_MODES.PER_SCU);
+  elements.pricingTotals.classList.toggle("hidden", mode !== PRICING_MODES.TOTALS);
+}
+
 function openTradeRunForm(prefill = {}) {
   resetTradeRunForm();
-  elements.tradeRunId.value = prefill.id || "";
-  elements.tradeRunName.value = prefill.name || "";
-  elements.tradeOrigin.value = prefill.originId || state.originId || (TRADEABLE_TYPES.has(nodesById.get(state.selectedNodeId)?.type) ? state.selectedNodeId : "");
-  elements.tradeDestination.value = prefill.destinationId || state.destinationId || "";
-  elements.tradeCommodity.value = prefill.commodity || "";
-  elements.tradeBuyPrice.value = numberOrBlank(prefill.buyPrice);
-  elements.tradeSellPrice.value = numberOrBlank(prefill.sellPrice);
-  elements.tradeNotes.value = prefill.notes || "";
+  const normalized = prefill.id ? normalizeTradeRun(prefill) : prefill;
+  const pricingMode = normalized.pricingMode || PRICING_MODES.PER_SCU;
+  elements.tradePricingModes.forEach((input) => {
+    input.checked = input.value === pricingMode;
+  });
+  elements.tradeRunId.value = normalized.id || "";
+  elements.tradeRunName.value = normalized.name || "";
+  elements.tradeOrigin.value = normalized.originId || state.originId || (TRADEABLE_TYPES.has(nodesById.get(state.selectedNodeId)?.type) ? state.selectedNodeId : "");
+  elements.tradeDestination.value = normalized.destinationId || state.destinationId || "";
+  elements.tradeCommodity.value = normalized.commodity || "";
+  elements.tradeBuyPrice.value = numberOrBlank(normalized.buyPrice ?? 0);
+  elements.tradeSellPrice.value = numberOrBlank(normalized.sellPrice ?? 0);
+  elements.tradeBuyTotal.value = numberOrBlank(normalized.buyTotal ?? 0);
+  elements.tradeSellTotal.value = numberOrBlank(normalized.sellTotal ?? 0);
+  elements.tradeLoadingFee.value = numberOrBlank(normalized.fees?.loading ?? 0);
+  elements.tradeUnloadingFee.value = numberOrBlank(normalized.fees?.unloading ?? 0);
+  elements.tradeFuelCost.value = numberOrBlank(normalized.fees?.fuel ?? 0);
+  elements.tradeOtherFees.value = numberOrBlank(normalized.fees?.other ?? 0);
+  elements.tradeObservedDate.value = normalized.priceObservedAt || new Date().toISOString().slice(0, 10);
+  elements.tradeTripMinutes.value = numberOrBlank(normalized.observedMinutes || "");
+  elements.tradeNotes.value = normalized.notes || "";
 
-  if (prefill.containers) {
-    elements.tradeRunForm.querySelectorAll("[data-container-size]").forEach((input) => {
-      input.value = Math.max(0, Number(prefill.containers[input.dataset.containerSize] || 0));
-    });
+  const normalizedContainers = calculateTradeMetrics({ containers: normalized.containers }).containers;
+  elements.tradeRunForm.querySelectorAll("[data-container-size]").forEach((input) => {
+    input.value = Math.max(0, Number(normalizedContainers[input.dataset.containerSize] || 0));
+  });
+
+  const optionalCosts = elements.tradeRunForm.querySelector(".optional-costs");
+  if (optionalCosts) {
+    optionalCosts.open = Boolean(
+      Number(normalized.fees?.loading) || Number(normalized.fees?.unloading) ||
+      Number(normalized.fees?.fuel) || Number(normalized.fees?.other) ||
+      Number(normalized.observedMinutes)
+    );
   }
 
-  elements.tradeRunSubmitLabel.textContent = prefill.id ? "Update trade run" : "Save trade run";
+  elements.tradeRunSubmitLabel.textContent = normalized.id ? "Update trade run" : "Save trade run";
+  updatePricingModeVisibility();
   updateTradeMath();
   openDrawer("run");
 }
@@ -667,7 +745,9 @@ function resetTradeRunForm() {
   elements.tradeRunForm.querySelectorAll("[data-container-size]").forEach((input) => {
     input.value = "0";
   });
+  elements.tradeObservedDate.value = new Date().toISOString().slice(0, 10);
   elements.tradeRunSubmitLabel.textContent = "Save trade run";
+  updatePricingModeVisibility();
 }
 
 function getContainerBreakdown() {
@@ -679,34 +759,49 @@ function getContainerBreakdown() {
   return containers;
 }
 
-function calculateTotalScu(containers) {
-  return CONTAINER_SIZES.reduce((total, size) => total + size * Number(containers[String(size)] || 0), 0);
+function calculateTradeRouteDistance(originId = elements.tradeOrigin.value, destinationId = elements.tradeDestination.value) {
+  if (!originId || !destinationId || originId === destinationId) return 0;
+  return findShortestRoute(universe.nodes, universe.edges, originId, destinationId)?.distance || 0;
+}
+
+function getTradeFormMetrics() {
+  return calculateTradeMetrics({
+    pricingMode: currentPricingMode(),
+    containers: getContainerBreakdown(),
+    buyPrice: elements.tradeBuyPrice.value,
+    sellPrice: elements.tradeSellPrice.value,
+    buyTotal: elements.tradeBuyTotal.value,
+    sellTotal: elements.tradeSellTotal.value,
+    fees: {
+      loading: elements.tradeLoadingFee.value,
+      unloading: elements.tradeUnloadingFee.value,
+      fuel: elements.tradeFuelCost.value,
+      other: elements.tradeOtherFees.value
+    },
+    routeDistance: calculateTradeRouteDistance(),
+    observedMinutes: elements.tradeTripMinutes.value
+  });
 }
 
 function updateTradeMath() {
-  const containers = getContainerBreakdown();
-  const totalScu = calculateTotalScu(containers);
-  const buyPrice = Number(elements.tradeBuyPrice.value) || 0;
-  const sellPrice = Number(elements.tradeSellPrice.value) || 0;
-  const investment = totalScu * buyPrice;
-  const revenue = totalScu * sellPrice;
-  const profit = revenue - investment;
-
-  elements.tradeTotalScu.textContent = `${formatWhole(totalScu)} SCU`;
-  elements.tradeInvestment.textContent = `${formatAuec(investment)} aUEC`;
-  elements.tradeRevenue.textContent = `${formatAuec(revenue)} aUEC`;
-  elements.tradeProfit.textContent = `${formatSignedAuec(profit)} aUEC`;
-  elements.tradeProfit.classList.toggle("negative", profit < 0);
+  const metrics = getTradeFormMetrics();
+  elements.tradeTotalScu.textContent = `${formatWhole(metrics.totalScu)} SCU`;
+  elements.tradeInvestment.textContent = `${formatAuec(metrics.investment)} aUEC`;
+  elements.tradeRevenue.textContent = `${formatAuec(metrics.revenue)} aUEC`;
+  elements.tradeFees.textContent = `${formatAuec(metrics.totalFees)} aUEC`;
+  elements.tradeProfit.textContent = `${formatSignedAuec(metrics.netProfit)} aUEC`;
+  elements.tradeProfit.classList.toggle("negative", metrics.netProfit < 0);
+  elements.tradeProfitPerScu.textContent = metrics.profitPerScu === null ? "—" : `${formatPrice(metrics.profitPerScu)} aUEC`;
+  elements.tradeRouteDistance.textContent = metrics.routeDistance > 0 ? `${formatDistance(metrics.routeDistance)} Gm` : "—";
+  elements.tradeProfitPerGm.textContent = metrics.profitPerGm === null ? "—" : `${formatAuec(metrics.profitPerGm)} aUEC`;
+  elements.tradeProfitPerMinute.textContent = metrics.profitPerMinute === null ? "—" : `${formatAuec(metrics.profitPerMinute)} aUEC`;
 }
 
 function saveTradeRun(event) {
   event.preventDefault();
   const originId = elements.tradeOrigin.value;
   const destinationId = elements.tradeDestination.value;
-  const containers = getContainerBreakdown();
-  const totalScu = calculateTotalScu(containers);
-  const buyPrice = Number(elements.tradeBuyPrice.value);
-  const sellPrice = Number(elements.tradeSellPrice.value);
+  const metrics = getTradeFormMetrics();
 
   if (!originId || !destinationId) {
     showToast("Choose both a buy and sell location.", true);
@@ -716,31 +811,34 @@ function saveTradeRun(event) {
     showToast("The buy and sell locations must be different.", true);
     return;
   }
-  if (totalScu <= 0) {
+  if (metrics.totalScu <= 0) {
     showToast("Add at least one cargo container.", true);
+    return;
+  }
+  if (metrics.pricingMode === PRICING_MODES.PER_SCU && (metrics.buyPrice <= 0 || metrics.sellPrice <= 0)) {
+    showToast("Enter both the buy and sell price per SCU.", true);
+    return;
+  }
+  if (metrics.pricingMode === PRICING_MODES.TOTALS && (metrics.buyTotal <= 0 || metrics.sellTotal <= 0)) {
+    showToast("Enter both the total amount paid and received.", true);
     return;
   }
 
   const existingId = elements.tradeRunId.value;
   const existing = state.tradeRuns.find((run) => run.id === existingId);
   const now = new Date().toISOString();
-  const run = {
+  const run = normalizeTradeRun({
+    ...metrics,
     id: existingId || crypto.randomUUID(),
     name: elements.tradeRunName.value.trim() || `${elements.tradeCommodity.value.trim()} · ${nodesById.get(originId)?.name} → ${nodesById.get(destinationId)?.name}`,
     originId,
     destinationId,
     commodity: elements.tradeCommodity.value.trim(),
-    containers,
-    totalScu,
-    buyPrice,
-    sellPrice,
-    investment: totalScu * buyPrice,
-    revenue: totalScu * sellPrice,
-    profit: totalScu * (sellPrice - buyPrice),
+    priceObservedAt: elements.tradeObservedDate.value || now.slice(0, 10),
     notes: elements.tradeNotes.value.trim(),
     createdAt: existing?.createdAt || now,
     updatedAt: now
-  };
+  });
 
   state.tradeRuns = existingId
     ? state.tradeRuns.map((item) => item.id === existingId ? run : item)
@@ -755,8 +853,10 @@ function saveTradeRun(event) {
 
 function renderSavedTradeRuns() {
   elements.tradeRunCount.textContent = String(state.tradeRuns.length);
+  elements.tradeSort.value = state.tradeSort;
 
   if (state.tradeRuns.length === 0) {
+    elements.bestTradeRun.classList.add("hidden");
     elements.savedTradeRuns.innerHTML = `
       <div class="empty-state">
         <strong>No commodity runs saved</strong>
@@ -765,22 +865,36 @@ function renderSavedTradeRuns() {
     return;
   }
 
-  elements.savedTradeRuns.innerHTML = state.tradeRuns.map((run) => {
+  const rankedRuns = rankTradeRuns(state.tradeRuns, state.tradeSort);
+  const bestRun = rankedRuns[0];
+  const bestMetric = tradeRankingMetric(bestRun, state.tradeSort);
+  elements.bestTradeRun.classList.remove("hidden");
+  elements.bestTradeRun.innerHTML = `
+    <span class="best-run-kicker">BEST MATCH FOR CURRENT RANKING</span>
+    <strong>${escapeHtml(bestRun.name)}</strong>
+    <span>${escapeHtml(bestRun.commodity)} · ${escapeHtml(nodesById.get(bestRun.originId)?.name || bestRun.originId)} → ${escapeHtml(nodesById.get(bestRun.destinationId)?.name || bestRun.destinationId)}</span>
+    <b>${escapeHtml(bestMetric)}</b>`;
+
+  elements.savedTradeRuns.innerHTML = rankedRuns.map((run, index) => {
     const origin = nodesById.get(run.originId);
     const destination = nodesById.get(run.destinationId);
     const cargoSummary = CONTAINER_SIZES
       .filter((size) => Number(run.containers?.[String(size)] || 0) > 0)
       .map((size) => `${run.containers[String(size)]}×${size}`)
       .join(" · ");
+    const freshness = freshnessForRun(run);
+    const pricingSummary = run.pricingMode === PRICING_MODES.TOTALS
+      ? `<span><small>TOTAL PAID</small>${formatAuec(run.investment)}</span><span><small>TOTAL RECEIVED</small>${formatAuec(run.revenue)}</span>`
+      : `<span><small>BUY / SCU</small>${formatPrice(run.buyPrice)}</span><span><small>SELL / SCU</small>${formatPrice(run.sellPrice)}</span>`;
 
     return `
-      <article class="trade-run-card">
+      <article class="trade-run-card ${index === 0 ? "top-ranked" : ""}">
         <div class="trade-run-card-header">
-          <div>
-            <p class="eyebrow">${escapeHtml(run.commodity)}</p>
-            <h3>${escapeHtml(run.name)}</h3>
+          <div class="ranked-title">
+            <span class="rank-badge">#${index + 1}</span>
+            <div><p class="eyebrow">${escapeHtml(run.commodity)}</p><h3>${escapeHtml(run.name)}</h3></div>
           </div>
-          <strong class="profit-value ${Number(run.profit) < 0 ? "negative" : ""}">${formatSignedAuec(run.profit)} aUEC</strong>
+          <strong class="profit-value ${Number(run.netProfit) < 0 ? "negative" : ""}">${formatSignedAuec(run.netProfit)} aUEC</strong>
         </div>
         <div class="trade-route-line">
           <span><small>BUY</small>${escapeHtml(origin?.name || run.originId)}</span>
@@ -789,9 +903,14 @@ function renderSavedTradeRuns() {
         </div>
         <div class="trade-stats">
           <span><small>CARGO</small>${formatWhole(run.totalScu)} SCU</span>
-          <span><small>BUY / SCU</small>${formatPrice(run.buyPrice)}</span>
-          <span><small>SELL / SCU</small>${formatPrice(run.sellPrice)}</span>
+          ${pricingSummary}
+          <span><small>OPTIONAL COSTS</small>${formatAuec(run.totalFees)} aUEC</span>
+          <span><small>DISTANCE</small>${run.routeDistance > 0 ? `${formatDistance(run.routeDistance)} Gm` : "—"}</span>
+          <span><small>PROFIT / SCU</small>${run.profitPerScu === null ? "—" : formatPrice(run.profitPerScu)}</span>
+          <span><small>PROFIT / GM</small>${run.profitPerGm === null ? "—" : formatAuec(run.profitPerGm)}</span>
+          <span><small>PROFIT / MIN</small>${run.profitPerMinute === null ? "—" : formatAuec(run.profitPerMinute)}</span>
         </div>
+        <div class="run-freshness ${freshness.level}"><span>${escapeHtml(run.priceObservedAt || "Unknown date")}</span><b>${escapeHtml(freshness.label)}</b></div>
         <p class="container-summary">${escapeHtml(cargoSummary || "No container breakdown")}</p>
         ${run.notes ? `<p class="trade-notes-preview">${escapeHtml(run.notes)}</p>` : ""}
         <div class="trade-card-actions">
@@ -822,6 +941,14 @@ function renderSavedTradeRuns() {
   elements.savedTradeRuns.querySelectorAll("[data-delete-trade-run]").forEach((button) => {
     button.addEventListener("click", () => deleteTradeRun(button.dataset.deleteTradeRun));
   });
+}
+
+function tradeRankingMetric(run, metric) {
+  if (metric === "profitPerScu") return `${formatPrice(run.profitPerScu)} aUEC profit / SCU`;
+  if (metric === "profitPerGm") return run.profitPerGm === null ? "No distance score" : `${formatAuec(run.profitPerGm)} aUEC profit / Gm`;
+  if (metric === "profitPerMinute") return run.profitPerMinute === null ? "Add an observed trip time to rank by time" : `${formatAuec(run.profitPerMinute)} aUEC profit / minute`;
+  if (metric === "recent") return `Updated ${freshnessForRun(run).label.toLowerCase()}`;
+  return `${formatSignedAuec(run.netProfit)} aUEC net profit`;
 }
 
 function deleteTradeRun(id) {
@@ -916,7 +1043,8 @@ async function importDataFile() {
     const payload = JSON.parse(await file.text());
     const imported = importUserData(payload);
     state.savedRoutes = imported.savedRoutes;
-    state.tradeRuns = imported.tradeRuns;
+    state.tradeRuns = hydrateTradeRuns(imported.tradeRuns);
+    persistTradeRuns(state.tradeRuns);
     state.manualPrices = imported.manualPrices;
     renderSavedRoutes();
     renderSavedTradeRuns();
