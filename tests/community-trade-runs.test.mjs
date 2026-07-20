@@ -11,9 +11,14 @@ const nodeIds = new Set(universe.nodes.map((node) => node.id));
 assert.equal(communityData.version, 1);
 assert.equal(communityData.tradeRuns.length, 3);
 assert(communityData.disclaimer.includes("Verify current values"));
-assert(indexHtml.includes('id="tab-community-runs"'));
+assert(!indexHtml.includes('id="tab-community-runs"'));
+assert(indexHtml.includes('id="open-community-examples"'));
+assert(indexHtml.includes('id="back-to-my-runs"'));
 assert(indexHtml.includes('id="community-trade-runs"'));
 assert(appSource.includes("copyCommunityTradeRun"));
+assert(appSource.includes("BUNDLED_COMMUNITY_TRADE_DATA"));
+assert(appSource.includes("elements.tradeRunCount.textContent = String(state.tradeRuns.length)"));
+assert(appSource.includes("panel.hidden = !active"));
 
 const normalized = communityData.tradeRuns.map(normalizeTradeRun);
 for (const run of normalized) {

@@ -2,6 +2,7 @@ import { createMap3D } from "./map-3d.js";
 import { createMap2D } from "./map-2d.js";
 import { findShortestRoute, summarizeRoute } from "./router.js";
 import { createHierarchy, scopeForNode, scopeTitle } from "./map-hierarchy.js";
+import { BUNDLED_COMMUNITY_TRADE_DATA } from "./community-examples.js";
 import {
   CONTAINER_SIZES,
   PRICING_MODES,
@@ -62,7 +63,8 @@ const elements = {
   tradeDrawer: document.querySelector("#trade-drawer"),
   drawerBackdrop: document.querySelector("#drawer-backdrop"),
   tradeRunCount: document.querySelector("#trade-run-count"),
-  tabCommunityRuns: document.querySelector("#tab-community-runs"),
+  openCommunityExamples: document.querySelector("#open-community-examples"),
+  backToMyRuns: document.querySelector("#back-to-my-runs"),
   tabSavedRuns: document.querySelector("#tab-saved-runs"),
   tabRunForm: document.querySelector("#tab-run-form"),
   tabPriceForm: document.querySelector("#tab-price-form"),
@@ -130,11 +132,14 @@ const elements = {
   toast: document.querySelector("#toast")
 };
 
-const [universe, commodities, communityTradeData] = await Promise.all([
+const [universe, commodities, loadedCommunityTradeData] = await Promise.all([
   loadJson("./public/data/universe.json"),
   loadJson("./public/data/commodities.json"),
-  loadJson("./public/data/community-trade-runs.json").catch(() => ({ tradeRuns: [] }))
+  loadJson("./public/data/community-trade-runs.json").catch(() => BUNDLED_COMMUNITY_TRADE_DATA)
 ]);
+const communityTradeData = Array.isArray(loadedCommunityTradeData?.tradeRuns) && loadedCommunityTradeData.tradeRuns.length
+  ? loadedCommunityTradeData
+  : BUNDLED_COMMUNITY_TRADE_DATA;
 
 const nodesById = new Map(universe.nodes.map((node) => [node.id, node]));
 const hierarchy = createHierarchy(universe);
@@ -156,7 +161,7 @@ let state = {
   tradeRuns: loadTradeRuns(),
   communityTradeRuns: hydrateTradeRuns(Array.isArray(communityTradeData.tradeRuns) ? communityTradeData.tradeRuns : []),
   manualPrices: loadManualPrices(),
-  drawerTab: "community",
+  drawerTab: "saved",
   tradeSort: "netProfit",
   communityTradeSort: "netProfit",
   mapScope: { level: "overview", system: null, anchorId: null }
@@ -223,14 +228,15 @@ function bindEvents() {
     if (anchor) enterLocal(anchor.id);
   });
 
-  elements.tradeDrawerOpen.addEventListener("click", () => openDrawer(state.tradeRuns.length ? "saved" : "community"));
+  elements.tradeDrawerOpen.addEventListener("click", () => openDrawer("saved"));
   elements.tradeDrawerClose.addEventListener("click", closeDrawer);
   elements.drawerBackdrop.addEventListener("click", closeDrawer);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && elements.tradeDrawer.classList.contains("open")) closeDrawer();
   });
 
-  elements.tabCommunityRuns.addEventListener("click", () => switchDrawerTab("community"));
+  elements.openCommunityExamples.addEventListener("click", () => switchDrawerTab("community"));
+  elements.backToMyRuns.addEventListener("click", () => switchDrawerTab("saved"));
   elements.tabSavedRuns.addEventListener("click", () => switchDrawerTab("saved"));
   elements.tabRunForm.addEventListener("click", () => switchDrawerTab("run"));
   elements.tabPriceForm.addEventListener("click", () => switchDrawerTab("price"));
@@ -679,19 +685,25 @@ function closeDrawer() {
 }
 
 function switchDrawerTab(tab) {
-  state.drawerTab = tab;
-  const tabs = {
-    community: [elements.tabCommunityRuns, elements.panelCommunityRuns],
-    saved: [elements.tabSavedRuns, elements.panelSavedRuns],
-    run: [elements.tabRunForm, elements.panelRunForm],
-    price: [elements.tabPriceForm, elements.panelPriceForm]
+  const sections = {
+    community: { button: null, panel: elements.panelCommunityRuns },
+    saved: { button: elements.tabSavedRuns, panel: elements.panelSavedRuns },
+    run: { button: elements.tabRunForm, panel: elements.panelRunForm },
+    price: { button: elements.tabPriceForm, panel: elements.panelPriceForm }
   };
+  const selected = sections[tab] || sections.saved;
+  state.drawerTab = sections[tab] ? tab : "saved";
 
-  Object.values(tabs).forEach(([button, panel]) => {
-    const active = button === tabs[tab][0];
-    button.classList.toggle("active", active);
+  Object.values(sections).forEach(({ button, panel }) => {
+    const active = panel === selected.panel;
+    button?.classList.toggle("active", active);
+    button?.setAttribute("aria-selected", String(active));
     panel.classList.toggle("active", active);
+    panel.hidden = !active;
   });
+
+  elements.openCommunityExamples.classList.toggle("active", state.drawerTab === "community");
+  elements.openCommunityExamples.setAttribute("aria-pressed", String(state.drawerTab === "community"));
 }
 
 function hydrateTradeRuns(runs) {
@@ -880,8 +892,8 @@ function renderCommunityTradeRuns() {
     elements.bestCommunityRun.classList.add("hidden");
     elements.communityTradeRuns.innerHTML = `
       <div class="empty-state">
-        <strong>No community runs published yet</strong>
-        <p>Shared example runs will appear here automatically when they are included with the map.</p>
+        <strong>No example runs available</strong>
+        <p>The bundled example runs could not be loaded.</p>
       </div>`;
     return;
   }
@@ -890,7 +902,7 @@ function renderCommunityTradeRuns() {
   const bestRun = rankedRuns[0];
   elements.bestCommunityRun.classList.remove("hidden");
   elements.bestCommunityRun.innerHTML = `
-    <span class="best-run-kicker">TOP COMMUNITY RUN FOR CURRENT RANKING</span>
+    <span class="best-run-kicker">TOP EXAMPLE FOR CURRENT RANKING</span>
     <strong>${escapeHtml(bestRun.name)}</strong>
     <span>${escapeHtml(bestRun.commodity)} · ${escapeHtml(nodesById.get(bestRun.originId)?.name || bestRun.originId)} → ${escapeHtml(nodesById.get(bestRun.destinationId)?.name || bestRun.destinationId)}</span>
     <b>${escapeHtml(tradeRankingMetric(bestRun, state.communityTradeSort))}</b>`;
@@ -913,7 +925,7 @@ function renderCommunityTradeRuns() {
         <div class="trade-run-card-header">
           <div class="ranked-title">
             <span class="rank-badge">#${index + 1}</span>
-            <div><p class="eyebrow">COMMUNITY · ${escapeHtml(run.commodity)}</p><h3>${escapeHtml(run.name)}</h3></div>
+            <div><p class="eyebrow">EXAMPLE · ${escapeHtml(run.commodity)}</p><h3>${escapeHtml(run.name)}</h3></div>
           </div>
           <strong class="profit-value ${Number(run.netProfit) < 0 ? "negative" : ""}">${formatSignedAuec(run.netProfit)} aUEC</strong>
         </div>
@@ -933,7 +945,7 @@ function renderCommunityTradeRuns() {
         </div>
         <div class="run-freshness ${freshness.level}"><span>Observed ${escapeHtml(run.priceObservedAt || "Unknown date")}</span><b>${escapeHtml(freshness.label)}</b></div>
         <p class="container-summary">${escapeHtml(cargoSummary || "No container breakdown")}</p>
-        <p class="community-copy-note">Shared by ${escapeHtml(run.submittedBy || "the community")}. Prices and stock may have changed since this run was recorded.</p>
+        <p class="community-copy-note">Example recorded by ${escapeHtml(run.submittedBy || "the group")}. Prices and stock may have changed since this run was recorded.</p>
         <div class="trade-card-actions">
           <button class="button primary" data-copy-community-run="${escapeHtml(run.communitySourceId || run.id)}" type="button" ${alreadyCopied ? "disabled" : ""}>${alreadyCopied ? "Copied to My Runs" : "Copy to My Runs"}</button>
           <button class="button secondary" data-load-community-run="${escapeHtml(run.communitySourceId || run.id)}" type="button">Load route</button>
@@ -986,7 +998,7 @@ function copyCommunityTradeRun(sourceId) {
 
 function renderSavedTradeRuns() {
   elements.myRunCount.textContent = String(state.tradeRuns.length);
-  elements.tradeRunCount.textContent = String(state.tradeRuns.length + state.communityTradeRuns.length);
+  elements.tradeRunCount.textContent = String(state.tradeRuns.length);
   elements.tradeSort.value = state.tradeSort;
 
   if (state.tradeRuns.length === 0) {
