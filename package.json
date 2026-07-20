@@ -1,15 +1,15 @@
 {
   "name": "star-citizen-interactive-map-starter",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
-  "description": "Themed hierarchical Star Citizen route and profitability planner with ranked trade runs",
+  "description": "Themed hierarchical Star Citizen route planner with ranked trade runs and procedural 3D body textures",
   "license": "MIT",
   "scripts": {
     "serve": "npx serve .",
     "update:trade": "node scripts/update-trade-data.mjs",
     "test": "node tests/router.test.mjs && node tests/trade-calculator.test.mjs",
     "update:universe": "node scripts/update-universe-data.mjs",
-    "validate": "node --check src/app.js && node --check src/router.js && node --check src/map-hierarchy.js && node --check src/map-2d.js && node --check src/map-3d.js && node --check src/trade-calculator.js && node --check src/storage.js && node --check scripts/update-universe-data.mjs && node --check scripts/update-trade-data.mjs"
+    "validate": "node --check src/app.js && node --check src/router.js && node --check src/map-hierarchy.js && node --check src/map-2d.js && node --check src/map-3d.js && node --check src/body-textures.js && node --check src/trade-calculator.js && node --check src/storage.js && node --check scripts/update-universe-data.mjs && node --check scripts/update-trade-data.mjs"
   },
   "type": "module"
 }

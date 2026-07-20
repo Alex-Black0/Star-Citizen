@@ -1,30 +1,30 @@
-# v5.2 Validation Checklist
+# Route Validation Checklist v5.3
 
-## Automated tests
+## Automated checks
+
+Run:
 
 ```cmd
 npm test
 npm run validate
 ```
 
-Expected:
+Expected output:
 
 ```text
 Routing tests passed (54 nodes, 180 edges).
 Trade calculator tests passed.
 ```
 
-## Trade-run checks
+## Visual checks
 
-1. Confirm the cargo sizes are **32, 24, 12, 8, and 1 SCU**.
-2. Enter `36` under 32 SCU and `12` under 24 SCU. Confirm total cargo is **1,440 SCU**.
-3. Test **Price by SCU & quantity** and confirm investment and revenue use total SCU.
-4. Test **Total transaction amounts** and confirm the entered totals are used directly.
-5. Enter loading, unloading, fuel, and other costs and confirm they reduce net profit.
-6. Confirm route distance appears after selecting buy and sell locations.
-7. Enter an observed trip time and confirm profit per minute appears.
-8. Save multiple runs and test every ranking option.
-9. Confirm the top-ranked run appears in the Best Match panel.
-10. Confirm each run displays its price-observed date and freshness.
-11. Edit a saved run and confirm it updates rather than creating a duplicate.
-12. Confirm old saves that used 36-SCU containers appear as 32-SCU containers.
+1. Open the public map.
+2. Enter **Stanton** and confirm:
+   - Hurston looks dusty / brown
+   - ArcCorp looks urbanized
+   - Crusader shows gas giant banding
+   - microTech looks icy
+3. Enter **Pyro** and confirm the system uses darker orange visuals and the planets look more scorched / volcanic.
+4. Enter **Nyx** and confirm Delamar has a colder rocky appearance.
+5. Open any local view and confirm the selected body is textured and slowly rotating.
+6. Confirm space stations still display correctly and routing / selection behavior still works.

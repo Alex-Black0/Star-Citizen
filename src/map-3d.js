@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import { routeEdgeIds } from "./router.js";
 import { createHierarchy } from "./map-hierarchy.js";
+import { buildMaterialForNode, getAtmosphereColor } from "./body-textures.js";
 
 const TYPE_COLORS = {
   star: 0xffd279,
@@ -121,19 +122,12 @@ export function createMap3D(container, universe, onNodeClick, onScopeRequest = (
     const color = Number(node.color ? parseInt(String(node.color).replace("#", ""), 16) : TYPE_COLORS[node.type] ?? 0x75d7ff);
     const radius = Number(node.radius || 0.7);
     const geometry = geometryForNode(node, radius);
-    const material = new THREE.MeshStandardMaterial({
-      color,
-      emissive: color,
-      emissiveIntensity: node.type === "star" ? 1.65 : node.type === "gateway" ? 0.55 : 0.24,
-      roughness: node.type === "star" ? 0.82 : 0.46,
-      metalness: ["station", "gateway", "jump-point"].includes(node.type) ? 0.64 : 0.08,
-      transparent: true,
-      opacity: 1
-    });
+    const material = buildMaterialForNode(node, color);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.nodeId = node.id;
     mesh.userData.nodeType = node.type;
     mesh.userData.baseScale = 1;
+    mesh.userData.rotationSpeed = ["planet", "planetoid"].includes(node.type) ? 0.0009 : node.type === "moon" ? 0.00065 : node.type === "star" ? 0.0011 : 0;
     mesh.visible = false;
     contentGroup.add(mesh);
     nodeMeshes.set(node.id, mesh);
@@ -146,9 +140,10 @@ export function createMap3D(container, universe, onNodeClick, onScopeRequest = (
       mesh.add(glow);
     }
     if (["planet", "planetoid", "moon"].includes(node.type)) {
+      const atmosphereColor = getAtmosphereColor(node, color);
       const atmosphere = new THREE.Mesh(
         new THREE.SphereGeometry(radius * 1.11, 24, 18),
-        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: node.type === "moon" ? 0.1 : 0.16, side: THREE.BackSide })
+        new THREE.MeshBasicMaterial({ color: atmosphereColor, transparent: true, opacity: node.type === "moon" ? 0.08 : 0.18, side: THREE.BackSide })
       );
       mesh.add(atmosphere);
     }
@@ -387,6 +382,7 @@ export function createMap3D(container, universe, onNodeClick, onScopeRequest = (
       if (!mesh.visible) continue;
       if (mesh.userData.nodeType === "jump-point") mesh.rotation.z += 0.0015;
       if (mesh.userData.nodeType === "station") mesh.rotation.y += 0.002;
+      if (mesh.userData.rotationSpeed) mesh.rotation.y += mesh.userData.rotationSpeed;
       const node = hierarchy.nodesById.get(nodeId);
       const dynamicScale = screenScaleForDistance(cameraDistance, scope.level);
       const activeBoost = route?.nodeIds?.includes(nodeId) ? 1.28 : 1;

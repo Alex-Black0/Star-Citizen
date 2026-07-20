@@ -1,100 +1,85 @@
-# Verse Route Map v5.2
+# Verse Route Map v5.3
 
-A static 3D/2D Star Citizen route, commodity, and trade-profit planner for GitHub Pages.
+A static 3D/2D Star Citizen route and commodity planner for GitHub Pages.
 
-## What changed in v5.2
+## What changed in v5.3
 
-- Corrected the largest cargo container from **36 SCU** to **32 SCU**.
-- Existing browser saves using the old `36` key are automatically migrated to `32` so saved runs are not lost.
-- Added two pricing modes:
-  1. **Price by SCU & quantity**
-  2. **Total transaction amounts** for entering the combined amount paid and received across one or more transactions
-- Added optional operating costs:
-  - auto-loading fee
-  - auto-unloading fee
-  - fuel cost
-  - other costs
-- Added an optional **price observed date** and freshness indicator so old prices are easier to identify.
-- Added optional **observed trip time**.
-- Automatically records route distance when the trade run is saved.
-- Added profitability metrics:
-  - net profit
-  - profit per SCU
-  - profit per Gm
-  - profit per observed minute
-- Saved trade runs can now be ranked by any of those profitability metrics or by the most recent update.
-- The highest-ranked run is shown in a dedicated **Best Match** panel.
-- Existing selection clearing and direct Pyro routing from v5.1 are retained.
+This update continues the visual overhaul by adding **procedural 3D textures** for stars, planets, moons, and stations.
 
-## Example cargo load
+### New visual improvements
 
-The form now supports the example:
+- Added procedural body textures for major Stanton, Pyro, and Nyx worlds
+- Each major planet/moon now has a more distinctive look based on its in-game identity
+  - **Hurston** looks more dusty and industrial
+  - **ArcCorp** uses an urbanized city-world texture
+  - **Crusader** uses gas giant banding
+  - **microTech** and its moons use colder ice palettes
+  - **Pyro** bodies use darker volcanic / scorched palettes
+  - **Nyx / Delamar** uses a cold rocky look
+- Added texture treatment for **stars** and **stations**
+- Atmosphere glow now varies by world instead of using a single generic color
+- Planetary bodies slowly rotate in the 3D view
 
-```text
-36 × 32 SCU containers = 1,152 SCU
-12 × 24 SCU containers =   288 SCU
-Total                    = 1,440 SCU
-```
+These textures are generated in the browser so the project stays lightweight and GitHub Pages-friendly.
 
-## Install without an extra nested folder
+## Existing features retained
 
-This ZIP contains the project files at its root. Extract it into:
+- Universe → System → Local navigation
+- system-themed backgrounds for Stanton, Pyro, and Nyx
+- selected-location distance spokes
+- saved trade runs and profitability ranking
+- dual price-entry modes for trade runs
+- optional operating costs
+- browser-local saved routes and trade data
 
-```text
-C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5-2
-```
-
-Then run:
+## Run locally
 
 ```cmd
-robocopy "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5-2" "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter" /E /XD .git
+cd /d "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter"
+py -m http.server 8080
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
+## Update your Git-connected project
+
+Extract `star-citizen-interactive-map-v5-3.zip` into your `Project` folder, then run:
+
+```cmd
+robocopy "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-v5-3" "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter" /E /XD .git
 
 cd /d "C:\Users\alex9\Desktop\Star Citizen\Project\star-citizen-interactive-map-starter"
 
-findstr /C:"0.5.2" package.json
 npm test
 npm run validate
 
 git status
 git add -A
-git commit -m "Add flexible trade pricing and profitability rankings"
+git commit -m "Add procedural 3D textures for planets and stations"
 git pull --rebase origin main
 git push origin main
-git status
 ```
 
-Expected test output:
+## Notes
+
+- The new textures are **procedural approximations**, not ripped in-game assets.
+- They are designed to better communicate each world's identity while keeping the project portable.
+- If you later want true high-fidelity planet textures, we can add an optional texture asset pipeline for manually curated maps.
+
+## Tests
+
+```cmd
+npm test
+npm run validate
+```
+
+Expected output:
 
 ```text
 Routing tests passed (54 nodes, 180 edges).
 Trade calculator tests passed.
 ```
-
-## Using the profitability ranking
-
-1. Open **Trade Runs**.
-2. Create or edit several runs.
-3. Enter cargo quantities and select a pricing mode.
-4. Add optional fees and observed trip time when known.
-5. Save the run.
-6. In **Saved Runs**, use **Rank saved runs by** to compare:
-   - Net profit
-   - Profit per SCU
-   - Profit per Gm
-   - Profit per minute
-   - Most recently updated
-
-The saved run can be edited later instead of being re-entered from scratch.
-
-## Journal data
-
-A trade journal can be converted into starter/default trade runs. Each imported example should include a price-observed date and a warning that prices may become stale. That can be added in the next data-import pass.
-
-## Later roadmap
-
-- Ship and vehicle profiles
-- Automatic cargo capacity based on the selected ship
-- Cargo utilization and optimization by ship
-- Estimated trip time based on distance and ship performance
-- Reusable community/default trade runs
-- 3D planet textures and more accurate in-game visual models, using the supplied screenshots and VerseGuide as visual references without copying proprietary assets
