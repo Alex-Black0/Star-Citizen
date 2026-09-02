@@ -2,9 +2,9 @@
   "metadata": {
     "source": "UEX API 2.0 commodity price snapshot",
     "endpoint": "https://api.uexcorp.uk/2.0/commodities_prices_all",
-    "updatedAt": "2026-09-01T15:28:26.020Z",
+    "updatedAt": "2026-09-02T15:08:06.115Z",
     "authoritative": false,
-    "matchedRows": 992,
+    "matchedRows": 1009,
     "note": "Community-maintained data. Buy is the lowest matched terminal buy price; sell is the highest matched terminal sell price for each mapped map location."
   },
   "locations": {
@@ -3997,8 +3997,8 @@
       {
         "commodity": "Pressurized Ice",
         "buy": null,
-        "sell": 5000,
-        "stockScu": 702,
+        "sell": 6400,
+        "stockScu": 1279,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Baijini Point",
@@ -4011,7 +4011,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-30T17:22:00.000Z"
+        "updatedAt": "2026-09-01T12:13:38.000Z"
       },
       {
         "commodity": "Quantum Fuel",
@@ -4253,7 +4253,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-08-30T17:21:24.000Z"
+        "updatedAt": "2026-09-01T12:13:03.000Z"
       },
       {
         "commodity": "Souvenirs",
@@ -4383,7 +4383,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-27T10:49:36.000Z"
+        "updatedAt": "2026-09-02T05:30:59.000Z"
       },
       {
         "commodity": "Aphorite",
@@ -4401,7 +4401,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:32:11.000Z"
       },
       {
         "commodity": "Astatine",
@@ -4449,7 +4449,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:31:33.000Z"
       },
       {
         "commodity": "Dolivine",
@@ -4467,7 +4467,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:32:11.000Z"
       },
       {
         "commodity": "Hadanite",
@@ -4485,7 +4485,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:31:33.000Z"
       },
       {
         "commodity": "Iodine",
@@ -4537,7 +4537,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-27T10:49:51.000Z"
+        "updatedAt": "2026-09-02T05:32:11.000Z"
       },
       {
         "commodity": "Laranite",
@@ -4572,7 +4572,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:31:33.000Z"
       },
       {
         "commodity": "Quantainium",
@@ -4591,7 +4591,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-27T10:49:41.000Z"
+        "updatedAt": "2026-09-02T05:31:33.000Z"
       },
       {
         "commodity": "Quartz",
@@ -4611,10 +4611,10 @@
         "commodity": "Riccite",
         "buy": null,
         "sell": 91000,
-        "stockScu": 34,
+        "stockScu": 42,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
-        "sellTerminal": "ArcCorp 141",
+        "sellTerminal": "ArcCorp 157",
         "containerSizes": [
           16,
           8,
@@ -4622,7 +4622,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-28T05:30:27.000Z"
+        "updatedAt": "2026-09-02T05:32:11.000Z"
       },
       {
         "commodity": "Saldynium (Ore)",
@@ -4657,7 +4657,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-28T05:30:27.000Z"
+        "updatedAt": "2026-09-02T05:32:11.000Z"
       },
       {
         "commodity": "Stims",
@@ -4675,7 +4675,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:31:33.000Z"
       },
       {
         "commodity": "Tungsten",
@@ -4709,7 +4709,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-09-02T05:30:59.000Z"
       }
     ],
     "port-tressler": [
@@ -6721,7 +6721,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-29T19:53:06.000Z"
+        "updatedAt": "2026-08-31T01:24:57.000Z"
       },
       {
         "commodity": "Ranta Dung",
@@ -9869,8 +9869,8 @@
       {
         "commodity": "Agricultural Supplies",
         "buy": null,
-        "sell": 1500,
-        "stockScu": 259,
+        "sell": 1300,
+        "stockScu": 1862,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Pyro Gateway (Stanton)",
@@ -9883,7 +9883,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T11:09:42.000Z"
+        "updatedAt": "2026-09-01T19:47:53.000Z"
       },
       {
         "commodity": "Aluminum",
@@ -9920,8 +9920,8 @@
       {
         "commodity": "Astatine",
         "buy": null,
-        "sell": 3700,
-        "stockScu": 274,
+        "sell": 3100,
+        "stockScu": 530,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Pyro Gateway (Stanton)",
@@ -9934,7 +9934,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T11:09:42.000Z"
+        "updatedAt": "2026-09-01T19:47:53.000Z"
       },
       {
         "commodity": "Carbon",
@@ -9972,7 +9972,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T11:09:42.000Z"
+        "updatedAt": "2026-09-01T19:47:53.000Z"
       },
       {
         "commodity": "Construction Materials",
@@ -9996,8 +9996,8 @@
       {
         "commodity": "Copper",
         "buy": null,
-        "sell": 4400,
-        "stockScu": 1021,
+        "sell": 3600,
+        "stockScu": 1027,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Pyro Gateway (Stanton)",
@@ -10010,7 +10010,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T11:09:53.000Z"
+        "updatedAt": "2026-09-01T19:47:53.000Z"
       },
       {
         "commodity": "Distilled Spirits",
@@ -12457,7 +12457,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:22:54.000Z"
+        "updatedAt": "2026-09-02T02:41:57.000Z"
+      },
+      {
+        "commodity": "Agricultural Supplies",
+        "buy": null,
+        "sell": 1300,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:41:45.000Z"
       },
       {
         "commodity": "Altruciatoxin",
@@ -12476,7 +12487,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:01.000Z"
+        "updatedAt": "2026-09-02T02:41:45.000Z"
       },
       {
         "commodity": "Aluminum",
@@ -12495,7 +12506,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:24:47.000Z"
+        "updatedAt": "2026-09-02T02:42:13.000Z"
       },
       {
         "commodity": "Ammonia",
@@ -12514,7 +12525,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:58.000Z"
+        "updatedAt": "2026-09-02T02:41:51.000Z"
+      },
+      {
+        "commodity": "Aphorite",
+        "buy": null,
+        "sell": 93000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:38.000Z"
       },
       {
         "commodity": "Argon",
@@ -12533,7 +12555,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:58.000Z"
+        "updatedAt": "2026-09-02T02:41:51.000Z"
       },
       {
         "commodity": "Aslarite",
@@ -12552,7 +12574,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:37:41.000Z"
+        "updatedAt": "2026-09-02T02:43:16.000Z"
       },
       {
         "commodity": "Beryl",
@@ -12571,7 +12593,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:58.000Z"
+        "updatedAt": "2026-09-02T02:41:51.000Z"
       },
       {
         "commodity": "Bioplastic",
@@ -12590,7 +12612,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:58.000Z"
+        "updatedAt": "2026-09-02T02:41:51.000Z"
       },
       {
         "commodity": "Borase",
@@ -12609,7 +12631,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:22:54.000Z"
+        "updatedAt": "2026-09-02T02:41:57.000Z"
       },
       {
         "commodity": "Carbon",
@@ -12628,7 +12650,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:22:54.000Z"
+        "updatedAt": "2026-09-02T02:41:57.000Z"
       },
       {
         "commodity": "Chlorine",
@@ -12647,7 +12669,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:22:54.000Z"
+        "updatedAt": "2026-09-02T02:41:57.000Z"
       },
       {
         "commodity": "Compboard",
@@ -12666,12 +12688,12 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:30:06.000Z"
+        "updatedAt": "2026-09-02T02:42:38.000Z"
       },
       {
         "commodity": "Construction Materials",
         "buy": null,
-        "sell": 11000,
+        "sell": 12000,
         "stockScu": 215,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
@@ -12685,7 +12707,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:24:47.000Z"
+        "updatedAt": "2026-09-02T02:42:13.000Z"
       },
       {
         "commodity": "Copper",
@@ -12704,7 +12726,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:23:47.000Z"
+        "updatedAt": "2026-09-02T02:42:08.000Z"
       },
       {
         "commodity": "Corundum",
@@ -12723,7 +12745,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:24:47.000Z"
+        "updatedAt": "2026-09-02T02:42:13.000Z"
       },
       {
         "commodity": "Distilled Spirits",
@@ -12742,7 +12764,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:23:47.000Z"
+        "updatedAt": "2026-09-02T02:42:08.000Z"
+      },
+      {
+        "commodity": "Dolivine",
+        "buy": null,
+        "sell": 130000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:44.000Z"
       },
       {
         "commodity": "Dymantium",
@@ -12761,7 +12794,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:31:15.000Z"
+        "updatedAt": "2026-09-02T02:42:44.000Z"
+      },
+      {
+        "commodity": "DynaFlex",
+        "buy": null,
+        "sell": 1900,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:08.000Z"
       },
       {
         "commodity": "Fluorine",
@@ -12780,7 +12824,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:01.000Z"
+        "updatedAt": "2026-09-02T02:41:45.000Z"
       },
       {
         "commodity": "Fresh Food",
@@ -12799,7 +12843,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:31:15.000Z"
+        "updatedAt": "2026-09-02T02:42:44.000Z"
       },
       {
         "commodity": "Gasping Weevil Eggs",
@@ -12818,7 +12862,29 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:31:15.000Z"
+        "updatedAt": "2026-09-02T02:42:44.000Z"
+      },
+      {
+        "commodity": "Golden Medmon",
+        "buy": null,
+        "sell": 54000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:49.000Z"
+      },
+      {
+        "commodity": "Hadanite",
+        "buy": null,
+        "sell": 480000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:49.000Z"
       },
       {
         "commodity": "Heart of the Woods",
@@ -12837,7 +12903,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:32:23.000Z"
+        "updatedAt": "2026-09-02T02:42:49.000Z"
       },
       {
         "commodity": "Helium",
@@ -12853,12 +12919,12 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T02:15:44.000Z"
+        "updatedAt": "2026-09-02T02:38:58.000Z"
       },
       {
         "commodity": "Hephaestanite",
         "buy": null,
-        "sell": 4600,
+        "sell": 4560,
         "stockScu": null,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
@@ -12872,7 +12938,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:23:47.000Z"
+        "updatedAt": "2026-09-02T02:42:08.000Z"
       },
       {
         "commodity": "HexaPolyMesh Coating",
@@ -12891,7 +12957,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:36:50.000Z"
+        "updatedAt": "2026-09-02T02:43:08.000Z"
       },
       {
         "commodity": "Human Food Bars",
@@ -12910,7 +12976,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:24:47.000Z"
+        "updatedAt": "2026-09-02T02:42:13.000Z"
       },
       {
         "commodity": "Hydrogen",
@@ -12929,7 +12995,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:25:59.000Z"
+        "updatedAt": "2026-09-02T02:42:17.000Z"
       },
       {
         "commodity": "Hydrogen Fuel",
@@ -12948,7 +13014,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:35:53.000Z"
+        "updatedAt": "2026-09-02T02:43:02.000Z"
       },
       {
         "commodity": "Inert Materials",
@@ -12967,7 +13033,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:36:50.000Z"
+        "updatedAt": "2026-09-02T02:43:08.000Z"
       },
       {
         "commodity": "Iron",
@@ -12986,7 +13052,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:25:59.000Z"
+        "updatedAt": "2026-09-02T02:42:17.000Z"
+      },
+      {
+        "commodity": "Janalite",
+        "buy": null,
+        "sell": 1500000,
+        "stockScu": 1,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:54.000Z"
       },
       {
         "commodity": "Laranite",
@@ -13005,7 +13082,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:25:59.000Z"
+        "updatedAt": "2026-09-02T02:42:17.000Z"
       },
       {
         "commodity": "Lindinium",
@@ -13024,7 +13101,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:37:41.000Z"
+        "updatedAt": "2026-09-02T02:43:16.000Z"
+      },
+      {
+        "commodity": "Luminalia Gift",
+        "buy": null,
+        "sell": 4600000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:49.000Z"
       },
       {
         "commodity": "Medical Supplies",
@@ -13043,13 +13131,13 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:25:59.000Z"
+        "updatedAt": "2026-09-02T02:42:17.000Z"
       },
       {
         "commodity": "Mercury",
         "buy": null,
-        "sell": 890,
-        "stockScu": 1083,
+        "sell": 840,
+        "stockScu": 1118,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Ruin Station",
@@ -13062,7 +13150,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:26:59.000Z"
+        "updatedAt": "2026-09-02T02:42:22.000Z"
       },
       {
         "commodity": "Methane",
@@ -13081,7 +13169,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:26:59.000Z"
+        "updatedAt": "2026-09-02T02:42:22.000Z"
       },
       {
         "commodity": "Neon",
@@ -13100,7 +13188,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:26:59.000Z"
+        "updatedAt": "2026-09-02T02:42:22.000Z"
       },
       {
         "commodity": "Nitrogen",
@@ -13119,7 +13207,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:26:59.000Z"
+        "updatedAt": "2026-09-02T02:42:22.000Z"
+      },
+      {
+        "commodity": "Omnapoxy",
+        "buy": null,
+        "sell": 4200,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:30.000Z"
       },
       {
         "commodity": "Ouratite",
@@ -13138,7 +13237,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:37:41.000Z"
+        "updatedAt": "2026-09-02T02:43:16.000Z"
       },
       {
         "commodity": "Partillium",
@@ -13157,7 +13256,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:33:25.000Z"
+        "updatedAt": "2026-09-02T02:42:54.000Z"
+      },
+      {
+        "commodity": "Pitambu",
+        "buy": null,
+        "sell": 53000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:54.000Z"
       },
       {
         "commodity": "Potassium",
@@ -13173,7 +13283,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T02:15:44.000Z"
+        "updatedAt": "2026-09-02T02:38:58.000Z"
       },
       {
         "commodity": "Pressurized Ice",
@@ -13190,7 +13300,7 @@
           8,
           4
         ],
-        "updatedAt": "2026-09-01T02:16:55.000Z"
+        "updatedAt": "2026-09-02T02:38:58.000Z"
       },
       {
         "commodity": "Processed Food",
@@ -13207,7 +13317,7 @@
           8,
           4
         ],
-        "updatedAt": "2026-09-01T02:16:55.000Z"
+        "updatedAt": "2026-09-02T02:39:10.000Z"
       },
       {
         "commodity": "Prota",
@@ -13226,7 +13336,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:34:38.000Z"
+        "updatedAt": "2026-09-02T02:42:58.000Z"
       },
       {
         "commodity": "Quantainium",
@@ -13245,7 +13355,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:34:38.000Z"
+        "updatedAt": "2026-09-02T02:42:58.000Z"
       },
       {
         "commodity": "Quantum Fuel",
@@ -13264,7 +13374,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:28:07.000Z"
+        "updatedAt": "2026-09-02T02:42:30.000Z"
       },
       {
         "commodity": "Quartz",
@@ -13283,7 +13393,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:28:07.000Z"
+        "updatedAt": "2026-09-02T02:42:30.000Z"
       },
       {
         "commodity": "Recycled Material Composite",
@@ -13302,7 +13412,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:35:53.000Z"
+        "updatedAt": "2026-09-02T02:43:02.000Z"
       },
       {
         "commodity": "Revenant Pod",
@@ -13321,7 +13431,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:34:38.000Z"
+        "updatedAt": "2026-09-02T02:42:58.000Z"
       },
       {
         "commodity": "Revenant Tree Pollen",
@@ -13335,7 +13445,7 @@
           32,
           24
         ],
-        "updatedAt": "2026-09-01T02:15:44.000Z"
+        "updatedAt": "2026-09-02T02:38:58.000Z"
       },
       {
         "commodity": "Riccite",
@@ -13354,7 +13464,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:34:38.000Z"
+        "updatedAt": "2026-09-02T02:42:58.000Z"
       },
       {
         "commodity": "Savrilium",
@@ -13373,7 +13483,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:36:50.000Z"
+        "updatedAt": "2026-09-02T02:43:08.000Z"
       },
       {
         "commodity": "Scrap",
@@ -13392,7 +13502,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:28:07.000Z"
+        "updatedAt": "2026-09-02T02:42:30.000Z"
       },
       {
         "commodity": "Ship Ammunition",
@@ -13411,7 +13521,73 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:35:53.000Z"
+        "updatedAt": "2026-09-02T02:43:02.000Z"
+      },
+      {
+        "commodity": "Ship Ammunition - Size 1",
+        "buy": 6868,
+        "sell": null,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": "Ruin Station",
+        "sellTerminal": null,
+        "containerSizes": [],
+        "updatedAt": "2026-09-01T02:17:46.000Z"
+      },
+      {
+        "commodity": "Ship Ammunition - Size 2",
+        "buy": 7126,
+        "sell": null,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": "Ruin Station",
+        "sellTerminal": null,
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:39:10.000Z"
+      },
+      {
+        "commodity": "Ship Ammunition - Size 3",
+        "buy": 7384,
+        "sell": null,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": "Ruin Station",
+        "sellTerminal": null,
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:39:25.000Z"
+      },
+      {
+        "commodity": "Ship Ammunition - Size 4",
+        "buy": 7641,
+        "sell": null,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": "Ruin Station",
+        "sellTerminal": null,
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:39:25.000Z"
+      },
+      {
+        "commodity": "Ship Ammunition - Size 5",
+        "buy": 7985,
+        "sell": null,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": "Ruin Station",
+        "sellTerminal": null,
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:39:25.000Z"
+      },
+      {
+        "commodity": "Ship Ammunition - Size 6",
+        "buy": 8328,
+        "sell": null,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": "Ruin Station",
+        "sellTerminal": null,
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:39:26.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 7",
@@ -13430,7 +13606,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:19:52.000Z"
+        "updatedAt": "2026-09-02T02:39:26.000Z"
       },
       {
         "commodity": "Ship Decoy Countermeasures",
@@ -13449,7 +13625,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:19:52.000Z"
+        "updatedAt": "2026-09-02T02:39:26.000Z"
       },
       {
         "commodity": "Ship Noise Countermeasures",
@@ -13468,7 +13644,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:19:52.000Z"
+        "updatedAt": "2026-09-02T02:39:26.000Z"
       },
       {
         "commodity": "Silicon",
@@ -13484,7 +13660,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T02:16:55.000Z"
+        "updatedAt": "2026-09-02T02:39:10.000Z"
       },
       {
         "commodity": "Steel",
@@ -13503,7 +13679,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:29:04.000Z"
+        "updatedAt": "2026-09-02T02:42:34.000Z"
       },
       {
         "commodity": "Stileron",
@@ -13522,7 +13698,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:36:50.000Z"
+        "updatedAt": "2026-09-02T02:43:08.000Z"
       },
       {
         "commodity": "Stims",
@@ -13541,7 +13717,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:29:04.000Z"
+        "updatedAt": "2026-09-02T02:42:34.000Z"
       },
       {
         "commodity": "Taranite",
@@ -13560,7 +13736,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:35:53.000Z"
+        "updatedAt": "2026-09-02T02:43:02.000Z"
       },
       {
         "commodity": "Tin",
@@ -13598,7 +13774,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:29:04.000Z"
+        "updatedAt": "2026-09-02T02:42:34.000Z"
       },
       {
         "commodity": "Torite",
@@ -13617,13 +13793,13 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:37:41.000Z"
+        "updatedAt": "2026-09-02T02:43:16.000Z"
       },
       {
         "commodity": "Tungsten",
         "buy": null,
         "sell": 9700,
-        "stockScu": 12,
+        "stockScu": 32,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Ruin Station",
@@ -13636,7 +13812,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:30:06.000Z"
+        "updatedAt": "2026-09-02T02:42:38.000Z"
       },
       {
         "commodity": "Waste",
@@ -13655,7 +13831,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:21:01.000Z"
+        "updatedAt": "2026-09-02T02:41:45.000Z"
       },
       {
         "commodity": "Xa'Pyen",
@@ -13674,7 +13850,18 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T02:30:06.000Z"
+        "updatedAt": "2026-09-02T02:42:38.000Z"
+      },
+      {
+        "commodity": "Year of the Rat Envelope",
+        "buy": null,
+        "sell": 1800000,
+        "stockScu": null,
+        "currency": "aUEC/SCU",
+        "buyTerminal": null,
+        "sellTerminal": "Ruin Station",
+        "containerSizes": [],
+        "updatedAt": "2026-09-02T02:42:54.000Z"
       }
     ],
     "stanton-gateway-pyro": [
@@ -14429,8 +14616,8 @@
       {
         "commodity": "Bioplastic",
         "buy": null,
-        "sell": 8600,
-        "stockScu": 277,
+        "sell": 6400,
+        "stockScu": 149,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "Orbituary",
@@ -14443,7 +14630,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-30T14:51:43.000Z"
+        "updatedAt": "2026-09-01T03:16:59.000Z"
       },
       {
         "commodity": "Borase",
@@ -14468,7 +14655,7 @@
         "commodity": "Carbon",
         "buy": 235,
         "sell": null,
-        "stockScu": null,
+        "stockScu": 24000,
         "currency": "aUEC/SCU",
         "buyTerminal": "Orbituary",
         "sellTerminal": null,
@@ -14478,7 +14665,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T03:10:42.000Z"
+        "updatedAt": "2026-09-01T18:05:12.000Z"
       },
       {
         "commodity": "Construction Materials",
@@ -14503,7 +14690,7 @@
         "commodity": "Copper",
         "buy": 2893,
         "sell": null,
-        "stockScu": null,
+        "stockScu": 99,
         "currency": "aUEC/SCU",
         "buyTerminal": "Orbituary",
         "sellTerminal": null,
@@ -14513,7 +14700,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T03:10:42.000Z"
+        "updatedAt": "2026-09-01T18:05:24.000Z"
       },
       {
         "commodity": "Corundum",
@@ -14627,7 +14814,7 @@
         "commodity": "Iron",
         "buy": 2480,
         "sell": null,
-        "stockScu": null,
+        "stockScu": 120,
         "currency": "aUEC/SCU",
         "buyTerminal": "Orbituary",
         "sellTerminal": null,
@@ -14637,7 +14824,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T03:10:42.000Z"
+        "updatedAt": "2026-09-01T18:05:50.000Z"
       },
       {
         "commodity": "Laranite",
@@ -14757,7 +14944,7 @@
         "commodity": "Potassium",
         "buy": 396,
         "sell": null,
-        "stockScu": null,
+        "stockScu": 24000,
         "currency": "aUEC/SCU",
         "buyTerminal": "Orbituary",
         "sellTerminal": null,
@@ -14767,7 +14954,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-01T03:10:42.000Z"
+        "updatedAt": "2026-09-01T18:06:05.000Z"
       },
       {
         "commodity": "Pressurized Ice",
@@ -14784,7 +14971,7 @@
           8,
           4
         ],
-        "updatedAt": "2026-09-01T03:20:00.000Z"
+        "updatedAt": "2026-09-01T16:34:06.000Z"
       },
       {
         "commodity": "Processed Food",
@@ -14803,7 +14990,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T03:20:57.000Z"
+        "updatedAt": "2026-09-01T16:34:06.000Z"
       },
       {
         "commodity": "Quantum Fuel",
@@ -14841,7 +15028,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T03:20:57.000Z"
+        "updatedAt": "2026-09-01T16:34:06.000Z"
       },
       {
         "commodity": "Recycled Material Composite",
@@ -14879,7 +15066,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-01T03:20:57.000Z"
+        "updatedAt": "2026-09-01T16:34:06.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 1",
