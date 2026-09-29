@@ -2,9 +2,9 @@
   "metadata": {
     "source": "UEX API 2.0 commodity price snapshot",
     "endpoint": "https://api.uexcorp.uk/2.0/commodities_prices_all",
-    "updatedAt": "2026-09-28T18:37:16.606Z",
+    "updatedAt": "2026-09-29T16:54:33.559Z",
     "authoritative": false,
-    "matchedRows": 1016,
+    "matchedRows": 1023,
     "note": "Community-maintained data. Buy is the lowest matched terminal buy price; sell is the highest matched terminal sell price for each mapped map location."
   },
   "locations": {
@@ -4383,7 +4383,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-26T19:03:39.000Z"
+        "updatedAt": "2026-09-29T14:28:33.000Z"
       },
       {
         "commodity": "Aphorite",
@@ -4401,7 +4401,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:31.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Astatine",
@@ -4418,7 +4418,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T01:22:41.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Borase",
@@ -4462,7 +4462,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:27.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Dolivine",
@@ -4480,7 +4480,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:27.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Hadanite",
@@ -4498,7 +4498,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:27.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Iodine",
@@ -4585,7 +4585,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:27.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Quantainium",
@@ -4604,7 +4604,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-26T19:04:29.000Z"
+        "updatedAt": "2026-09-29T01:05:34.000Z"
       },
       {
         "commodity": "Quartz",
@@ -4623,11 +4623,11 @@
       {
         "commodity": "Riccite",
         "buy": null,
-        "sell": 91000,
-        "stockScu": 61,
+        "sell": 90000,
+        "stockScu": 39,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
-        "sellTerminal": "ArcCorp 141",
+        "sellTerminal": "ArcCorp 157",
         "containerSizes": [
           16,
           8,
@@ -4635,7 +4635,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-26T19:33:21.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Saldynium (Ore)",
@@ -4659,7 +4659,7 @@
         "commodity": "Stileron",
         "buy": null,
         "sell": 140000,
-        "stockScu": 43,
+        "stockScu": 1,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
         "sellTerminal": "ArcCorp 141",
@@ -4670,7 +4670,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-26T19:33:21.000Z"
+        "updatedAt": "2026-09-29T03:37:36.000Z"
       },
       {
         "commodity": "Stims",
@@ -4688,7 +4688,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:27.000Z"
+        "updatedAt": "2026-09-29T03:36:25.000Z"
       },
       {
         "commodity": "Tungsten",
@@ -4722,7 +4722,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:22.000Z"
+        "updatedAt": "2026-09-29T14:28:33.000Z"
       }
     ],
     "port-tressler": [
@@ -7439,7 +7439,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:13:37.000Z"
+        "updatedAt": "2026-09-29T01:05:24.000Z"
       },
       {
         "commodity": "Astatine",
@@ -7648,7 +7648,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:00:46.000Z"
+        "updatedAt": "2026-09-29T00:30:45.000Z"
       },
       {
         "commodity": "Cobalt",
@@ -7724,7 +7724,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:00:46.000Z"
+        "updatedAt": "2026-09-29T00:30:46.000Z"
       },
       {
         "commodity": "Corundum",
@@ -7743,7 +7743,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:01:27.000Z"
+        "updatedAt": "2026-09-29T00:30:46.000Z"
       },
       {
         "commodity": "Degnous Root",
@@ -7781,7 +7781,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:01:27.000Z"
+        "updatedAt": "2026-09-29T00:30:46.000Z"
       },
       {
         "commodity": "Diamond Laminate",
@@ -7819,7 +7819,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:01:27.000Z"
+        "updatedAt": "2026-09-29T00:30:46.000Z"
       },
       {
         "commodity": "Dolivine",
@@ -8237,7 +8237,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:13:37.000Z"
+        "updatedAt": "2026-09-29T01:05:24.000Z"
       },
       {
         "commodity": "Marok Gem",
@@ -8372,11 +8372,11 @@
       {
         "commodity": "Ouratite",
         "buy": null,
-        "sell": 44000,
+        "sell": 46000,
         "stockScu": 28,
         "currency": "aUEC/SCU",
         "buyTerminal": null,
-        "sellTerminal": "TDD Orison",
+        "sellTerminal": "Orison Providence",
         "containerSizes": [
           32,
           24,
@@ -8386,7 +8386,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:14:27.000Z"
+        "updatedAt": "2026-09-29T01:05:24.000Z"
       },
       {
         "commodity": "Party Favors",
@@ -8633,7 +8633,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T14:13:37.000Z"
+        "updatedAt": "2026-09-29T01:05:24.000Z"
       },
       {
         "commodity": "Savrilium",
