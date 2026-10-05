@@ -2,7 +2,7 @@
   "metadata": {
     "source": "UEX API 2.0 commodity price snapshot",
     "endpoint": "https://api.uexcorp.uk/2.0/commodities_prices_all",
-    "updatedAt": "2026-10-04T15:49:22.456Z",
+    "updatedAt": "2026-10-05T19:43:53.756Z",
     "authoritative": false,
     "matchedRows": 1014,
     "note": "Community-maintained data. Buy is the lowest matched terminal buy price; sell is the highest matched terminal sell price for each mapped map location."
@@ -4401,7 +4401,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T07:43:11.000Z"
+        "updatedAt": "2026-10-05T06:24:13.000Z"
       },
       {
         "commodity": "Astatine",
@@ -4449,7 +4449,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T07:43:07.000Z"
+        "updatedAt": "2026-10-05T06:24:11.000Z"
       },
       {
         "commodity": "Dolivine",
@@ -4467,7 +4467,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T07:43:11.000Z"
+        "updatedAt": "2026-10-05T06:24:13.000Z"
       },
       {
         "commodity": "Hadanite",
@@ -4485,7 +4485,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T07:43:11.000Z"
+        "updatedAt": "2026-10-05T06:24:13.000Z"
       },
       {
         "commodity": "Iodine",
@@ -4501,7 +4501,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-01T00:07:41.000Z"
+        "updatedAt": "2026-10-05T01:26:37.000Z"
       },
       {
         "commodity": "Jaclium (Ore)",
@@ -4519,7 +4519,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-09-27T20:31:31.000Z"
+        "updatedAt": "2026-10-05T00:49:52.000Z"
       },
       {
         "commodity": "Janalite",
@@ -4554,7 +4554,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-01T00:07:43.000Z"
+        "updatedAt": "2026-10-05T00:49:50.000Z"
       },
       {
         "commodity": "Processed Food",
@@ -4572,7 +4572,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T07:43:07.000Z"
+        "updatedAt": "2026-10-05T06:24:13.000Z"
       },
       {
         "commodity": "Quantainium",
@@ -4605,7 +4605,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-09-27T20:31:22.000Z"
+        "updatedAt": "2026-10-05T00:49:50.000Z"
       },
       {
         "commodity": "Riccite",
@@ -4640,7 +4640,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-08-31T05:56:21.000Z"
+        "updatedAt": "2026-10-05T00:49:52.000Z"
       },
       {
         "commodity": "Stileron",
@@ -4675,7 +4675,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T07:43:07.000Z"
+        "updatedAt": "2026-10-05T06:24:11.000Z"
       },
       {
         "commodity": "Tungsten",
@@ -4691,7 +4691,7 @@
           8,
           4
         ],
-        "updatedAt": "2026-10-02T10:05:53.000Z"
+        "updatedAt": "2026-10-05T00:49:50.000Z"
       },
       {
         "commodity": "Waste",
@@ -4709,7 +4709,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T10:05:53.000Z"
+        "updatedAt": "2026-10-05T06:24:09.000Z"
       }
     ],
     "port-tressler": [
@@ -4727,7 +4727,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-10-02T14:44:55.000Z"
+        "updatedAt": "2026-10-05T18:50:34.000Z"
       },
       {
         "commodity": "Aluminum",
@@ -4759,7 +4759,7 @@
           16,
           8
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:34.000Z"
       },
       {
         "commodity": "Aphorite",
@@ -4942,7 +4942,7 @@
           24,
           16
         ],
-        "updatedAt": "2026-10-02T14:44:55.000Z"
+        "updatedAt": "2026-10-05T18:50:34.000Z"
       },
       {
         "commodity": "Feynmaline",
@@ -5075,7 +5075,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:58.000Z"
       },
       {
         "commodity": "Luminalia Gift",
@@ -5167,7 +5167,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:58.000Z"
       },
       {
         "commodity": "Quartz",
@@ -5182,7 +5182,7 @@
           24,
           16
         ],
-        "updatedAt": "2026-10-02T14:44:31.000Z"
+        "updatedAt": "2026-10-05T18:50:40.000Z"
       },
       {
         "commodity": "Recycled Material Composite",
@@ -5201,7 +5201,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:58.000Z"
       },
       {
         "commodity": "Scrap",
@@ -5218,7 +5218,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-02T14:44:31.000Z"
+        "updatedAt": "2026-10-05T18:50:40.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 1",
@@ -5237,7 +5237,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:44.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 2",
@@ -5256,7 +5256,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:44.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 3",
@@ -5275,7 +5275,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:44.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 4",
@@ -5294,7 +5294,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:44.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 5",
@@ -5313,7 +5313,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:48.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 6",
@@ -5332,7 +5332,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:48.000Z"
       },
       {
         "commodity": "Ship Ammunition - Size 7",
@@ -5351,7 +5351,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:48.000Z"
       },
       {
         "commodity": "Ship Decoy Countermeasures",
@@ -5370,7 +5370,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:48.000Z"
       },
       {
         "commodity": "Ship Noise Countermeasures",
@@ -5503,7 +5503,7 @@
           2,
           1
         ],
-        "updatedAt": "2026-10-04T13:31:21.000Z"
+        "updatedAt": "2026-10-05T18:50:40.000Z"
       },
       {
         "commodity": "Year of the Rat Envelope",
